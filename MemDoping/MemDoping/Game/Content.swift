@@ -34,6 +34,17 @@ enum LevelMechanic: String, Hashable {
     /// Place items along a familiar route, then walk it back and recall what
     /// was left at each stop (T09 Method of Loci).
     case loci
+    /// Build a vivid mental image for each pair by choosing a modifier, then
+    /// recall (T02 Association & Imagery — the active "Canlı Sahne" version).
+    case scene
+}
+
+/// A vivid modifier the player attaches to an item to build a memorable scene
+/// (T02). Deliberately silly — odd images stick better.
+struct SceneModifier: Identifiable, Hashable {
+    let id = UUID()
+    let emoji: String
+    let text: String   // resolved via localizedContent; reads as "<word> <text>"
 }
 
 /// One stop along a memory-palace route (e.g. the front door of a home).
@@ -114,8 +125,9 @@ struct GameLevel: Identifiable, Hashable {
     /// choiceCount, which is 0 for the non-recognition mechanics.
     var memoryDifficulty: Double {
         switch mechanic {
-        case .pairRecall:
-            // Recognition; a little harder with more distractors.
+        case .pairRecall, .scene:
+            // Recognition recall; scene building enriches encoding but the test
+            // is still multiple-choice. A little harder with more distractors.
             return min(0.75, 0.5 + Double(max(0, choiceCount - 2)) * 0.08)
         case .chunking:  return 0.80   // reproduce a number from grouped memory
         case .loci:      return 0.90   // serial reconstruction along a route
@@ -192,6 +204,20 @@ enum SampleContent {
         ]
     )
 
+    /// Vivid modifiers for building associations (T02). Read as "<word> <text>".
+    static let sceneModifiers: [SceneModifier] = [
+        .init(emoji: "🔥", text: "is on fire"),
+        .init(emoji: "🧊", text: "is frozen solid"),
+        .init(emoji: "🌈", text: "is glowing"),
+        .init(emoji: "🦣", text: "is enormous"),
+        .init(emoji: "🐜", text: "is tiny"),
+        .init(emoji: "🤸", text: "is bouncing"),
+        .init(emoji: "💃", text: "is dancing"),
+        .init(emoji: "🌀", text: "is spinning"),
+        .init(emoji: "🎈", text: "is floating"),
+        .init(emoji: "😱", text: "is screaming")
+    ]
+
     /// A walk through a familiar home — the starter memory palace.
     static let home = MemoryRoute(
         id: "home",
@@ -238,17 +264,19 @@ enum SampleLevels {
             index: 3,
             title: "First Links",
             technique: "Association & Imagery",
-            tip: "Picture the symbol doing something with its word. Silly images stick.",
-            itemCount: 3, questionCount: 3, choiceCount: 3, memorizeSeconds: 12,
-            theme: SampleContent.animals
+            tip: "Pick a wild twist for each item and picture it — the sillier the scene, the better it sticks.",
+            itemCount: 3, questionCount: 3, choiceCount: 3, memorizeSeconds: 0,
+            theme: SampleContent.animals,
+            mechanic: .scene
         ),
         GameLevel(
             index: 4,
-            title: "Warm Up",
+            title: "Make a Scene",
             technique: "Association & Imagery",
-            tip: "Look at each pair for a beat, then move on. Trust the picture.",
-            itemCount: 4, questionCount: 4, choiceCount: 3, memorizeSeconds: 14,
-            theme: SampleContent.food
+            tip: "You build the image now. Choose the twist that makes you smile — that's the one you'll remember.",
+            itemCount: 4, questionCount: 4, choiceCount: 3, memorizeSeconds: 0,
+            theme: SampleContent.food,
+            mechanic: .scene
         ),
         GameLevel(
             index: 5,
