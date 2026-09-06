@@ -148,6 +148,57 @@ struct Card<Content: View>: View {
     }
 }
 
+extension Color {
+    /// Returns the colour with its brightness scaled (0.8 = darker, 1.2 = lighter).
+    func brightness(_ factor: Double) -> Color {
+        #if canImport(UIKit)
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        UIColor(self).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return Color(hue: h, saturation: s, brightness: min(1, max(0, b * factor)), opacity: a)
+        #else
+        return self.opacity(1) // fallback: unchanged on platforms without UIKit
+        #endif
+    }
+}
+
+/// A chunky, beveled, glossy game tile — reads as a 3D piece (mahjong-style)
+/// while staying transparent, fast, and tap-friendly for the many interactive
+/// pieces. Real SceneKit is reserved for hero/celebration moments.
+struct GameTile<Content: View>: View {
+    var base: Color = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+    var cornerRadius: CGFloat = 16
+    var pressed: Bool = false
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(LinearGradient(
+                        colors: [base.brightness(1.35), base, base.brightness(0.72)],
+                        startPoint: .top, endPoint: .bottom))
+            )
+            // Raised bevel: bright lit top edge fading to a dark bottom edge.
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(LinearGradient(
+                        colors: [.white.opacity(0.6), .white.opacity(0.08), .black.opacity(0.35)],
+                        startPoint: .top, endPoint: .bottom), lineWidth: 1.5)
+            )
+            // Inner top sheen.
+            .overlay(alignment: .top) {
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(LinearGradient(colors: [.white.opacity(0.22), .clear],
+                                         startPoint: .top, endPoint: .center))
+                    .padding(1.5)
+                    .allowsHitTesting(false)
+            }
+            .shadow(color: .black.opacity(0.45), radius: pressed ? 3 : 10,
+                    x: 0, y: pressed ? 2 : 7)
+            .scaleEffect(pressed ? 0.97 : 1)
+    }
+}
+
 /// A left-to-right layout that wraps to the next line when it runs out of
 /// width — used for the scrambled letter tray, whose tile count varies by word.
 struct FlowRow: Layout {
