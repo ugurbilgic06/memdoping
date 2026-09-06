@@ -243,8 +243,10 @@ struct HomeView: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(unlocked ? Brand.primary : Color.white.opacity(0.08))
+                        .fill(unlocked ? Brand.gloss(level.tileBase) : Brand.gloss(.white.opacity(0.08)))
                         .frame(width: 40, height: 40)
+                        .overlay(Circle().strokeBorder(Brand.edgeHighlight, lineWidth: 1))
+                        .shadow(color: unlocked ? level.tileBase.opacity(0.5) : .clear, radius: 5, y: 2)
                     Image(systemName: unlocked ? "\(level.index).circle.fill" : "lock.fill")
                         .foregroundStyle(.white)
                 }
@@ -303,4 +305,10 @@ struct HomeView: View {
             .multilineTextAlignment(.center)
             .padding(.top, 8)
     }
+}
+
+#Preview {
+    HomeView()
+        .environment(GameStore())
+        .preferredColorScheme(.dark)
 }
