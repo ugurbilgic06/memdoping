@@ -36,17 +36,20 @@ struct HomeView: View {
             .navigationDestination(item: $activeLevel) { level in
                 // Apply adaptive difficulty (§7) at launch, preserving identity.
                 let l = store.adapted(level)
-                switch l.mechanic {
-                case .pairRecall: MissionView(level: l)
-                case .chunking:   ChunkingMissionView(level: l)
-                case .retrieval:  RetrievalMissionView(level: l)
-                case .loci:       LociMissionView(level: l)
-                case .scene:      SceneMissionView(level: l)
-                case .interleaving: InterleavingMissionView(level: l)
-                case .elaboration: ElaborationMissionView(level: l)
-                case .story:      StoryMissionView(level: l)
-                case .numberShape: NumberShapeMissionView(level: l)
+                Group {
+                    switch l.mechanic {
+                    case .pairRecall: MissionView(level: l)
+                    case .chunking:   ChunkingMissionView(level: l)
+                    case .retrieval:  RetrievalMissionView(level: l)
+                    case .loci:       LociMissionView(level: l)
+                    case .scene:      SceneMissionView(level: l)
+                    case .interleaving: InterleavingMissionView(level: l)
+                    case .elaboration: ElaborationMissionView(level: l)
+                    case .story:      StoryMissionView(level: l)
+                    case .numberShape: NumberShapeMissionView(level: l)
+                    }
                 }
+                .doorReveal()   // "doors opening" reveal on entering a level
             }
             .navigationDestination(isPresented: $showReview) {
                 ReviewMissionView(items: store.dueReviews)

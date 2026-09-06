@@ -263,6 +263,61 @@ struct ShakeEffect: GeometryEffect {
     }
 }
 
+/// A "doors opening" reveal: two panels cover the screen, then slide apart to
+/// unveil the content when it appears (Vita-Mahjong style). Still under Reduce
+/// Motion.
+struct DoorReveal: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(GameStore.self) private var store
+    @State private var open = false
+
+    func body(content: Content) -> some View {
+        content.overlay {
+            if !reduceMotion {
+                GeometryReader { geo in
+                    let w = geo.size.width
+                    HStack(spacing: 0) {
+                        panel(seamOnRight: true).frame(width: w / 2 + 1)
+                            .offset(x: open ? -(w / 2 + 2) : 0)
+                        panel(seamOnRight: false).frame(width: w / 2 + 1)
+                            .offset(x: open ? (w / 2 + 2) : 0)
+                    }
+                    .frame(width: w, height: geo.size.height)
+                }
+                .ignoresSafeArea()
+                .allowsHitTesting(!open)
+                .onAppear {
+                    if store.soundEnabled { SoundPlayer.shared.play(.sparkle) }
+                    withAnimation(.easeInOut(duration: 0.75)) { open = true }
+                }
+            }
+        }
+    }
+
+    private func panel(seamOnRight: Bool) -> some View {
+        LinearGradient(
+            colors: [Color(hue: 0.50, saturation: 0.50, brightness: 0.30),
+                     Color(hue: 0.52, saturation: 0.58, brightness: 0.16)],
+            startPoint: .top, endPoint: .bottom)
+        .overlay(alignment: seamOnRight ? .trailing : .leading) {
+            Rectangle()
+                .fill(LinearGradient(
+                    colors: seamOnRight ? [.clear, Brand.accent.opacity(0.9)]
+                                        : [Brand.accent.opacity(0.9), .clear],
+                    startPoint: .leading, endPoint: .trailing))
+                .frame(width: 10)
+        }
+        .overlay(alignment: seamOnRight ? .trailing : .leading) {
+            Text("🧠").font(.system(size: 40))
+                .offset(x: seamOnRight ? 20 : -20)
+        }
+    }
+}
+
+extension View {
+    func doorReveal() -> some View { modifier(DoorReveal()) }
+}
+
 /// A subtle, endless vertical bob to give idle tiles a little life. Phase-offset
 /// by `seed` so a grid of tiles drifts out of sync. Still under Reduce Motion.
 struct GentleFloat: ViewModifier {
