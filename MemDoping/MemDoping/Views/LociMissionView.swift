@@ -18,6 +18,12 @@ struct LociMissionView: View {
     @State private var outcome: GameStore.SessionOutcome?
     @State private var revealed = false
 
+    // Drag-to-combine state for the place phase: the item starts below the
+    // location and the player drags it onto the spot to "see them together".
+    private static let itemStart = CGSize(width: 0, height: 120)
+    @State private var itemOffset = LociMissionView.itemStart
+    @State private var dragStart = LociMissionView.itemStart
+
     init(level: GameLevel) {
         _session = State(initialValue: LociSession(level: level))
     }
@@ -69,7 +75,7 @@ struct LociMissionView: View {
     // MARK: Place — walk forward, drop an item at each stop
 
     private var placePhase: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: 14) {
             HStack {
                 Label("Leave it here", systemImage: "figure.walk")
                     .font(.headline).foregroundStyle(.white)
@@ -80,43 +86,60 @@ struct LociMissionView: View {
 
             ProgressView(value: session.placeProgress).tint(Brand.accent)
 
-            Spacer()
-
             if let p = session.currentPlacement {
-                VStack(spacing: 8) {
-                    Text(p.stop.icon).font(.system(size: 70))
-                    Text(p.stop.name.localizedContent)
-                        .font(.title3.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.9))
-                }
-
-                Image(systemName: "arrow.down")
-                    .font(.title2).foregroundStyle(.white.opacity(0.4))
-
-                VStack(spacing: 6) {
-                    Text(p.item.symbol).font(.system(size: 56))
-                    Text(p.item.word.localizedContent)
-                        .font(.title2.bold()).foregroundStyle(.white)
-                }
-                .padding(.vertical, 16).frame(maxWidth: .infinity)
-                .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 18))
-                .id(p.id)
-                .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
-
-                Text("Picture the \(p.item.word.localizedContent) at the \(p.stop.name.localizedContent) — the sillier the image, the better it sticks.")
-                    .font(.footnote).foregroundStyle(.white.opacity(0.75))
+                Text("Drag the \(p.item.word.localizedContent) onto the \(p.stop.name.localizedContent) — really see them together.")
+                    .font(.subheadline).foregroundStyle(.white.opacity(0.8))
                     .multilineTextAlignment(.center)
-            }
 
-            Spacer()
+                // The stage: the location, with the item you drag onto it.
+                ZStack {
+                    VStack(spacing: 8) {
+                        Text(p.stop.icon).font(.system(size: 120))
+                        Text(p.stop.name.localizedContent)
+                            .font(.headline).foregroundStyle(.white.opacity(0.85))
+                    }
+
+                    Text(p.item.symbol)
+                        .font(.system(size: 62))
+                        .shadow(color: .black.opacity(0.45), radius: 7, y: 4)
+                        .scaleEffect(isItemOnSpot ? 1.12 : 1)
+                        .offset(itemOffset)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { g in
+                                    itemOffset = CGSize(width: dragStart.width + g.translation.width,
+                                                        height: dragStart.height + g.translation.height)
+                                }
+                                .onEnded { _ in
+                                    dragStart = itemOffset
+                                    if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+                                    if store.soundEnabled { SoundPlayer.shared.play(.pop) }
+                                }
+                        )
+                        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.6),
+                                   value: isItemOnSpot)
+                        .accessibilityLabel(Text(p.item.word.localizedContent))
+                }
+                .frame(maxWidth: .infinity, minHeight: 300)
+            }
 
             PrimaryButton(title: "Leave it & walk on", systemImage: "arrow.right") {
                 if store.soundEnabled { SoundPlayer.shared.play(.tap) }
-                if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                 session.placeCurrent()
             }
         }
+        .onChange(of: session.placeIndex) { _, _ in resetItem() }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: session.placeIndex)
+    }
+
+    /// Whether the dragged item is resting over the location (near the centre).
+    private var isItemOnSpot: Bool {
+        abs(itemOffset.width) < 60 && abs(itemOffset.height) < 60
+    }
+
+    private func resetItem() {
+        itemOffset = LociMissionView.itemStart
+        dragStart = LociMissionView.itemStart
     }
 
     // MARK: Recall — walk again, recall what's at each stop
