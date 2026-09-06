@@ -38,6 +38,7 @@ struct HomeView: View {
                 case .retrieval:  RetrievalMissionView(level: level)
                 case .loci:       LociMissionView(level: level)
                 case .scene:      SceneMissionView(level: level)
+                case .interleaving: InterleavingMissionView(level: level)
                 }
             }
             .navigationDestination(isPresented: $showReview) {

@@ -37,6 +37,9 @@ enum LevelMechanic: String, Hashable {
     /// Build a vivid mental image for each pair by choosing a modifier, then
     /// recall (T02 Association & Imagery — the active "Canlı Sahne" version).
     case scene
+    /// Mix 2-3 themes in one mission; each question first asks the category,
+    /// then the answer — never two of the same theme in a row (T06 Interleaving).
+    case interleaving
 }
 
 /// A vivid modifier the player attaches to an item to build a memorable scene
@@ -113,6 +116,9 @@ struct GameLevel: Identifiable, Hashable {
     var orientingDepth: OrientingDepth? = nil
     /// The route a Method-of-Loci level is walked along. nil for other mechanics.
     var route: MemoryRoute? = nil
+    /// The themes mixed together in an Interleaving level. nil for other
+    /// mechanics (which use the single `theme`).
+    var interleavedThemes: [MemoryTheme]? = nil
 
     var id: Int { index }
 
@@ -130,6 +136,7 @@ struct GameLevel: Identifiable, Hashable {
             // is still multiple-choice. A little harder with more distractors.
             return min(0.75, 0.5 + Double(max(0, choiceCount - 2)) * 0.08)
         case .chunking:  return 0.80   // reproduce a number from grouped memory
+        case .interleaving: return 0.85   // discriminate category, then recall
         case .loci:      return 0.90   // serial reconstruction along a route
         case .retrieval: return 0.95   // free recall — produce every letter
         }
@@ -300,9 +307,11 @@ enum SampleLevels {
             index: 7,
             title: "Mixed Field",
             technique: "Interleaving",
-            tip: "Switching between items keeps your brain choosing the right link.",
-            itemCount: 6, questionCount: 6, choiceCount: 4, memorizeSeconds: 12,
-            theme: SampleContent.animals
+            tip: "Two categories, shuffled together. Spot the category first, then the word. Feeling harder is the point — it's working.",
+            itemCount: 6, questionCount: 6, choiceCount: 3, memorizeSeconds: 0,
+            theme: SampleContent.animals,
+            mechanic: .interleaving,
+            interleavedThemes: [SampleContent.animals, SampleContent.food]
         ),
         GameLevel(
             index: 8,
