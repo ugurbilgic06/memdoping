@@ -82,6 +82,9 @@ final class GameStore {
     var soundEnabled: Bool = true { didSet { save() } }
     var hapticsEnabled: Bool = true { didSet { save() } }
 
+    /// Whether the player has seen the first-run welcome.
+    private(set) var hasOnboarded: Bool = false
+
     private let defaultsKey = "memdoping.save.v1"
 
     init() { load() }
@@ -272,6 +275,7 @@ final class GameStore {
         var hapticsEnabled: Bool
         var reviews: [String: ReviewRecord]?
         var retentionHistory: [Bool]?
+        var hasOnboarded: Bool?
     }
 
     private func save() {
@@ -284,7 +288,8 @@ final class GameStore {
             soundEnabled: soundEnabled,
             hapticsEnabled: hapticsEnabled,
             reviews: reviews,
-            retentionHistory: retentionHistory
+            retentionHistory: retentionHistory,
+            hasOnboarded: hasOnboarded
         )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: defaultsKey)
@@ -304,6 +309,13 @@ final class GameStore {
         hapticsEnabled = snapshot.hapticsEnabled
         reviews = snapshot.reviews ?? [:]
         retentionHistory = snapshot.retentionHistory ?? []
+        hasOnboarded = snapshot.hasOnboarded ?? false
+    }
+
+    /// Marks the first-run welcome as seen.
+    func completeOnboarding() {
+        hasOnboarded = true
+        save()
     }
 
     /// Wipes all progress. Used from the profile screen.

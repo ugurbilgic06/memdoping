@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(GameStore.self) private var store
+
     var body: some View {
-        HomeView()
+        Group {
+            if store.hasOnboarded {
+                HomeView()
+            } else {
+                OnboardingView()
+            }
+        }
+        .animation(.easeInOut, value: store.hasOnboarded)
     }
 }
 
