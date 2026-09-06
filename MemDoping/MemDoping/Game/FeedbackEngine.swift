@@ -29,11 +29,17 @@ final class SoundPlayer {
     private let engine = AVAudioEngine()
     private let player = AVAudioPlayerNode()
     private let sampleRate: Double = 44100
+    /// One canonical buffer format. The player is connected to the mixer with
+    /// this exact format so scheduled buffers always match it — connecting with
+    /// `nil` picks up the hardware format (often 48 kHz stereo), which then
+    /// mismatches our 44.1 kHz mono buffers and crashes `scheduleBuffer`.
+    private let format: AVAudioFormat
     private var isRunning = false
 
     private init() {
+        format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
         engine.attach(player)
-        engine.connect(player, to: engine.mainMixerNode, format: nil)
+        engine.connect(player, to: engine.mainMixerNode, format: format)
         #if os(iOS)
         try? AVAudioSession.sharedInstance().setCategory(.ambient, options: [.mixWithOthers])
         #endif
@@ -71,7 +77,6 @@ final class SoundPlayer {
     /// multi-note effects (correct/levelUp). Each note fades in/out to avoid
     /// clicks at its edges.
     private func tone(frequencies: [Double], noteDuration: Double, gain: Float, shape: Waveform = .sine) -> AVAudioPCMBuffer {
-        let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
         let framesPerNote = Int(noteDuration * sampleRate)
         let totalFrames = AVAudioFrameCount(framesPerNote * frequencies.count)
         let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames)!
