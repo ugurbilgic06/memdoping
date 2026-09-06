@@ -140,4 +140,18 @@ struct MechanicsTests {
             #expect(studied.contains(q.prompt.word))
         }
     }
+
+    // MARK: Number-Shape (T11) — digit-sequence recall
+
+    @Test func numberShapeScoresDigitPositions() {
+        let s = NumberShapeSession(level: level(12))
+        s.beginStudying()
+        s.beginRecall()
+        for d in s.digits { s.enter(d) }            // type the code back correctly
+        #expect(s.correctCount == s.total)
+        #expect(s.accuracy == 1.0)
+        #expect(s.legend.count == 10)               // a shape for every digit
+        // Every digit maps to a non-empty shape.
+        for d in 0...9 { #expect(s.shape(for: d) != "?") }
+    }
 }
