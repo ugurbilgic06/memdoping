@@ -100,9 +100,12 @@ struct OnboardingView: View {
                     .padding(.horizontal, 28)
             }
             VStack(spacing: 12) {
-                ageChoice(.child, "Child", "🧒", "Gentle pace, more time")
-                ageChoice(.teen, "Teen", "🧑", "Balanced")
-                ageChoice(.adult, "Adult", "🧑‍💼", "A little more challenge")
+                ageChoice(.child, "Child", "🧒", "Gentle pace, more time",
+                          Color(hue: 0.38, saturation: 0.55, brightness: 0.86)).dealIn(0)
+                ageChoice(.teen, "Teen", "🧑", "Balanced",
+                          Color(hue: 0.57, saturation: 0.55, brightness: 0.88)).dealIn(1)
+                ageChoice(.adult, "Adult", "🧑‍💼", "A little more challenge",
+                          Color(hue: 0.50, saturation: 0.58, brightness: 0.84)).dealIn(2)
             }
             .padding(.horizontal, 24)
             Spacer()
@@ -110,12 +113,13 @@ struct OnboardingView: View {
     }
 
     private func ageChoice(_ band: GameStore.AgeBand, _ title: LocalizedStringKey,
-                           _ emoji: String, _ subtitle: LocalizedStringKey) -> some View {
+                           _ emoji: String, _ subtitle: LocalizedStringKey,
+                           _ base: Color) -> some View {
         Button {
             store.setAgeBand(band)
             store.completeOnboarding()
         } label: {
-            GameTile(base: Brand.primary, cornerRadius: 16) {
+            GameTile(base: base, cornerRadius: 16) {
                 HStack(spacing: 14) {
                     Text(emoji).font(.largeTitle)
                     VStack(alignment: .leading, spacing: 2) {
@@ -217,8 +221,8 @@ struct OnboardingView: View {
         HStack(spacing: 8) {
             ForEach(0...lastPage, id: \.self) { i in
                 Circle()
-                    .fill(i == page ? Brand.accent : Color.primary.opacity(0.25))
-                    .frame(width: 8, height: 8)
+                    .fill(i == page ? Brand.accentText : Color.primary.opacity(0.25))
+                    .frame(width: i == page ? 9 : 8, height: i == page ? 9 : 8)
             }
         }
         .padding(.top, 8)
