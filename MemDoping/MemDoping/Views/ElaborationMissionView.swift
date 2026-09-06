@@ -84,7 +84,7 @@ struct ElaborationMissionView: View {
             if let card = session.currentCard {
                 Spacer()
                 VStack(spacing: 10) {
-                    Text(card.fact.symbol).font(.system(size: 64))
+                    Symbol3DTile(symbol: card.fact.symbol, tint: session.level.tileBase, size: 116)
                     Text("\(card.fact.subject.localizedContent)…")
                         .font(.title3.bold())
                         .foregroundStyle(.white)
@@ -170,7 +170,7 @@ struct ElaborationMissionView: View {
 
             if let q = session.currentQuestion {
                 VStack(spacing: 8) {
-                    Text(q.fact.symbol).font(.system(size: 60))
+                    Symbol3DTile(symbol: q.fact.symbol, tint: session.level.tileBase, size: 116)
                     Text(q.fact.subject.localizedContent)
                         .font(.headline).foregroundStyle(.white)
                         .multilineTextAlignment(.center)

@@ -158,7 +158,8 @@ struct SceneMissionView: View {
                 .font(.title3.weight(.semibold)).foregroundStyle(.white)
 
             if let q = session.currentQuestion {
-                Text(q.prompt.symbol).font(.system(size: 90)).padding(.vertical, 8)
+                Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150)
+                    .padding(.vertical, 8)
 
                 VStack(spacing: 12) {
                     ForEach(q.options, id: \.self) { option in

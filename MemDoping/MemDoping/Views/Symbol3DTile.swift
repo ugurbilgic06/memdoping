@@ -87,15 +87,24 @@ struct Symbol3DTile: View {
         let key = SCNNode()
         key.light = SCNLight()
         key.light?.type = .directional
-        key.light?.intensity = 1000
+        key.light?.intensity = 1100
         key.light?.color = cg(1.0, 0.97, 0.92)
         key.eulerAngles = SCNVector3(-0.6, -0.5, 0)
         scene.rootNode.addChildNode(key)
 
+        // Coloured rim light for a lively, glassy edge (Vita-Mahjong style).
+        let rim = SCNNode()
+        rim.light = SCNLight()
+        rim.light?.type = .omni
+        rim.light?.intensity = 650
+        rim.light?.color = cgColor(tint.brightness(1.6))
+        rim.position = SCNVector3(-3.5, 2.5, -2)
+        scene.rootNode.addChildNode(rim)
+
         let ambient = SCNNode()
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
-        ambient.light?.intensity = 350
+        ambient.light?.intensity = 320
         ambient.light?.color = cg(0.6, 0.6, 0.85)
         scene.rootNode.addChildNode(ambient)
 
