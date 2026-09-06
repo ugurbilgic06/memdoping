@@ -75,7 +75,7 @@ struct Symbol3DTile: View {
                 (SCNVector3(d, 0, 0),  SCNVector3(0, 1.5708, 0)),      // right
                 (SCNVector3(-d, 0, 0), SCNVector3(0, -1.5708, 0))      // left
             ]
-            for (pos, rot) in faces {
+            for (i, face) in faces.enumerated() {
                 let plane = SCNPlane(width: 2.0, height: 2.0)
                 let pm = SCNMaterial()
                 pm.diffuse.contents = image
@@ -84,8 +84,21 @@ struct Symbol3DTile: View {
                 pm.blendMode = .alpha
                 plane.materials = [pm]
                 let node = SCNNode(geometry: plane)
-                node.position = pos
-                node.eulerAngles = rot
+                node.position = face.0
+                node.eulerAngles = face.1
+                // Make the character feel alive: a gentle "breathing" pulse and
+                // a small wobble, phase-shifted per face so it looks organic.
+                let phase = Double(i) * 0.35
+                let grow = SCNAction.scale(to: 1.07, duration: 0.85)
+                grow.timingMode = .easeInEaseOut
+                let shrink = SCNAction.scale(to: 1.0, duration: 0.85)
+                shrink.timingMode = .easeInEaseOut
+                let breathe = SCNAction.sequence([grow, shrink])
+                let wobble = SCNAction.rotateBy(x: 0, y: 0, z: 0.07, duration: 1.05)
+                wobble.timingMode = .easeInEaseOut
+                let sway = SCNAction.sequence([wobble, wobble.reversed()])
+                node.runAction(.sequence([.wait(duration: phase), .repeatForever(breathe)]))
+                node.runAction(.sequence([.wait(duration: phase), .repeatForever(sway)]))
                 cube.addChildNode(node)
             }
         }
@@ -235,6 +248,8 @@ extension TransparentSceneView: UIViewRepresentable {
         v.isOpaque = false
         v.antialiasingMode = .multisampling4X
         v.rendersContinuously = true
+        v.allowsCameraControl = true                       // drag to spin it yourself
+        v.defaultCameraController.interactionMode = .orbitTurntable
         v.scene = scene
         return v
     }
@@ -249,6 +264,8 @@ extension TransparentSceneView: NSViewRepresentable {
         v.backgroundColor = .clear
         v.antialiasingMode = .multisampling4X
         v.rendersContinuously = true
+        v.allowsCameraControl = true
+        v.defaultCameraController.interactionMode = .orbitTurntable
         v.scene = scene
         return v
     }
