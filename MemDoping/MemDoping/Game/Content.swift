@@ -267,6 +267,23 @@ enum SampleContent {
         .init(emoji: "😱", text: "is screaming")
     ]
 
+    /// A soft, familiar deck for Night Doping — the calm, untimed mode (§4).
+    static let nightCalm = MemoryTheme(
+        id: "night",
+        title: "Calm",
+        deepQuestion: "Is it peaceful?",
+        pairs: [
+            .init(symbol: "🌙", word: "Moon", deepAnswer: true),
+            .init(symbol: "⭐️", word: "Star", deepAnswer: true),
+            .init(symbol: "🌊", word: "Wave", deepAnswer: true),
+            .init(symbol: "🕯️", word: "Candle", deepAnswer: true),
+            .init(symbol: "🍵", word: "Tea", deepAnswer: true),
+            .init(symbol: "☁️", word: "Cloud", deepAnswer: true),
+            .init(symbol: "🛏️", word: "Bed", deepAnswer: true),
+            .init(symbol: "📖", word: "Book", deepAnswer: true)
+        ]
+    )
+
     /// Vivid linking actions for chain stories (T08). Read as "<A> <action> <B>".
     static let storyActions: [String] = [
         "chased", "swallowed", "hugged", "jumped over", "carried",

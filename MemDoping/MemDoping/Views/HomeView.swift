@@ -13,6 +13,7 @@ struct HomeView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var activeLevel: GameLevel?
     @State private var showReview = false
+    @State private var showNight = false
 
     var body: some View {
         NavigationStack {
@@ -26,6 +27,7 @@ struct HomeView: View {
                         reviewCard
                         continueCard
                         levelLadder
+                        nightCard
                         disclaimer
                     }
                     .padding()
@@ -47,6 +49,9 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $showReview) {
                 ReviewMissionView(items: store.dueReviews)
+            }
+            .navigationDestination(isPresented: $showNight) {
+                NightDopingView()
             }
         }
     }
@@ -247,6 +252,28 @@ struct HomeView: View {
         }
         .buttonStyle(.plain)
         .disabled(!unlocked)
+    }
+
+    // MARK: Night Doping (§4 — optional calm mode)
+
+    private var nightCard: some View {
+        Button { showNight = true } label: {
+            Card {
+                HStack(spacing: 14) {
+                    Text("🌙").font(.title)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Night Doping")
+                            .font(.headline).foregroundStyle(.white)
+                        Text("A calm, untimed wind-down — no score, no rush.")
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.75))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
+                }
+            }
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: Disclaimer (§9)
