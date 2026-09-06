@@ -26,6 +26,7 @@ struct MissionStat: Identifiable {
 
 /// Mission briefing: what this level teaches, and one rule to hold on to.
 struct MissionIntro: View {
+    @Environment(GameStore.self) private var store
     let level: GameLevel
     let stats: [MissionStat]
     let onStart: () -> Void
@@ -48,6 +49,20 @@ struct MissionIntro: View {
                     Text(level.techniqueExplanation)
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.85))
+
+                    // The scientific reason — richer detail for teens/adults;
+                    // skipped for the child band, where it isn't needed.
+                    if store.ageBand != .child {
+                        Label {
+                            Text(level.techniqueScience)
+                                .font(.caption)
+                                .foregroundStyle(.white.opacity(0.7))
+                        } icon: {
+                            Image(systemName: "flask.fill").foregroundStyle(Brand.primary)
+                        }
+                        .padding(.top, 2)
+                    }
+
                     Label {
                         Text(level.tip.localizedContent)
                             .font(.subheadline.weight(.medium))

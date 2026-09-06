@@ -205,6 +205,35 @@ struct GameLevel: Identifiable, Hashable {
         return key.localizedContent
     }
 
+    /// The plain-language scientific reason the technique works. Honest about
+    /// strength (§9) — shown to teens/adults, hidden for the child band.
+    var techniqueScience: String {
+        let key: String
+        switch mechanic {
+        case .pairRecall:
+            key = orientingDepth != nil
+                ? "Backed by 'levels of processing' research: the more meaningfully you handle something, the better you recall it (Craik & Lockhart)."
+                : "Recalling on cue is retrieval practice — repeatedly tested material is remembered better."
+        case .scene:
+            key = "Based on dual coding (Paivio): a word plus an image gives memory two routes to it. A modest, conditional effect."
+        case .chunking:
+            key = "Working memory holds only about four chunks (Miller; Cowan) — grouping lets you carry more within that limit."
+        case .retrieval:
+            key = "The testing effect: retrieving a memory strengthens it more than re-reading (Roediger & Karpicke) — one of the most robust findings."
+        case .interleaving:
+            key = "Mixed practice sharpens choosing the right method — it roughly doubled next-day accuracy in Taylor & Rohrer's study."
+        case .elaboration:
+            key = "Elaborative interrogation: asking 'why' links facts to what you know. A moderate benefit, best on familiar material."
+        case .story:
+            key = "Bower & Clark found a story group recalled far more of a list long-term — a striking effect from a classic study."
+        case .loci:
+            key = "The method of loci borrows your spatial memory. Maguire (2003): memory champions aren't smarter — they use this method."
+        case .numberShape:
+            key = "It combines chunking and imagery. Direct evidence for the number-shape trick itself is thin — treat it as a handy aid, not a rule."
+        }
+        return key.localizedContent
+    }
+
     /// A difficulty-scaled clone at a new index, keeping the mechanic and its
     /// wired content. Used to extend the curated levels into the 100-level
     /// ladder; counts are capped and sessions clamp to available content.
