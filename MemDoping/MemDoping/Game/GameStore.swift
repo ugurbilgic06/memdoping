@@ -85,6 +85,14 @@ final class GameStore {
     /// Whether the player has seen the first-run welcome.
     private(set) var hasOnboarded: Bool = false
 
+    // MARK: Adaptive difficulty (§7)
+
+    /// A transparent difficulty offset that nudges up on repeated success and
+    /// down on repeated struggle. Applied to a level's parameters, not its
+    /// identity. Bounded so it can never punish or trivialize.
+    private(set) var adaptiveOffset: Int = 0
+    static let adaptiveRange = -2...3
+
     private let defaultsKey = "memdoping.save.v1"
 
     init() { load() }
@@ -244,6 +252,14 @@ final class GameStore {
 
         if !isDailyMissionDone { lastDailyMissionDate = .now }
 
+        // Adaptive difficulty (§7): repeated success permits one small step up;
+        // repeated struggle steps down. Transparent and bounded.
+        if result.accuracy >= 0.85 {
+            adaptiveOffset = min(Self.adaptiveRange.upperBound, adaptiveOffset + 1)
+        } else if result.accuracy <= 0.40 {
+            adaptiveOffset = max(Self.adaptiveRange.lowerBound, adaptiveOffset - 1)
+        }
+
         save()
 
         return SessionOutcome(
@@ -276,6 +292,7 @@ final class GameStore {
         var reviews: [String: ReviewRecord]?
         var retentionHistory: [Bool]?
         var hasOnboarded: Bool?
+        var adaptiveOffset: Int?
     }
 
     private func save() {
@@ -289,7 +306,8 @@ final class GameStore {
             hapticsEnabled: hapticsEnabled,
             reviews: reviews,
             retentionHistory: retentionHistory,
-            hasOnboarded: hasOnboarded
+            hasOnboarded: hasOnboarded,
+            adaptiveOffset: adaptiveOffset
         )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: defaultsKey)
@@ -310,6 +328,36 @@ final class GameStore {
         reviews = snapshot.reviews ?? [:]
         retentionHistory = snapshot.retentionHistory ?? []
         hasOnboarded = snapshot.hasOnboarded ?? false
+        adaptiveOffset = snapshot.adaptiveOffset ?? 0
+    }
+
+    // MARK: - Adaptive difficulty application
+
+    /// Applies the adaptive offset to a level's gameplay parameters (item count,
+    /// choices, and study time) while preserving its identity. Sessions already
+    /// clamp counts to the available content, so over-shoot is safe. Study time
+    /// grows when eased and shrinks when ramped, but never below a floor.
+    func adapted(_ level: GameLevel) -> GameLevel {
+        let o = adaptiveOffset
+        guard o != 0 else { return level }
+        let stepSign = o > 0 ? 1 : -1
+        return level.varying(
+            itemCount: max(2, level.itemCount + o),
+            questionCount: max(2, level.questionCount + stepSign),
+            choiceCount: level.choiceCount == 0 ? 0
+                : min(5, max(2, level.choiceCount + stepSign)),
+            memorizeSeconds: level.memorizeSeconds == 0 ? 0
+                : max(6, level.memorizeSeconds - o * 2)
+        )
+    }
+
+    enum DifficultyState { case eased, standard, ramped }
+
+    /// The current adaptation state (UI maps this to a localized label).
+    var difficultyState: DifficultyState {
+        if adaptiveOffset < 0 { return .eased }
+        if adaptiveOffset > 0 { return .ramped }
+        return .standard
     }
 
     /// Marks the first-run welcome as seen.
@@ -327,6 +375,7 @@ final class GameStore {
         lastDailyMissionDate = nil
         reviews = [:]
         retentionHistory = []
+        adaptiveOffset = 0
         save()
     }
 }

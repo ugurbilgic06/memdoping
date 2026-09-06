@@ -32,15 +32,17 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(item: $activeLevel) { level in
-                switch level.mechanic {
-                case .pairRecall: MissionView(level: level)
-                case .chunking:   ChunkingMissionView(level: level)
-                case .retrieval:  RetrievalMissionView(level: level)
-                case .loci:       LociMissionView(level: level)
-                case .scene:      SceneMissionView(level: level)
-                case .interleaving: InterleavingMissionView(level: level)
-                case .elaboration: ElaborationMissionView(level: level)
-                case .story:      StoryMissionView(level: level)
+                // Apply adaptive difficulty (§7) at launch, preserving identity.
+                let l = store.adapted(level)
+                switch l.mechanic {
+                case .pairRecall: MissionView(level: l)
+                case .chunking:   ChunkingMissionView(level: l)
+                case .retrieval:  RetrievalMissionView(level: l)
+                case .loci:       LociMissionView(level: l)
+                case .scene:      SceneMissionView(level: l)
+                case .interleaving: InterleavingMissionView(level: l)
+                case .elaboration: ElaborationMissionView(level: l)
+                case .story:      StoryMissionView(level: l)
                 }
             }
             .navigationDestination(isPresented: $showReview) {
@@ -155,6 +157,14 @@ struct HomeView: View {
         }
     }
 
+    private var difficultyLabel: LocalizedStringKey {
+        switch store.difficultyState {
+        case .eased:    "Eased to your pace"
+        case .standard: "Adapts to you"
+        case .ramped:   "Ramped up"
+        }
+    }
+
     // MARK: Continue (core loop entry)
 
     private var continueCard: some View {
@@ -174,6 +184,9 @@ struct HomeView: View {
                         Text("Level \(store.currentLevel.index): \(store.currentLevel.title.localizedContent)")
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.75))
+                        Label(difficultyLabel, systemImage: "slider.horizontal.3")
+                            .font(.caption2)
+                            .foregroundStyle(Brand.accent)
                     }
                     Spacer()
                 }

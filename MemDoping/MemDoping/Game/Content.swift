@@ -171,6 +171,18 @@ struct GameLevel: Identifiable, Hashable {
         case .retrieval: return 0.95   // free recall — produce every letter
         }
     }
+
+    /// Returns a copy with adjusted gameplay parameters (for adaptive difficulty,
+    /// §7). Identity, mechanic and content are preserved.
+    func varying(itemCount: Int, questionCount: Int, choiceCount: Int, memorizeSeconds: Int) -> GameLevel {
+        GameLevel(
+            index: index, title: title, technique: technique, tip: tip,
+            itemCount: itemCount, questionCount: questionCount,
+            choiceCount: choiceCount, memorizeSeconds: memorizeSeconds,
+            theme: theme, mechanic: mechanic, orientingDepth: orientingDepth,
+            route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck
+        )
+    }
 }
 
 // MARK: - Sample themed decks  (SAMPLE CONTENT — not final curriculum)

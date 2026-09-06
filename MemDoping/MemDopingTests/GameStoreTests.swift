@@ -129,4 +129,27 @@ struct GameStoreTests {
         store.recordReview(key: key, remembered: false)
         #expect(store.retentionScore == 67)         // 2/3 rounded
     }
+
+    // MARK: Adaptive difficulty (§7)
+
+    @Test func adaptiveOffsetRampsUpAndEasesWithinBounds() {
+        let store = freshStore()
+        #expect(store.adaptiveOffset == 0)
+        for _ in 0..<6 { _ = store.complete(level: level(5), correct: 4, total: 4) }
+        #expect(store.adaptiveOffset == GameStore.adaptiveRange.upperBound)  // capped
+        for _ in 0..<10 { _ = store.complete(level: level(5), correct: 0, total: 4) }
+        #expect(store.adaptiveOffset == GameStore.adaptiveRange.lowerBound)  // floored
+    }
+
+    @Test func adaptedLevelKeepsIdentityAndFloors() {
+        let store = freshStore()
+        for _ in 0..<6 { _ = store.complete(level: level(5), correct: 4, total: 4) }
+        let ramped = store.adapted(level(5))
+        #expect(ramped.index == 5 && ramped.mechanic == .retrieval)
+        #expect(ramped.memorizeSeconds >= 6)              // never below the floor
+        #expect(ramped.itemCount > level(5).itemCount)    // harder = more items
+
+        // A timerless mechanic never gains a study timer.
+        #expect(store.adapted(level(1)).memorizeSeconds == 0)
+    }
 }
