@@ -13,7 +13,7 @@ struct OnboardingView: View {
     @Environment(GameStore.self) private var store
     @State private var page = 0
 
-    private let lastPage = 2
+    private let lastPage = 3
 
     var body: some View {
         ZStack {
@@ -34,6 +34,7 @@ struct OnboardingView: View {
                     welcomePage.tag(0)
                     loopPage.tag(1)
                     honestPage.tag(2)
+                    agePage.tag(3)
                 }
                 #if os(iOS)
                 .tabViewStyle(.page(indexDisplayMode: .never))
@@ -41,17 +42,15 @@ struct OnboardingView: View {
 
                 pageDots
 
-                PrimaryButton(
-                    title: page == lastPage ? "Start playing" : "Next",
-                    systemImage: page == lastPage ? "play.fill" : "arrow.right"
-                ) {
-                    if page == lastPage {
-                        store.completeOnboarding()
-                    } else {
+                // The age page's own buttons are the call to action.
+                if page < lastPage {
+                    PrimaryButton(title: "Next", systemImage: "arrow.right") {
                         withAnimation { page += 1 }
                     }
+                    .padding()
+                } else {
+                    Color.clear.frame(height: 1).padding()
                 }
-                .padding()
             }
         }
     }
@@ -83,6 +82,53 @@ struct OnboardingView: View {
             subtitle: "What to expect",
             body: "Regular use may support memory, focus, and recall. Results vary by person; there's no 100% guarantee. These are learnable strategies — anyone can pick them up."
         )
+    }
+
+    private var agePage: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            Text("👥")
+                .font(.system(size: 72))
+            VStack(spacing: 8) {
+                Text("Who's playing?")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.white)
+                Text("We'll set a comfortable starting difficulty — you can change it any time in your profile.")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.75))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 28)
+            }
+            VStack(spacing: 12) {
+                ageChoice(.child, "Child", "🧒", "Gentle pace, more time")
+                ageChoice(.teen, "Teen", "🧑", "Balanced")
+                ageChoice(.adult, "Adult", "🧑‍💼", "A little more challenge")
+            }
+            .padding(.horizontal, 24)
+            Spacer()
+        }
+    }
+
+    private func ageChoice(_ band: GameStore.AgeBand, _ title: LocalizedStringKey,
+                           _ emoji: String, _ subtitle: LocalizedStringKey) -> some View {
+        Button {
+            store.setAgeBand(band)
+            store.completeOnboarding()
+        } label: {
+            GameTile(base: Brand.primary, cornerRadius: 16) {
+                HStack(spacing: 14) {
+                    Text(emoji).font(.largeTitle)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(title).font(.headline).foregroundStyle(.white)
+                        Text(subtitle).font(.caption).foregroundStyle(.white.opacity(0.75))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.6))
+                }
+                .padding()
+            }
+        }
+        .buttonStyle(TileButtonStyle())
     }
 
     // MARK: Art

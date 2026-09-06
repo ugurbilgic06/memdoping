@@ -95,6 +95,14 @@ struct ProfileView: View {
         .accessibilityElement(children: .combine)
     }
 
+    private func bandLabel(_ band: GameStore.AgeBand) -> LocalizedStringKey {
+        switch band {
+        case .child: "Child"
+        case .teen:  "Teen"
+        case .adult: "Adult"
+        }
+    }
+
     private var difficultyText: String {
         switch store.difficultyState {
         case .eased:    String(localized: "Eased")
@@ -112,6 +120,23 @@ struct ProfileView: View {
                 Toggle("Music", isOn: $store.musicEnabled)
                 Toggle("Sound", isOn: $store.soundEnabled)
                 Toggle("Haptics", isOn: $store.hapticsEnabled)
+
+                Divider().overlay(.white.opacity(0.15))
+                Text("Audience").font(.subheadline.weight(.semibold)).foregroundStyle(.white)
+                HStack(spacing: 8) {
+                    ForEach(GameStore.AgeBand.allCases, id: \.self) { band in
+                        Button { store.setAgeBand(band) } label: {
+                            Text(bandLabel(band))
+                                .font(.caption.weight(.medium))
+                                .frame(maxWidth: .infinity).padding(.vertical, 8)
+                                .background(store.ageBand == band ? Brand.accent : .white.opacity(0.08),
+                                            in: Capsule())
+                                .foregroundStyle(.white)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
                 Text("Reduced motion follows your system accessibility setting.")
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.5))

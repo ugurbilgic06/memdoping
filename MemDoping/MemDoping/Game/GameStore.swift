@@ -86,6 +86,24 @@ final class GameStore {
     /// Whether the player has seen the first-run welcome.
     private(set) var hasOnboarded: Bool = false
 
+    // MARK: Audience (§1 — adapt to each age group)
+
+    enum AgeBand: String, Codable, CaseIterable { case child, teen, adult }
+
+    /// The chosen audience band; nil until picked (treated as neutral).
+    private(set) var ageBand: AgeBand?
+
+    func setAgeBand(_ band: AgeBand) { ageBand = band; save() }
+
+    /// A baseline difficulty shift from the age band: younger = gentler.
+    var ageOffset: Int {
+        switch ageBand {
+        case .child:        return -2
+        case .teen, .none:  return 0
+        case .adult:        return 1
+        }
+    }
+
     // MARK: Adaptive difficulty (§7)
 
     /// A transparent difficulty offset that nudges up on repeated success and
@@ -295,6 +313,7 @@ final class GameStore {
         var retentionHistory: [Bool]?
         var hasOnboarded: Bool?
         var adaptiveOffset: Int?
+        var ageBand: AgeBand?
     }
 
     private func save() {
@@ -310,7 +329,8 @@ final class GameStore {
             reviews: reviews,
             retentionHistory: retentionHistory,
             hasOnboarded: hasOnboarded,
-            adaptiveOffset: adaptiveOffset
+            adaptiveOffset: adaptiveOffset,
+            ageBand: ageBand
         )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: defaultsKey)
@@ -333,6 +353,7 @@ final class GameStore {
         retentionHistory = snapshot.retentionHistory ?? []
         hasOnboarded = snapshot.hasOnboarded ?? false
         adaptiveOffset = snapshot.adaptiveOffset ?? 0
+        ageBand = snapshot.ageBand
     }
 
     // MARK: - Adaptive difficulty application
@@ -342,7 +363,8 @@ final class GameStore {
     /// clamp counts to the available content, so over-shoot is safe. Study time
     /// grows when eased and shrinks when ramped, but never below a floor.
     func adapted(_ level: GameLevel) -> GameLevel {
-        let o = adaptiveOffset
+        // Age band sets the baseline; adaptive performance nudges from there.
+        let o = adaptiveOffset + ageOffset
         guard o != 0 else { return level }
         let stepSign = o > 0 ? 1 : -1
         return level.varying(
