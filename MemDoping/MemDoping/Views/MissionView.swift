@@ -164,6 +164,15 @@ struct MissionView: View {
     @State private var badgesVisible = false
 
     private var summaryPhase: some View {
+        ZStack {
+            if session.passedMastery && !reduceMotion {
+                ConfettiView().allowsHitTesting(false)
+            }
+            summaryContent
+        }
+    }
+
+    private var summaryContent: some View {
         VStack(spacing: 20) {
             Spacer()
             Image(systemName: session.passedMastery ? "star.circle.fill" : "arrow.counterclockwise.circle.fill")
@@ -387,5 +396,52 @@ private struct RecallPhaseView: View {
         .buttonStyle(.plain)
         .disabled(revealed)
         .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.55), value: revealed)
+    }
+}
+
+// MARK: - Level-up celebration
+
+/// A short, dependency-free confetti burst for mastering a level (§4 Sensory
+/// Motivation Engine: "progress reveals and satisfying completion feedback").
+/// Skipped entirely under Reduce Motion by the caller, not just slowed down.
+private struct ConfettiView: View {
+    private struct Piece: Identifiable {
+        let id = UUID()
+        let color: Color
+        let startX: CGFloat
+        let endX: CGFloat
+        let endY: CGFloat
+        let rotation: Double
+        let size: CGFloat
+    }
+
+    @State private var animate = false
+    private let pieces: [Piece] = (0..<24).map { _ in
+        Piece(
+            color: [Brand.accent, Brand.success, Brand.primary, .white].randomElement()!,
+            startX: CGFloat.random(in: -16...16),
+            endX: CGFloat.random(in: -150...150),
+            endY: CGFloat.random(in: 240...460),
+            rotation: Double.random(in: 180...900),
+            size: CGFloat.random(in: 6...11)
+        )
+    }
+
+    var body: some View {
+        ZStack {
+            ForEach(pieces) { piece in
+                Rectangle()
+                    .fill(piece.color)
+                    .frame(width: piece.size, height: piece.size * 0.4)
+                    .rotationEffect(.degrees(animate ? piece.rotation : 0))
+                    .offset(x: animate ? piece.endX : piece.startX, y: animate ? piece.endY : -30)
+                    .opacity(animate ? 0 : 1)
+            }
+        }
+        .onAppear {
+            withAnimation(.easeOut(duration: 1.1)) {
+                animate = true
+            }
+        }
     }
 }
