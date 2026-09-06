@@ -40,6 +40,27 @@ enum LevelMechanic: String, Hashable {
     /// Mix 2-3 themes in one mission; each question first asks the category,
     /// then the answer — never two of the same theme in a row (T06 Interleaving).
     case interleaving
+    /// Pick the plausible "why" for a fact, then recall which reason went with
+    /// which fact (T07 Elaboration — "Neden Böyle?").
+    case elaboration
+}
+
+/// A fact plus the reason behind it, for elaborative interrogation (T07).
+/// Best for familiar, factual material where the player has some background —
+/// its benefit is conditional (Dunlosky et al. 2013 rated it moderate).
+struct WhyFact: Identifiable, Hashable {
+    let id = UUID()
+    let symbol: String
+    let subject: String        // the fact, e.g. "Owls hunt at night"
+    let because: String        // the plausible reason
+    let wrong: [String]        // implausible reasons, for the elaborate step
+}
+
+/// A themed set of why-facts.
+struct WhyDeck: Identifiable, Hashable {
+    let id: String
+    let title: String
+    let facts: [WhyFact]
 }
 
 /// A vivid modifier the player attaches to an item to build a memorable scene
@@ -119,6 +140,8 @@ struct GameLevel: Identifiable, Hashable {
     /// The themes mixed together in an Interleaving level. nil for other
     /// mechanics (which use the single `theme`).
     var interleavedThemes: [MemoryTheme]? = nil
+    /// The fact set an Elaboration level uses. nil for other mechanics.
+    var whyDeck: WhyDeck? = nil
 
     var id: Int { index }
 
@@ -135,6 +158,9 @@ struct GameLevel: Identifiable, Hashable {
             // Recognition recall; scene building enriches encoding but the test
             // is still multiple-choice. A little harder with more distractors.
             return min(0.75, 0.5 + Double(max(0, choiceCount - 2)) * 0.08)
+        case .elaboration:
+            // Reason about a fact, then recognise which reason it was.
+            return min(0.78, 0.55 + Double(max(0, choiceCount - 2)) * 0.08)
         case .chunking:  return 0.80   // reproduce a number from grouped memory
         case .interleaving: return 0.85   // discriminate category, then recall
         case .loci:      return 0.90   // serial reconstruction along a route
@@ -224,6 +250,39 @@ enum SampleContent {
         .init(emoji: "🎈", text: "is floating"),
         .init(emoji: "😱", text: "is screaming")
     ]
+
+    /// Everyday "why" facts — familiar enough that most players have some
+    /// background, which is where elaboration works best (T07).
+    static let whyEveryday = WhyDeck(
+        id: "why-everyday",
+        title: "Everyday Why",
+        facts: [
+            .init(symbol: "🦉", subject: "Owls hunt at night",
+                  because: "their eyes see well in the dark",
+                  wrong: ["they are afraid of the sun", "they like the colour black"]),
+            .init(symbol: "🐫", subject: "Camels cross deserts",
+                  because: "their humps store fat for energy",
+                  wrong: ["they drink lots of coffee", "they dislike shade"]),
+            .init(symbol: "🐝", subject: "Bees visit flowers",
+                  because: "they gather nectar to make honey",
+                  wrong: ["they enjoy the smell", "flowers tell them jokes"]),
+            .init(symbol: "🧊", subject: "Ice floats on water",
+                  because: "it is less dense than liquid water",
+                  wrong: ["it is scared of the bottom", "water only lifts cubes"]),
+            .init(symbol: "🌵", subject: "Cacti have spines, not leaves",
+                  because: "spines lose less water in the heat",
+                  wrong: ["to look a bit scary", "they forgot to grow leaves"]),
+            .init(symbol: "🦇", subject: "Bats fly in the dark",
+                  because: "they use sound to find their way",
+                  wrong: ["the moon guides them home", "they dislike birds"]),
+            .init(symbol: "🥶", subject: "We shiver when cold",
+                  because: "trembling muscles make heat",
+                  wrong: ["our body is dancing", "cold makes us sleepy"]),
+            .init(symbol: "🌙", subject: "The moon changes shape",
+                  because: "sunlight lights different parts as it orbits",
+                  wrong: ["clouds nibble part of it", "it shrinks when tired"])
+        ]
+    )
 
     /// A walk through a familiar home — the starter memory palace.
     static let home = MemoryRoute(
@@ -330,6 +389,16 @@ enum SampleLevels {
             theme: SampleContent.travel,
             mechanic: .loci,
             route: SampleContent.home
+        ),
+        GameLevel(
+            index: 10,
+            title: "Why Is That?",
+            technique: "Elaboration",
+            tip: "Don't just take a fact — ask why it's true. Reasons you build yourself are easier to recall. Works best on things you already know a little about.",
+            itemCount: 5, questionCount: 5, choiceCount: 3, memorizeSeconds: 0,
+            theme: SampleContent.animals,   // unused by this mechanic
+            mechanic: .elaboration,
+            whyDeck: SampleContent.whyEveryday
         )
     ]
 
