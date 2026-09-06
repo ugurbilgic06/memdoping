@@ -100,22 +100,38 @@ struct HomeView: View {
     // MARK: Daily mission
 
     private var dailyMissionCard: some View {
-        Card {
-            HStack(spacing: 14) {
-                Image(systemName: store.isDailyMissionDone ? "checkmark.seal.fill" : "sun.max.fill")
-                    .font(.title)
-                    .foregroundStyle(store.isDailyMissionDone ? Brand.success : Brand.accent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Daily mission")
-                        .font(.headline).foregroundStyle(.white)
-                    Text(store.isDailyMissionDone
-                         ? "Done for today — nice work."
-                         : "Today's memory doping takes just a few minutes.")
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.75))
+        Button {
+            if store.dueReviewCount > 0 { showReview = true }
+            else { activeLevel = store.currentLevel }
+        } label: {
+            Card {
+                HStack(spacing: 14) {
+                    Image(systemName: store.isDailyMissionDone ? "checkmark.seal.fill" : "sun.max.fill")
+                        .font(.title)
+                        .foregroundStyle(store.isDailyMissionDone ? Brand.success : Brand.accent)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Daily mission")
+                            .font(.headline).foregroundStyle(.white)
+                        dailySubtitle
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.75))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
                 }
-                Spacer()
             }
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private var dailySubtitle: some View {
+        if store.isDailyMissionDone {
+            Text("Done for today — one more if you like.")
+        } else if store.dueReviewCount > 0 {
+            Text("Today: refresh \(store.dueReviewCount) due items")
+        } else {
+            Text("Today: Level \(store.currentLevel.index) · \(store.currentLevel.title.localizedContent)")
         }
     }
 
