@@ -106,13 +106,14 @@ struct NumberShapeMissionView: View {
             Spacer()
             // The code as shapes.
             HStack(spacing: 12) {
-                ForEach(Array(session.digits.enumerated()), id: \.offset) { _, d in
+                ForEach(Array(session.digits.enumerated()), id: \.offset) { i, d in
                     VStack(spacing: 4) {
                         Text(session.shape(for: d)).font(.system(size: 46))
                         Text("\(d)").font(.caption.monospacedDigit()).foregroundStyle(Color.primary.opacity(0.5))
                     }
                     .padding(.vertical, 12).padding(.horizontal, 10)
                     .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 14))
+                    .dealIn(i)
                 }
             }
             Spacer()
@@ -143,15 +144,22 @@ struct NumberShapeMissionView: View {
             Text("Type the code back")
                 .font(.title3.weight(.semibold)).foregroundStyle(.primary)
 
-            // Entry slots.
+            // Entry slots — each pops and tints as it fills, so keying feels live.
             HStack(spacing: 10) {
                 ForEach(0..<session.total, id: \.self) { i in
                     let typed = session.entered.indices.contains(i) ? session.entered[i] : nil
+                    let filled = typed != nil
                     Text(typed.map(String.init) ?? "•")
                         .font(.system(size: 30, weight: .bold, design: .rounded).monospacedDigit())
-                        .foregroundStyle(typed == nil ? Color.primary.opacity(0.25) : Color.primary)
+                        .foregroundStyle(filled ? Color.primary : Color.primary.opacity(0.25))
                         .frame(width: 40, height: 52)
-                        .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+                        .background((filled ? Brand.accent.opacity(0.22) : Color.primary.opacity(0.07)),
+                                    in: RoundedRectangle(cornerRadius: 12))
+                        .overlay(RoundedRectangle(cornerRadius: 12)
+                            .stroke(filled ? Brand.accentText.opacity(0.5) : .clear, lineWidth: 1))
+                        .scaleEffect(filled ? 1 : 0.96)
+                        .animation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.5),
+                                   value: filled)
                 }
             }
 
@@ -250,6 +258,7 @@ struct NumberShapeMissionView: View {
                     .padding(.horizontal, 8).padding(.vertical, 6)
                     .background((ok ? Brand.success : Brand.danger).opacity(0.3),
                                 in: RoundedRectangle(cornerRadius: 10))
+                    .dealIn(i)
                 }
             }
         }

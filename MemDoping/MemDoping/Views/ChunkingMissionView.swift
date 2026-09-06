@@ -188,19 +188,30 @@ struct ChunkingMissionView: View {
     private var entryDisplay: some View {
         HStack(spacing: 10) {
             ForEach(Array(session.chunks.enumerated()), id: \.offset) { chunkIndex, chunk in
+                let base = session.chunks.prefix(chunkIndex).reduce(0) { $0 + $1.count }
+                let chunkFilled = session.entered.count >= base + chunk.count
                 HStack(spacing: 2) {
                     ForEach(Array(chunk.enumerated()), id: \.offset) { digitIndex, _ in
-                        let absolute = session.chunks.prefix(chunkIndex).reduce(0) { $0 + $1.count } + digitIndex
+                        let absolute = base + digitIndex
                         let typed = session.entered.indices.contains(absolute) ? session.entered[absolute] : nil
                         Text(typed.map(String.init) ?? "•")
                             .font(.system(size: 30, weight: .bold, design: .rounded).monospacedDigit())
                             .foregroundStyle(typed == nil ? Color.primary.opacity(0.25) : Color.primary)
                             .frame(width: 26)
+                            .scaleEffect(typed != nil ? 1 : 0.94)
+                            .animation(reduceMotion ? nil : .spring(response: 0.26, dampingFraction: 0.5),
+                                       value: typed != nil)
                     }
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 10)
-                .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+                // The whole group lights up once it's complete — the chunk is the unit.
+                .background((chunkFilled ? Brand.accent.opacity(0.22) : Color.primary.opacity(0.07)),
+                            in: RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12)
+                    .stroke(chunkFilled ? Brand.accentText.opacity(0.5) : .clear, lineWidth: 1))
+                .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.6),
+                           value: chunkFilled)
             }
         }
         .frame(maxWidth: .infinity)
@@ -248,7 +259,7 @@ struct ChunkingMissionView: View {
                     .foregroundStyle(.primary)
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(TileButtonStyle())
     }
 
     // MARK: Feedback
@@ -308,6 +319,7 @@ struct ChunkingMissionView: View {
                             (isCorrect ? Brand.success : Brand.danger).opacity(0.3),
                             in: RoundedRectangle(cornerRadius: 10)
                         )
+                        .dealIn(index)
                 }
             }
         }
@@ -343,7 +355,7 @@ struct ChunkingMissionView: View {
     /// they see their own chunks, not the raw digit run.
     private func chunkRow(_ groups: [[Int]], highlight: Bool) -> some View {
         HStack(spacing: 10) {
-            ForEach(Array(groups.enumerated()), id: \.offset) { _, group in
+            ForEach(Array(groups.enumerated()), id: \.offset) { i, group in
                 Text(group.map(String.init).joined())
                     .font(.system(size: 34, weight: .bold, design: .rounded).monospacedDigit())
                     .foregroundStyle(.primary)
@@ -352,6 +364,7 @@ struct ChunkingMissionView: View {
                         (highlight ? Brand.accent.opacity(0.3) : Color.primary.opacity(0.08)),
                         in: RoundedRectangle(cornerRadius: 14)
                     )
+                    .dealIn(i)
             }
         }
         .frame(maxWidth: .infinity)
