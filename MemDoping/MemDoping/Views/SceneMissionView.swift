@@ -19,6 +19,10 @@ struct SceneMissionView: View {
     @State private var outcome: GameStore.SessionOutcome?
     @State private var revealed = false
 
+    // Drag-to-combine state for the build phase.
+    @State private var dragIndex: Int? = nil
+    @State private var dragTranslation: CGSize = .zero
+
     init(level: GameLevel) {
         _session = State(initialValue: SceneSession(level: level))
     }
@@ -84,27 +88,28 @@ struct SceneMissionView: View {
             if let card = session.currentCard {
                 Spacer()
 
-                VStack(spacing: 8) {
-                    Text(card.pair.symbol).font(.system(size: 72))
-                    Text(card.pair.word.localizedContent)
-                        .font(.largeTitle.bold()).foregroundStyle(.white)
+                // The item — the drop target. The chosen twist lands on it.
+                ZStack(alignment: .topTrailing) {
+                    Text(card.pair.symbol).font(.system(size: 92))
+                    if let chosen = card.chosen {
+                        Text(chosen.emoji).font(.system(size: 44))
+                            .offset(x: 14, y: -6)
+                            .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
+                    }
                 }
-                .id(card.id)
+                Text(card.pair.word.localizedContent)
+                    .font(.largeTitle.bold()).foregroundStyle(.white)
+                    .id(card.id)
 
                 if let chosen = card.chosen {
-                    // The scene the player just made.
-                    HStack(spacing: 8) {
-                        Text(chosen.emoji).font(.title)
-                        Text("\(card.pair.word.localizedContent) \(chosen.text.localizedContent)")
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding(.vertical, 14).padding(.horizontal, 18)
-                    .frame(maxWidth: .infinity)
-                    .background(Brand.accent.opacity(0.2), in: RoundedRectangle(cornerRadius: 16))
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.accent, lineWidth: 1))
-                    .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
+                    Text("\(card.pair.word.localizedContent) \(chosen.text.localizedContent)")
+                        .font(.title3.weight(.semibold)).foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.vertical, 14).padding(.horizontal, 18)
+                        .frame(maxWidth: .infinity)
+                        .background(Brand.accent.opacity(0.2), in: RoundedRectangle(cornerRadius: 16))
+                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.accent, lineWidth: 1))
+                        .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
 
                     Spacer()
                     PrimaryButton(
@@ -114,11 +119,12 @@ struct SceneMissionView: View {
                         session.advanceAfterChoice()
                     }
                 } else {
-                    Text("Pick a twist and picture it:")
+                    Text("Drag a twist up onto the \(card.pair.word.localizedContent):")
                         .font(.subheadline).foregroundStyle(.white.opacity(0.75))
+                        .multilineTextAlignment(.center)
                     VStack(spacing: 10) {
-                        ForEach(card.options) { modifier in
-                            modifierButton(card: card, modifier: modifier)
+                        ForEach(Array(card.options.enumerated()), id: \.element.id) { i, modifier in
+                            modifierChip(card: card, modifier: modifier, index: i)
                         }
                     }
                     Spacer()
@@ -128,24 +134,39 @@ struct SceneMissionView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: session.currentCard?.chosen)
     }
 
-    private func modifierButton(card: SceneSession.SceneCard, modifier: SceneModifier) -> some View {
-        Button {
-            if store.soundEnabled { SoundPlayer.shared.play(.tap) }
-            if store.hapticsEnabled { HapticsPlayer.shared.tap() }
-            session.choose(modifier)
-        } label: {
-            GameTile(base: session.level.tileBase, cornerRadius: 14) {
-                HStack(spacing: 12) {
-                    Text(modifier.emoji).font(.title2)
-                    Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
-                        .foregroundStyle(.white).fontWeight(.medium)
-                    Spacer()
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
+    /// A draggable twist chip — drag it up onto the item to build the scene.
+    private func modifierChip(card: SceneSession.SceneCard, modifier: SceneModifier, index: Int) -> some View {
+        GameTile(base: session.level.tileBase, cornerRadius: 14) {
+            HStack(spacing: 12) {
+                Text(modifier.emoji).font(.title2)
+                Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
+                    .foregroundStyle(.white).fontWeight(.medium)
+                Spacer()
+                Image(systemName: "hand.draw").foregroundStyle(.white.opacity(0.5))
             }
+            .padding()
+            .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.plain)
+        .offset(dragIndex == index ? dragTranslation : .zero)
+        .zIndex(dragIndex == index ? 1 : 0)
+        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.7),
+                   value: dragIndex == index ? dragTranslation : .zero)
+        .gesture(
+            DragGesture()
+                .onChanged { g in dragIndex = index; dragTranslation = g.translation }
+                .onEnded { g in
+                    // Dragged far enough up = dropped onto the item.
+                    if g.translation.height < -120 {
+                        session.choose(modifier)
+                        if store.soundEnabled { SoundPlayer.shared.play(.pop) }
+                        if store.hapticsEnabled { HapticsPlayer.shared.notify(success: true) }
+                    } else if store.hapticsEnabled {
+                        HapticsPlayer.shared.tap()
+                    }
+                    dragIndex = nil
+                    dragTranslation = .zero
+                }
+        )
     }
 
     // MARK: Recall — multiple choice
