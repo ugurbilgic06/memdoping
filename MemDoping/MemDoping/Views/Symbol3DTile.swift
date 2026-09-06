@@ -41,13 +41,25 @@ struct Symbol3DTile: View {
         let scene = SCNScene()
         scene.background.contents = cg(0.13, 0.10, 0.27)
 
-        // The tile body.
+        // Image-based lighting so the glossy tile has something to reflect.
+        let env = environmentImage()
+        if let env {
+            scene.lightingEnvironment.contents = env
+            scene.lightingEnvironment.intensity = 1.3
+        }
+
+        // The tile body — glossy, lightly reflective, with a fresnel edge sheen.
         let box = SCNBox(width: 2.4, height: 2.4, length: 0.5, chamferRadius: 0.2)
         let mat = SCNMaterial()
         mat.lightingModel = .physicallyBased
         mat.diffuse.contents = cgColor(tint.brightness(1.15))
-        mat.metalness.contents = 0.2
-        mat.roughness.contents = 0.4
+        mat.metalness.contents = 0.5
+        mat.roughness.contents = 0.28
+        if let env {
+            mat.reflective.contents = env
+            mat.reflective.intensity = 0.45
+        }
+        mat.fresnelExponent = 1.6
         box.materials = [mat]
         let tile = SCNNode(geometry: box)
 
@@ -129,6 +141,25 @@ struct Symbol3DTile: View {
                                           attributes: attrs, context: nil)
             str.draw(at: CGPoint(x: (side - bounds.width) / 2,
                                  y: (side - bounds.height) / 2), withAttributes: attrs)
+        }
+        #else
+        return nil
+        #endif
+    }
+
+    /// A cheap gradient environment map — bright top to dark bottom gives the
+    /// glossy tile a believable window-like reflection without an HDR asset.
+    private static func environmentImage() -> Any? {
+        #if canImport(UIKit)
+        let size = CGSize(width: 256, height: 256)
+        return UIGraphicsImageRenderer(size: size).image { ctx in
+            let colors = [UIColor(white: 0.98, alpha: 1).cgColor,
+                          UIColor(red: 0.35, green: 0.34, blue: 0.55, alpha: 1).cgColor,
+                          UIColor(white: 0.05, alpha: 1).cgColor]
+            let grad = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                                  colors: colors as CFArray, locations: [0, 0.55, 1])!
+            ctx.cgContext.drawLinearGradient(
+                grad, start: .zero, end: CGPoint(x: 0, y: size.height), options: [])
         }
         #else
         return nil
