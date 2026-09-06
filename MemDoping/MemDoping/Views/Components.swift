@@ -169,7 +169,7 @@ extension GameLevel {
         case ..<4:    return Color(hue: 0.68, saturation: 0.74, brightness: 0.68) // vivid blue-violet
         case 4..<7:   return Color(hue: 0.46, saturation: 0.72, brightness: 0.62) // vivid teal
         case 7..<10:  return Color(hue: 0.92, saturation: 0.64, brightness: 0.74) // vivid pink
-        default:      return Color(hue: 0.09, saturation: 0.88, brightness: 0.78) // vivid amber
+        default:      return Color(hue: 0.08, saturation: 0.92, brightness: 0.66) // vivid amber (white-readable)
         }
     }
 }
