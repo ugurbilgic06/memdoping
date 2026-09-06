@@ -18,9 +18,11 @@ struct LociMissionView: View {
     @State private var outcome: GameStore.SessionOutcome?
     @State private var revealed = false
 
-    // Drag-to-combine state for the place phase: the item starts below the
-    // location and the player drags it onto the spot to "see them together".
-    private static let itemStart = CGSize(width: 0, height: 120)
+    // Drag-to-combine state for the place phase: the location sits up top and
+    // the item waits in a dock below (clearly apart at first); the player drags
+    // the item up onto the location to "see them together".
+    private static let locationOffset = CGSize(width: 0, height: -70)
+    private static let itemStart = CGSize(width: 0, height: 150)
     @State private var itemOffset = LociMissionView.itemStart
     @State private var dragStart = LociMissionView.itemStart
 
@@ -91,16 +93,31 @@ struct LociMissionView: View {
                     .font(.subheadline).foregroundStyle(.white.opacity(0.8))
                     .multilineTextAlignment(.center)
 
-                // The stage: the location, with the item you drag onto it.
+                // The stage: the location up top (with a target ring), and the
+                // item waiting in a dock below — drag it up onto the location.
                 ZStack {
-                    VStack(spacing: 8) {
-                        Text(p.stop.icon).font(.system(size: 120))
+                    // Target ring at the location.
+                    Circle()
+                        .strokeBorder(isItemOnSpot ? Brand.accent : .white.opacity(0.18),
+                                      style: StrokeStyle(lineWidth: 2, dash: [7]))
+                        .frame(width: 150, height: 150)
+                        .offset(LociMissionView.locationOffset)
+
+                    VStack(spacing: 6) {
+                        Text(p.stop.icon).font(.system(size: 104))
                         Text(p.stop.name.localizedContent)
                             .font(.headline).foregroundStyle(.white.opacity(0.85))
                     }
+                    .offset(LociMissionView.locationOffset)
+
+                    // The dock the item starts in.
+                    Circle()
+                        .fill(.white.opacity(0.05))
+                        .frame(width: 88, height: 88)
+                        .offset(LociMissionView.itemStart)
 
                     Text(p.item.symbol)
-                        .font(.system(size: 62))
+                        .font(.system(size: 60))
                         .shadow(color: .black.opacity(0.45), radius: 7, y: 4)
                         .scaleEffect(isItemOnSpot ? 1.12 : 1)
                         .offset(itemOffset)
@@ -111,16 +128,18 @@ struct LociMissionView: View {
                                                         height: dragStart.height + g.translation.height)
                                 }
                                 .onEnded { _ in
+                                    // Snap onto the location if it landed on the ring.
+                                    if isItemOnSpot { itemOffset = LociMissionView.locationOffset }
                                     dragStart = itemOffset
                                     if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                                     if store.soundEnabled { SoundPlayer.shared.play(.pop) }
                                 }
                         )
                         .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.6),
-                                   value: isItemOnSpot)
+                                   value: itemOffset)
                         .accessibilityLabel(Text(p.item.word.localizedContent))
                 }
-                .frame(maxWidth: .infinity, minHeight: 300)
+                .frame(maxWidth: .infinity, minHeight: 340)
             }
 
             PrimaryButton(title: "Leave it & walk on", systemImage: "arrow.right") {
@@ -132,9 +151,11 @@ struct LociMissionView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: session.placeIndex)
     }
 
-    /// Whether the dragged item is resting over the location (near the centre).
+    /// Whether the dragged item is resting over the location's target ring.
     private var isItemOnSpot: Bool {
-        abs(itemOffset.width) < 60 && abs(itemOffset.height) < 60
+        let dx = itemOffset.width - LociMissionView.locationOffset.width
+        let dy = itemOffset.height - LociMissionView.locationOffset.height
+        return dx * dx + dy * dy < 75 * 75
     }
 
     private func resetItem() {
