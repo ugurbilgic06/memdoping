@@ -23,7 +23,7 @@ struct ChunkingMissionView: View {
 
     var body: some View {
         ZStack {
-            BrandBackground()
+            BrandBackground(tint: session.level.tileBase)
 
             Group {
                 switch session.phase {

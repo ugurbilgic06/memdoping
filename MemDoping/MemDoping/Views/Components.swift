@@ -49,13 +49,25 @@ enum Brand {
     }
 }
 
-/// Full-screen brand background with a soft top glow for depth.
+/// Full-screen brand background with a soft top glow for depth. Pass a `tint`
+/// (e.g. the level's motif colour) to shift the whole backdrop per level while
+/// staying dark and readable.
 struct BrandBackground: View {
+    var tint: Color? = nil
+
+    private var gradient: LinearGradient {
+        guard let tint else { return Brand.backgroundGradient }
+        return LinearGradient(
+            colors: [Color(red: 0.06, green: 0.05, blue: 0.14),
+                     tint.brightness(0.42)],
+            startPoint: .top, endPoint: .bottom)
+    }
+
     var body: some View {
         ZStack {
-            Brand.backgroundGradient
+            gradient
             RadialGradient(
-                colors: [Brand.primary.opacity(0.45), .clear],
+                colors: [(tint ?? Brand.primary).brightness(1.2).opacity(0.5), .clear],
                 center: .init(x: 0.5, y: 0.0), startRadius: 0, endRadius: 520
             )
             .blendMode(.screen)
