@@ -320,6 +320,32 @@ extension View {
     func doorReveal() -> some View { modifier(DoorReveal()) }
 }
 
+/// A staggered "deal-in" entrance — tiles rise, scale up, and fade in one after
+/// another, like pieces being dealt. Give each its position `index`. Reset by
+/// changing the container's `.id` (e.g. per question). Still under Reduce Motion.
+struct DealIn: ViewModifier {
+    let index: Int
+    @State private var shown = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(shown || reduceMotion ? 1 : 0)
+            .offset(y: shown || reduceMotion ? 0 : 20)
+            .scaleEffect(shown || reduceMotion ? 1 : 0.92, anchor: .top)
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.spring(response: 0.42, dampingFraction: 0.72)
+                    .delay(Double(index) * 0.06)) { shown = true }
+            }
+    }
+}
+
+extension View {
+    /// Deals this view in with a staggered rise/scale by its `index`.
+    func dealIn(_ index: Int) -> some View { modifier(DealIn(index: index)) }
+}
+
 /// A subtle, endless vertical bob to give idle tiles a little life. Phase-offset
 /// by `seed` so a grid of tiles drifts out of sync. Still under Reduce Motion.
 struct GentleFloat: ViewModifier {

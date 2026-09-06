@@ -178,8 +178,8 @@ struct ElaborationMissionView: View {
                 }
 
                 VStack(spacing: 10) {
-                    ForEach(q.options, id: \.self) { option in
-                        answerButton(option, question: q)
+                    ForEach(Array(q.options.enumerated()), id: \.element) { i, option in
+                        answerButton(option, question: q).dealIn(i)
                     }
                 }
 

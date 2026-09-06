@@ -81,8 +81,8 @@ struct InterleavingMissionView: View {
                     Text("Which category?")
                         .font(.title3.weight(.semibold)).foregroundStyle(.primary)
                     VStack(spacing: 12) {
-                        ForEach(q.categoryOptions) { theme in
-                            categoryButton(theme)
+                        ForEach(Array(q.categoryOptions.enumerated()), id: \.element.id) { i, theme in
+                            categoryButton(theme).dealIn(i)
                         }
                     }
                 } else {
@@ -90,8 +90,8 @@ struct InterleavingMissionView: View {
                     Text("Which word?")
                         .font(.title3.weight(.semibold)).foregroundStyle(.primary)
                     VStack(spacing: 12) {
-                        ForEach(q.answerOptions, id: \.self) { option in
-                            answerButton(option, question: q)
+                        ForEach(Array(q.answerOptions.enumerated()), id: \.element) { i, option in
+                            answerButton(option, question: q).dealIn(i)
                         }
                     }
                 }
