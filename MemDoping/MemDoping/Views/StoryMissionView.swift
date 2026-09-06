@@ -182,7 +182,7 @@ struct StoryMissionView: View {
                 ForEach(session.tray) { pair in
                     let used = session.isUsed(pair)
                     Button {
-                        if store.soundEnabled { SoundPlayer.shared.play(.tap) }
+                        if store.soundEnabled { SoundPlayer.shared.play(.pop) }
                         if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                         session.placeNext(pair)
                     } label: {
@@ -193,7 +193,7 @@ struct StoryMissionView: View {
                         }
                         .opacity(used ? 0.3 : 1)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(TileButtonStyle())
                     .disabled(used)
                 }
             }
