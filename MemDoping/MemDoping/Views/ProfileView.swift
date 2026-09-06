@@ -109,6 +109,7 @@ struct ProfileView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Comfort")
                     .font(.headline).foregroundStyle(.white)
+                Toggle("Music", isOn: $store.musicEnabled)
                 Toggle("Sound", isOn: $store.soundEnabled)
                 Toggle("Haptics", isOn: $store.hapticsEnabled)
                 Text("Reduced motion follows your system accessibility setting.")

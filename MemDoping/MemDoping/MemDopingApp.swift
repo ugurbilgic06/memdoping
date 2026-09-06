@@ -16,6 +16,7 @@ struct MemDopingApp: App {
             ContentView()
                 .environment(store)
                 .preferredColorScheme(.dark)
+                .onAppear { if store.musicEnabled { MusicPlayer.shared.start() } }
         }
     }
 }

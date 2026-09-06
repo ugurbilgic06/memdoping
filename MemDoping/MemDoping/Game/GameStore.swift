@@ -81,6 +81,7 @@ final class GameStore {
 
     var soundEnabled: Bool = true { didSet { save() } }
     var hapticsEnabled: Bool = true { didSet { save() } }
+    var musicEnabled: Bool = true { didSet { save(); MusicPlayer.shared.setEnabled(musicEnabled) } }
 
     /// Whether the player has seen the first-run welcome.
     private(set) var hasOnboarded: Bool = false
@@ -289,6 +290,7 @@ final class GameStore {
         var lastDailyMissionDate: Date?
         var soundEnabled: Bool
         var hapticsEnabled: Bool
+        var musicEnabled: Bool?
         var reviews: [String: ReviewRecord]?
         var retentionHistory: [Bool]?
         var hasOnboarded: Bool?
@@ -304,6 +306,7 @@ final class GameStore {
             lastDailyMissionDate: lastDailyMissionDate,
             soundEnabled: soundEnabled,
             hapticsEnabled: hapticsEnabled,
+            musicEnabled: musicEnabled,
             reviews: reviews,
             retentionHistory: retentionHistory,
             hasOnboarded: hasOnboarded,
@@ -325,6 +328,7 @@ final class GameStore {
         lastDailyMissionDate = snapshot.lastDailyMissionDate
         soundEnabled = snapshot.soundEnabled
         hapticsEnabled = snapshot.hapticsEnabled
+        musicEnabled = snapshot.musicEnabled ?? true
         reviews = snapshot.reviews ?? [:]
         retentionHistory = snapshot.retentionHistory ?? []
         hasOnboarded = snapshot.hasOnboarded ?? false
