@@ -43,7 +43,7 @@ struct HomeView: View {
                     Text("MemDoping")
                         .font(.largeTitle.bold())
                         .foregroundStyle(.white)
-                    Text("Hafıza Dopingi · Play, Learn, Remember")
+                    Text("Memory Doping · Play, Learn, Remember")
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.7))
                 }
