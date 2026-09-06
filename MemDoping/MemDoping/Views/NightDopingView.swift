@@ -258,6 +258,7 @@ struct NightBackground: View {
             }
         }
         .ignoresSafeArea()
+        .accessibilityHidden(true)
     }
 }
 

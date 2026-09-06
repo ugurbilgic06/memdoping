@@ -61,6 +61,7 @@ struct BrandBackground: View {
             .blendMode(.screen)
         }
         .ignoresSafeArea()
+        .accessibilityHidden(true)
     }
 }
 
@@ -132,6 +133,7 @@ struct StatChip: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
         }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -266,6 +268,7 @@ struct SparkBurst: View {
         }
         .onAppear { withAnimation(.easeOut(duration: 0.55)) { go = true } }
         .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 

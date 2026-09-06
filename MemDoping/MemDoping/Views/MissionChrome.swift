@@ -60,6 +60,7 @@ struct MissionIntro: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                    .accessibilityElement(children: .combine)
                 }
             }
 
@@ -222,5 +223,6 @@ struct ConfettiView: View {
                 animate = true
             }
         }
+        .accessibilityHidden(true)
     }
 }
