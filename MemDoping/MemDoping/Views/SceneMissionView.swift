@@ -157,9 +157,7 @@ struct SceneMissionView: View {
                 .onEnded { g in
                     // Dragged far enough up = dropped onto the item.
                     if g.translation.height < -120 {
-                        session.choose(modifier)
-                        if store.soundEnabled { SoundPlayer.shared.play(.pop) }
-                        if store.hapticsEnabled { HapticsPlayer.shared.notify(success: true) }
+                        chooseModifier(modifier)
                     } else if store.hapticsEnabled {
                         HapticsPlayer.shared.tap()
                     }
@@ -167,6 +165,15 @@ struct SceneMissionView: View {
                     dragTranslation = .zero
                 }
         )
+        .accessibilityHint(Text("Double-tap to add this twist"))
+        .accessibilityAction { chooseModifier(modifier) }
+    }
+
+    /// Apply a twist to the current item (shared by drag and VoiceOver action).
+    private func chooseModifier(_ modifier: SceneModifier) {
+        session.choose(modifier)
+        if store.soundEnabled { SoundPlayer.shared.play(.pop) }
+        if store.hapticsEnabled { HapticsPlayer.shared.notify(success: true) }
     }
 
     // MARK: Recall — multiple choice

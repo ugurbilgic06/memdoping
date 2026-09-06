@@ -241,6 +241,7 @@ struct ChunkingMissionView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(session.entered.isEmpty)
+                .accessibilityLabel(Text("Delete"))
             }
         }
     }

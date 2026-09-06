@@ -188,6 +188,7 @@ struct NumberShapeMissionView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(session.entered.isEmpty)
+                .accessibilityLabel(Text("Delete"))
             }
         }
     }
@@ -209,6 +210,8 @@ struct NumberShapeMissionView: View {
             }
         }
         .buttonStyle(TileButtonStyle())
+        .accessibilityLabel(Text("\(digit)"))
+        .accessibilityHint(Text("Enter digit"))
     }
 
     // MARK: Feedback

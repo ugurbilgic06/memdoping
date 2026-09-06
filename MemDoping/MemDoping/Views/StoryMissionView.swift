@@ -123,6 +123,14 @@ struct StoryMissionView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: session.currentLink?.chosen)
     }
 
+    /// Place the given item into the next slot (shared by drag and the
+    /// VoiceOver tap action).
+    private func placeInOrder(_ pair: MemoryPair) {
+        session.placeNext(pair)
+        if store.soundEnabled { SoundPlayer.shared.play(.pop) }
+        if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+    }
+
     private func itemChip(_ pair: MemoryPair) -> some View {
         VStack(spacing: 4) {
             Text(pair.symbol).font(.system(size: 44))
@@ -201,13 +209,17 @@ struct StoryMissionView: View {
                             }
                             .onEnded { g in
                                 if !used, g.translation.height < -100 {
-                                    session.placeNext(pair)
-                                    if store.soundEnabled { SoundPlayer.shared.play(.pop) }
-                                    if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+                                    placeInOrder(pair)
                                 }
                                 dragId = nil; dragOffset = .zero
                             }
                     )
+                    .accessibilityElement()
+                    .accessibilityLabel(Text(pair.word.localizedContent))
+                    .accessibilityValue(Text(used ? "placed" : "in tray"))
+                    .accessibilityHint(Text("Double-tap to place next in order"))
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityAction { if !used { placeInOrder(pair) } }
                 }
             }
 

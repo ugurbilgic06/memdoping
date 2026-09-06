@@ -224,6 +224,8 @@ struct LociMissionView: View {
                 .buttonStyle(TileButtonStyle())
                 .disabled(revealed || used)
                 .dealIn(i)
+                .accessibilityLabel(Text(item.word.localizedContent))
+                .accessibilityHint(Text("Leave this at the stop"))
             }
         }
     }

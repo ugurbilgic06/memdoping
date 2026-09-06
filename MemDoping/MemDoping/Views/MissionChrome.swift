@@ -32,8 +32,18 @@ struct MissionIntro: View {
     let onStart: () -> Void
 
     var body: some View {
+        // Pin the Start button; let the briefing scroll so large Dynamic Type
+        // sizes never push the call to action off-screen.
+        VStack(spacing: 16) {
+            ScrollView {
+                briefing
+            }
+            PrimaryButton(title: "Start", systemImage: "play.fill", action: onStart)
+        }
+    }
+
+    private var briefing: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Spacer()
             Text("Level \(level.index)")
                 .font(.subheadline.weight(.bold))
                 .foregroundStyle(Brand.accentText)
@@ -46,9 +56,11 @@ struct MissionIntro: View {
                     Label(level.technique.localizedContent, systemImage: "brain.head.profile")
                         .font(.headline)
                         .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(level.techniqueExplanation)
                         .font(.subheadline)
                         .foregroundStyle(Color.primary.opacity(0.85))
+                        .fixedSize(horizontal: false, vertical: true)
 
                     // The scientific reason — richer detail for teens/adults;
                     // skipped for the child band, where it isn't needed.
@@ -60,6 +72,7 @@ struct MissionIntro: View {
                         } icon: {
                             Image(systemName: "flask.fill").foregroundStyle(Brand.primary)
                         }
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 2)
                     }
 
@@ -70,6 +83,7 @@ struct MissionIntro: View {
                     } icon: {
                         Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                     }
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 2)
                 }
             }
@@ -88,12 +102,12 @@ struct MissionIntro: View {
                 }
             }
 
-            Spacer()
             Text("Sample content — a prototype mission, not final curriculum.")
                 .font(.caption2)
                 .foregroundStyle(Color.primary.opacity(0.5))
-            PrimaryButton(title: "Start", systemImage: "play.fill", action: onStart)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 8)
     }
 }
 
