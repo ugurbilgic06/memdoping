@@ -100,12 +100,9 @@ struct OnboardingView: View {
                     .padding(.horizontal, 28)
             }
             VStack(spacing: 12) {
-                ageChoice(.child, "Child", "🧒", "Gentle pace, more time",
-                          Color(hue: 0.38, saturation: 0.55, brightness: 0.86)).dealIn(0)
-                ageChoice(.teen, "Teen", "🧑", "Balanced",
-                          Color(hue: 0.57, saturation: 0.55, brightness: 0.88)).dealIn(1)
-                ageChoice(.adult, "Adult", "🧑‍💼", "A little more challenge",
-                          Color(hue: 0.50, saturation: 0.58, brightness: 0.84)).dealIn(2)
+                ageChoice(.child, "Child", "🧒", "Gentle pace, more time", seed: 10).dealIn(0)
+                ageChoice(.teen, "Teen", "🧑‍🎓", "Balanced", seed: 3).dealIn(1)
+                ageChoice(.adult, "Adult", "🧑‍💼", "A little more challenge", seed: 4).dealIn(2)
             }
             .padding(.horizontal, 24)
             Spacer()
@@ -114,23 +111,25 @@ struct OnboardingView: View {
 
     private func ageChoice(_ band: GameStore.AgeBand, _ title: LocalizedStringKey,
                            _ emoji: String, _ subtitle: LocalizedStringKey,
-                           _ base: Color) -> some View {
+                           seed: Int) -> some View {
         Button {
             store.setAgeBand(band)
             store.completeOnboarding()
         } label: {
-            GameTile(base: base, cornerRadius: 16) {
-                HStack(spacing: 14) {
-                    Text(emoji).font(.largeTitle)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(title).font(.headline).foregroundStyle(.primary)
-                        Text(subtitle).font(.caption).foregroundStyle(Color.primary.opacity(0.75))
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.6))
+            HStack(spacing: 14) {
+                SymbolBadge(symbol: emoji, seed: seed, size: 56)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).font(.headline).foregroundStyle(.primary)
+                    Text(subtitle).font(.caption).foregroundStyle(Color.primary.opacity(0.75))
                 }
-                .padding()
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.6))
             }
+            .padding()
+            .background(Color.white.opacity(0.6),
+                        in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
         }
         .buttonStyle(TileButtonStyle())
     }
