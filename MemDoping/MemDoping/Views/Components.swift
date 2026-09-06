@@ -10,15 +10,15 @@ import SwiftUI
 
 /// MemDoping brand palette.
 enum Brand {
-    static let primary = Color(red: 0.36, green: 0.24, blue: 0.86)   // indigo
-    static let accent  = Color(red: 0.98, green: 0.53, blue: 0.24)   // energetic orange
-    static let success = Color(red: 0.16, green: 0.68, blue: 0.45)
-    static let danger  = Color(red: 0.86, green: 0.30, blue: 0.34)
+    static let primary = Color(red: 0.49, green: 0.34, blue: 1.0)    // luminous violet
+    static let accent  = Color(red: 1.0,  green: 0.58, blue: 0.16)   // luminous orange
+    static let success = Color(red: 0.20, green: 0.85, blue: 0.52)   // luminous green
+    static let danger  = Color(red: 1.0,  green: 0.34, blue: 0.46)   // luminous rose
 
     static var backgroundGradient: LinearGradient {
         LinearGradient(
-            colors: [Color(red: 0.10, green: 0.08, blue: 0.24),
-                     Color(red: 0.17, green: 0.12, blue: 0.36)],
+            colors: [Color(red: 0.08, green: 0.06, blue: 0.22),
+                     Color(red: 0.20, green: 0.13, blue: 0.42)],
             startPoint: .top, endPoint: .bottom
         )
     }
@@ -166,10 +166,10 @@ extension GameLevel {
     /// Grouped into four colour tiers across the level range.
     var tileBase: Color {
         switch index {
-        case ..<4:    return Color(hue: 0.72, saturation: 0.38, brightness: 0.30) // indigo
-        case 4..<7:   return Color(hue: 0.50, saturation: 0.45, brightness: 0.30) // teal
-        case 7..<10:  return Color(hue: 0.83, saturation: 0.40, brightness: 0.33) // magenta
-        default:      return Color(hue: 0.09, saturation: 0.55, brightness: 0.34) // amber
+        case ..<4:    return Color(hue: 0.68, saturation: 0.74, brightness: 0.68) // vivid blue-violet
+        case 4..<7:   return Color(hue: 0.46, saturation: 0.72, brightness: 0.62) // vivid teal
+        case 7..<10:  return Color(hue: 0.92, saturation: 0.64, brightness: 0.74) // vivid pink
+        default:      return Color(hue: 0.09, saturation: 0.88, brightness: 0.78) // vivid amber
         }
     }
 }
@@ -201,7 +201,7 @@ struct GameTile<Content: View>: View {
             // Inner top sheen.
             .overlay(alignment: .top) {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(LinearGradient(colors: [.white.opacity(0.22), .clear],
+                    .fill(LinearGradient(colors: [.white.opacity(0.30), .clear],
                                          startPoint: .top, endPoint: .center))
                     .padding(1.5)
                     .allowsHitTesting(false)
