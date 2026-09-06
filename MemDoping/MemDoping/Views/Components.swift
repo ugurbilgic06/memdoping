@@ -22,16 +22,67 @@ enum Brand {
             startPoint: .top, endPoint: .bottom
         )
     }
-}
 
-/// Full-screen brand background.
-struct BrandBackground: View {
-    var body: some View {
-        Brand.backgroundGradient.ignoresSafeArea()
+    /// A top-lit glossy fill for a solid colour — gives buttons and tiles a
+    /// rounded, dimensional look (matches the app icon's style).
+    static func gloss(_ color: Color) -> LinearGradient {
+        LinearGradient(
+            colors: [color.opacity(1.0), color.opacity(0.78)],
+            startPoint: .top, endPoint: .bottom
+        )
+    }
+
+    /// A subtle top-lit fill for translucent surfaces (cards, chips, tiles).
+    static var surfaceGloss: LinearGradient {
+        LinearGradient(
+            colors: [.white.opacity(0.14), .white.opacity(0.05)],
+            startPoint: .top, endPoint: .bottom
+        )
+    }
+
+    /// A soft top highlight stroke for the lit edge of a rounded surface.
+    static var edgeHighlight: LinearGradient {
+        LinearGradient(
+            colors: [.white.opacity(0.35), .white.opacity(0.05)],
+            startPoint: .top, endPoint: .bottom
+        )
     }
 }
 
-/// A large primary call-to-action button.
+/// Full-screen brand background with a soft top glow for depth.
+struct BrandBackground: View {
+    var body: some View {
+        ZStack {
+            Brand.backgroundGradient
+            RadialGradient(
+                colors: [Brand.primary.opacity(0.45), .clear],
+                center: .init(x: 0.5, y: 0.0), startRadius: 0, endRadius: 520
+            )
+            .blendMode(.screen)
+        }
+        .ignoresSafeArea()
+    }
+}
+
+/// A dimensional rounded tile surface used across game elements.
+struct GlossyTile<Content: View>: View {
+    var fill: LinearGradient = Brand.surfaceGloss
+    var cornerRadius: CGFloat = 16
+    var strokeColor: Color = .white
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        content
+            .background(fill, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(Brand.edgeHighlight, lineWidth: 1)
+            )
+            .shadow(color: .black.opacity(0.28), radius: 8, x: 0, y: 5)
+    }
+}
+
+/// A large primary call-to-action button with a glossy, raised look.
 struct PrimaryButton: View {
     let title: LocalizedStringKey
     var systemImage: String? = nil
@@ -46,8 +97,13 @@ struct PrimaryButton: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(tint, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Brand.gloss(tint), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(Brand.edgeHighlight, lineWidth: 1)
+            )
             .foregroundStyle(.white)
+            .shadow(color: tint.opacity(0.45), radius: 12, x: 0, y: 6)
         }
         .buttonStyle(.plain)
     }
@@ -61,32 +117,34 @@ struct StatChip: View {
     var tint: Color = .white
 
     var body: some View {
-        VStack(spacing: 4) {
-            Image(systemName: systemImage)
-                .font(.title3)
-                .foregroundStyle(tint)
-            Text(value)
-                .font(.headline.monospacedDigit())
-                .foregroundStyle(.white)
-            Text(title)
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(0.7))
+        GlossyTile(cornerRadius: 14) {
+            VStack(spacing: 4) {
+                Image(systemName: systemImage)
+                    .font(.title3)
+                    .foregroundStyle(tint)
+                Text(value)
+                    .font(.headline.monospacedDigit())
+                    .foregroundStyle(.white)
+                Text(title)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
     }
 }
 
-/// A rounded translucent card container.
+/// A rounded, dimensional card container.
 struct Card<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        content
-            .padding(18)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.white.opacity(0.07), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        GlossyTile(cornerRadius: 20) {
+            content
+                .padding(18)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 

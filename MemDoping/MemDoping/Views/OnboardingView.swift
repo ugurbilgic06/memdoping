@@ -88,12 +88,7 @@ struct OnboardingView: View {
     // MARK: Art
 
     private var brandArt: some View {
-        ZStack {
-            Circle().fill(Brand.primary.opacity(0.35)).frame(width: 150, height: 150)
-            Image(systemName: "brain.head.profile")
-                .font(.system(size: 72))
-                .foregroundStyle(Brand.accent)
-        }
+        Hero3DView(size: 200)
     }
 
     private var loopArt: some View {
