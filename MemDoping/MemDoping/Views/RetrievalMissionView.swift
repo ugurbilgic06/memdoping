@@ -89,14 +89,15 @@ struct RetrievalMissionView: View {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     ForEach(session.studyPairs) { pair in
-                        VStack(spacing: 8) {
-                            Text(pair.symbol).font(.system(size: 46))
-                            Text(pair.word.localizedContent)
-                                .font(.headline).foregroundStyle(.white)
+                        GameTile {
+                            VStack(spacing: 8) {
+                                Text(pair.symbol).font(.system(size: 46))
+                                Text(pair.word.localizedContent)
+                                    .font(.headline).foregroundStyle(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 20)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 20)
-                        .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
                     }
                 }
             }

@@ -151,10 +151,10 @@ struct InterleavingMissionView: View {
     private func answerButton(_ option: String, question q: InterleavingSession.Question) -> some View {
         let isChosen = q.chosenAnswer == option
         let isCorrectAnswer = option == q.pair.word
-        var fill: Color = .white.opacity(0.08)
+        var base = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
         if revealed {
-            if isCorrectAnswer { fill = Brand.success.opacity(0.35) }
-            else if isChosen { fill = Brand.danger.opacity(0.35) }
+            if isCorrectAnswer { base = Brand.success }
+            else if isChosen { base = Brand.danger }
         }
         return Button {
             guard !revealed else { return }
@@ -163,18 +163,18 @@ struct InterleavingMissionView: View {
             if store.soundEnabled { SoundPlayer.shared.play(isCorrectAnswer ? .correct : .incorrect) }
             if store.hapticsEnabled { HapticsPlayer.shared.notify(success: isCorrectAnswer) }
         } label: {
-            HStack {
-                Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
-                Spacer()
-                if revealed && isCorrectAnswer {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(Brand.success)
-                } else if revealed && isChosen {
-                    Image(systemName: "xmark.circle.fill").foregroundStyle(Brand.danger)
+            GameTile(base: base, cornerRadius: 14) {
+                HStack {
+                    Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
+                    Spacer()
+                    if revealed && isCorrectAnswer {
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.white)
+                    } else if revealed && isChosen {
+                        Image(systemName: "xmark.circle.fill").foregroundStyle(.white)
+                    }
                 }
+                .padding().frame(maxWidth: .infinity)
             }
-            .padding().frame(maxWidth: .infinity)
-            .background(fill, in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(.white.opacity(0.12), lineWidth: 1))
         }
         .buttonStyle(.plain)
         .disabled(revealed)
