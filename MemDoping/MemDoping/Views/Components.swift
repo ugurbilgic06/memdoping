@@ -242,12 +242,14 @@ struct SymbolBadge: View {
     /// A cheerful palette — cyan/teal/green/blue/pink/coral. Purple and amber
     /// are avoided on purpose (the owner's steer).
     private var plate: Color {
-        // Ordered so consecutive seeds alternate cool/warm and never repeat a
-        // hue family back-to-back.
-        let hues: [Double] = [0.53, 0.92, 0.34, 0.02, 0.60, 0.42, 0.90, 0.50, 0.38, 0.58]
+        // A full, bright rainbow across the whole wheel — ordered so consecutive
+        // seeds jump far around it, giving a lively "rengarenk" spread rather
+        // than a run of similar tones. Kept luminous so nothing reads gloomy.
+        let hues: [Double] = [0.00, 0.50, 0.13, 0.62, 0.33, 0.85, 0.08,
+                              0.55, 0.75, 0.28, 0.92, 0.44, 0.68, 0.18]
         let h = hues[abs(seed) % hues.count]
-        // Younger players get more saturated, vivid plates.
-        return Color(hue: h, saturation: 0.52 + 0.16 * cartoon, brightness: 0.9)
+        // Vivid and bright; younger players get an extra saturation boost.
+        return Color(hue: h, saturation: 0.62 + 0.15 * cartoon, brightness: 0.92)
     }
 
     var body: some View {
