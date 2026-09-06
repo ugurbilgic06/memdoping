@@ -35,6 +35,14 @@ Bu teknik tek bir mission içinde değil, **oyunun genel zamanlama/bildirim mima
 
 **Tahmini süre:** Her tekrar turu 30–60 saniye (kısa, sık, düşük sürtünmeli — günlük misyonlara doğal olarak eklenir).
 
+## Psikolojik Uyum
+
+- **Karanlık desen sınırı — bu tekniğin en kritik risk alanı:** Zamanlanmış tekrar mekanikleri (kolayca "her gün gel yoksa kaybedersin" tarzı zorlayıcı bir alışkanlık döngüsüne dönüşebilir). §6'nın açık talimatı: "sessiz rozet, zorlayıcı bildirim değil", "compulsive time spent değil, useful practice and satisfaction optimize edilmeli". Bu yüzden tasarımda **streak cezası yok**, bildirim opt-in ve sessiz saatlere uyumlu, geciken tekrar cezalandırılmıyor sadece ertelenmiş oluyor.
+- **Kaygı/stres:** Ana ekrandaki rozetin "Bugün tekrar edilecek 3 öğe" gibi nötr/davetkâr bir dille sunulması (§6 "welcoming return sessions"), suçlayıcı bir dil ("unuttun!", "kaybediyorsun!") kullanmaması önemli — bu, kaygı yaratmadan geri dönüşü teşvik eder.
+- **Özyeterlik:** Gecikmeli recall'un ayrı bir "kalıcılık skoru" olarak gösterilmesi, oyuncuya zamanla gerçekten daha iyi hatırladığını somut biçimde gösterir — bu, tekniğin kendisinin işe yaradığına dair kanıt sunarak özyeterliği pekiştirir.
+- **İnaktivite sonrası nazik dönüş (§6):** Uzun süre ara veren oyuncu için zorluk otomatik ayarlanmalı ve kazanılmış ilerleme korunmalı — cezalandırıcı bir "sıfırdan başla" deneyimi §6'ya aykırı olur.
+- **Etik sınır (§7):** "Vulnerable moments" (ör. oyuncunun art arda başarısız olduğu bir an) bildirim sıklığını artırmak veya satın almaya yönlendirmek için kullanılmamalı — tekrar zamanlaması yalnızca unutma eğrisine dayanmalı, davranışsal zafiyete değil.
+
 ## Bağımlılıklar
 
 Önkoşul: [[retrieval-practice]] (tekrar turu retrieval mekaniğini kullanır — sadece zamanlaması farklı). Bu teknik bağımsız bir "level" değil, **tüm ladder'ı kesen bir sistem katmanı** olarak tasarlanmalı; §7 (adaptive difficulty) ve §6 (retention engine) ile doğrudan entegre.

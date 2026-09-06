@@ -38,6 +38,14 @@ Mevcut prototipteki Level 5 zaten "Interleaving" etiketini taşıyor ama mekanik
 
 **Tahmini süre:** 100–130 saniye/mission (tema geçişleri ek bilişsel yük getirir, biraz daha uzun sürebilir).
 
+## Psikolojik Uyum
+
+- **Kaygı/utanç karşıtı tasarım — en kritik nokta:** Taylor & Rohrer'in bulgusunun kendisi "kısa vadeli performans düşer" diyor; oyuncu bu seviyede daha çok hata yapacak. Intro'daki "ilk başta zor gelebilir, bu normal ve iyi bir işaret" cümlesi olmadan bu mekanik oyuncuda "beceriksizleştim" hissi yaratabilir — §2'nin "retry without shame" ilkesi burada salt bir nezaket değil, **mekaniğin işe yaraması için gerekli bir çerçeveleme**.
+- **Bilişsel yük:** Renk-kodlu ipuçlarının kademeli kaldırılması (seviye 1-2'de var, 3-4'te yok), tema ayırt etme yükünü kademeli artırır — aniden tam karmaşıklığa atlamaz.
+- **Özyeterlik:** "Yöntem/kategori seçim hatası" oranının ayrı gösterilmesi, oyuncunun zamanla "hangi tema olduğunu artık karıştırmıyorum" ilerlemesini somut olarak görmesini sağlar.
+- **Motivasyon:** Karışık pratik doğası gereği daha az tekrarlayıcı/monoton hissettirir (aynı temayı art arda görmemek) — bu, §4'ün "keyif" ve "merak" hedefleriyle dolaylı olarak örtüşür.
+- **Yaş/gelişim uyumu:** Bu mekanik bilişsel esneklik (cognitive flexibility) gerektirir; küçük çocuklarda bu beceri daha geç gelişir, bu yüzden ladder'da geç konumlandırılması (Aşama 4) sadece "zor" olduğu için değil, gelişimsel olarak daha ileri bir beceriyi hedeflediği için doğru bir sıralama.
+
 ## Bağımlılıklar
 
 Önkoşul: en az 2 farklı tema/teknik için [[retrieval-practice]] tarzı bir temel mekaniğin oyuncu tarafından zaten öğrenilmiş olması gerekir (aksi halde karıştırma anlamsızlaşır). Master dokümanın §3 "Aşama 4: Combine approved techniques across varied contexts" tanımına doğrudan karşılık gelir.

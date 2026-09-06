@@ -36,6 +36,14 @@ Bulunan kaynaklar ticari/pratisyen web siteleri; içerik doğrudan alıntılanma
 
 **Tahmini süre:** 110-140 saniye/mission (en karmaşık mekanik — üç bileşenli seçim + sahne kurma).
 
+## Psikolojik Uyum
+
+- **Dürüstlük — kanıt sınırlaması burada en belirgin:** Bu, 13 teknik arasında kanıtı en ince olanlardan biri; oyun içi metin bunu "deneyimli hafıza sporcularının kullandığı ileri bir teknik, kanıt tabanı sınırlı" şeklinde açıkça belirtmeli — §9'un "no 100% improvement guarantee" ilkesi burada özellikle önemli çünkü teknik "elit sporcu" çağrışımı yaparak abartılı beklenti yaratma riski taşıyor.
+- **Bilişsel yük — en yüksek risk noktası:** PAO, ladder'daki en karmaşık mekanik (üç ayrı bileşen + tek sahnede birleştirme + varsa zincirleme). Bu yüzden kesinlikle en son, en ileri seviyeye konmalı ve **isteğe bağlı/yetişkin modu** olarak sunulmalı — küçük yaş gruplarına hiç açılmaması önerilir.
+- **Yaş/gelişim uyumu:** §1'in "adapt... session length... to each audience" ilkesi burada net bir sınır çiziyor: PAO, çocuklar için uygun bir hedef teknik değil; bu açıkça içerik/level tasarımına yansıtılmalı (age-gate).
+- **Motivasyon:** "Hafıza sporcusu deneyimi" çerçevesi (ileri seviye), meydan okuma arayan yetişkin/genç oyuncular için güçlü bir yetkinlik/statü motivasyonu yaratabilir — ama bu motivasyon kaynağının rekabetçi kıyaslamaya (§5 "protect beginners from punitive comparisons") dönüşmemesi, sadece kişisel gelişim çerçevesinde kalması gerekir.
+- **Özyeterlik:** Bu tekniğe ulaşmak, ladder'daki neredeyse tüm önceki tekniklerin (T02, T03, T09, T12) başarıyla tamamlanmasını gerektirdiği için, PAO'ya erişimin kendisi zaten güçlü bir "buraya kadar geldim" başarı hissi taşır — bu doğal bir kilometre taşı, ayrıca yapay bir ödül eklenmesine gerek yok.
+
 ## Bağımlılıklar
 
 Önkoşul: [[chunking]], [[association-imagery]], [[method-of-loci]] (mekânsal yerleştirmeyle birleştirilebilir), [[major-system]] (sayı çiftlerini PAO ile eşlemek için). Bu, ladder'daki **en ileri/son** mnemonik sistem olmalı — diğer 12 tekniğin neredeyse tamamının ilkelerini bir araya getiriyor.

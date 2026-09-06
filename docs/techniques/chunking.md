@@ -37,6 +37,14 @@ Miller (1956) 70 yılı aşkın klasik bir makale; birçok akademik/arşiv sites
 
 **Tahmini süre:** 90 saniye/mission.
 
+## Psikolojik Uyum
+
+- **Bilişsel yük — bu tekniğin özü zaten budur:** Chunking, doğrudan Miller'ın (1956) tanımladığı kapasite sınırını yönetme stratejisidir; mekanik, oyuncuya bilişsel yükü **azaltmayı** öğretiyor, artırmıyor — bu, §7'nin "adjust item count... and scaffolding" ilkesiyle doğrudan örtüşen tek teknik.
+- **Özyeterlik:** Seviye ilerledikçe öğe sayısının 9'dan 20'ye çıkması ama gruplama stratejisi sayesinde "başarılabilir" kalması, oyuncuya artan zorluğa rağmen yetkinlik hissi verir (Bandura'nın "graduated mastery" ilkesine yakın bir yapı).
+- **Kaygı karşıtı tasarım:** Seviye 1-2'de önerilen gruplama sınırlarının verilmesi, oyuncunun "yanlış grupladım" kaygısı yaşamadan tekniği önce güvenli bir çerçevede deneyimlemesini sağlar.
+- **Motivasyon:** "Öbek tutarlılığı" geri bildirimi (aynı öbekteki öğeleri birlikte hatırlayıp hatırlamadığı), oyuncuya kendi stratejisinin somut, ölçülebilir bir etkisi olduğunu gösterir — bu şeffaflık §7'nin "transparent rules" ilkesine uyar.
+- **Etik sınır:** Zorluk artışı (öğe sayısı, süre) tamamen kural tabanlı ve önceden görünür; zorlayıcı geri sayım veya "son şans" gibi baskı unsurları içermez (§5 "no coercive countdowns" yasağı).
+
 ## Bağımlılıklar
 
 Önkoşul: yok (bağımsız çalışabilir), ama [[attention-encoding]] ile birlikte daha güçlü. İleri seviyelerde [[association-imagery]] ile birleştirilerek [[peg-system]] ve [[pao]] gibi mnemonik sistemlere köprü kurar (öbek + imge = daha gelişmiş sistemlerin temel bileşeni).

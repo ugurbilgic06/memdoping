@@ -44,6 +44,15 @@ Her iki makale de dergi telifi altında (ücretli erişim); Craik & Tulving (197
 
 **Tahmini süre:** 60–90 saniye/mission.
 
+## Psikolojik Uyum
+
+- **Bilişsel yük (§3 "one rule at a time"):** Mekanik kasıtlı olarak tek bir karar noktası içeriyor (evet/hayır). Seviye 1'de sadece sığ/görünüş sorusu sorulması, oyuncunun aynı anda hem yeni bir arayüzü hem yeni bir bilişsel talebi öğrenmek zorunda kalmamasını sağlar — kademeli yük artışı §3'ün "highly guided practice" ilkesiyle örtüşür.
+- **Kaygı/utanç karşıtı tasarım (§2 Feedback):** Yönlendirici soru evet/hayır formatında, "doğru/yanlış" damgası taşımıyor (bir karar, bir sınav değil) — bu, oyuncuyu yargılanma kaygısı olmadan derin işlemeye yönlendirir.
+- **Özyeterlik:** Özet ekranında derin-işlenen öğelerin recall'unun sığ-işlenenlerden yüksek çıkması, oyuncuya "bu stratejiyi ben uyguladım ve işe yaradı" hissi verir — dışarıdan söylenen bir gerçek değil, kendi deneyimiyle doğruladığı bir sonuç.
+- **Motivasyon (§4 Sensory Motivation Engine):** Yönlendirici sorular küçük, hızlı "merak" anları yaratır (bir sonraki öğe ne olacak, soru nasıl olacak); bu içsel meraka dayanır, ödül/puan baskısına değil.
+- **Etik sınır:** Bu mekanik hiçbir davranışsal/duygusal çıkarım yapmıyor (§4'ün yasakladığı "infer mental state from interaction patterns" ilkesine uygun) — sadece önceden tanımlı, şeffaf bir soru-cevap kuralı işletiyor.
+- **Night Doping uyumluluğu (§4):** Süre kısıtı olmayan, sadece sığ-seviye sorularla çalışan bir "sakin mod" versiyonu mümkün — derin/anlamsal soru baskısı olmadan, düşük yoğunlukta bir varyant olarak sunulabilir.
+
 ## Bağımlılıklar
 
 Önkoşul: yok — bu, ladder'ın **en temel/ilk** tekniği olmalı. [[method-of-loci]], [[association-imagery]] gibi ileri tekniklerin hepsi "derin/anlamsal kodlama" ilkesine dayanır.

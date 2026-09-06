@@ -35,6 +35,14 @@ Dunlosky ve ark. makalesinin bir kurumsal (Almanya, WHZ) barındırılan ücrets
 
 **Tahmini süre:** 90–110 saniye/mission.
 
+## Psikolojik Uyum
+
+- **Yaş/gelişim uyumu — bu tekniğin en kritik kısıtı:** Araştırma bulgusu açıkça "üst ilkokul/ortaokul/lise" ve "arka plan bilgisi olan" öğrencilerde işe yaradığını söylüyor. Küçük çocuklar veya tanıdık olmayan temalarda bu mekaniğin sunulması, hem etkisiz hem de kafa karıştırıcı olabilir — §1'in "adapt... to each audience" ilkesi gereği bu teknik yaş kapısıyla (age-gated) sunulmalı, tüm yaş gruplarına aynı şekilde açılmamalı.
+- **Bilişsel yük:** "Neden" açıklamalarının önce hazır seçeneklerden (2-3 kart) sunulması, serbest açıklama üretmenin getirdiği yüksek bilişsel yükü erteler; serbest yazma sadece daha büyük/deneyimli oyuncularda açılıyor.
+- **Motivasyon (§4):** "Neden böyle?" sorusu doğası gereği merak uyandırıcıdır (curiosity gap) — bu, dışsal ödülden bağımsız, içsel bir motivasyon kaynağı.
+- **Kaygı karşıtı tasarım:** Yanlış ve doğru açıklamaların başlangıçta belirgin biçimde ayrışık olması (seviye 1-2), oyuncunun "tamamen tahmin ettim" hissi yaşamadan doğru muhakeme yapabilmesini sağlar; zorluk kademeli artar.
+- **Etik sınır:** Serbest yazılan açıklamalar (varsa) kişisel veri/profil oluşturma amacıyla saklanmamalı — §7'nin veri minimizasyonu ilkesine uygun, sadece anlık geri bildirim için kullanılmalı.
+
 ## Bağımlılıklar
 
 Önkoşul: [[attention-encoding]] (bir "neden" üretmek zaten derin/anlamsal işlemenin bir biçimidir — bu teknik aslında T01'in daha gelişmiş bir uygulamasıdır). Doğal uzantısı: [[story-linking]] (açıklamalar zincirlenerek bir anlatıya dönüşebilir).

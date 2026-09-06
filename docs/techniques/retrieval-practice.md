@@ -39,6 +39,14 @@ Bu teknik zaten mevcut prototipteki temel mekanizmayla (öğren → sonra sor) �
 
 **Tahmini süre:** 90–120 saniye/mission (yazma/dizme adımı çoktan seçmeliden daha uzun sürer).
 
+## Psikolojik Uyum
+
+- **Kaygı/utanç karşıtı tasarım — bu tekniğin en kritik riski burada:** Serbest recall, çoktan seçmeliden doğası gereği daha zor ve daha fazla anlık başarısızlık hissi yaratır (Roediger & Karpicke'nin bulgusu tam olarak bunu söylüyor: zor hissettirir ama işe yarar). İpucu sisteminin (ilk harf) cezasız olması ve "zor gelse bile bu seni güçlendiriyor" çerçevelemesi, §2'nin "retry without shame" ilkesini burada özellikle önemli kılıyor — aksi halde bu mekanik oyuncuyu yıldırabilir.
+- **Özyeterlik:** İlk denemede mi yoksa ipucuyla mı doğru bulunduğunun ayrı izlenmesi, oyuncunun "tamamen kendi başıma yaptım" başarısını görmesini sağlar — bu, ipucu kullanılan başarıdan psikolojik olarak daha güçlü bir özyeterlik kaynağıdır.
+- **Bilişsel yük yönetimi:** Kademeli ipucu azaltma (harf dizme → ilk harf → serbest) klasik scaffolding'dir; oyuncu asla "boş sayfa" ile aniden karşılaşmaz.
+- **Motivasyon:** Zorluk ağırlıklı puanlama (`difficultyWeight`), oyuncunun daha zor/serbest recall'u tercih etmesi için içsel bir teşvik yaratır — bu, dışsal bir "ödül" değil, çabanın kendi içinde değerli olduğunu gösteren şeffaf bir kural (§7).
+- **Etik sınır:** Yanlış cevap sonrası verilen ipucu bir "satın al" teklifiyle birleştirilmiyor — §5'in "pay-to-win" ve "paid score inflation" yasağına uygun: yardım her zaman ücretsiz ve oyun-içi kural gereği.
+
 ## Bağımlılıklar
 
 Önkoşul: [[attention-encoding]] (öncesinde bir şeyin öğrenilmiş/kodlanmış olması gerekir). Bu teknik ladder'da **erken ve sık tekrar eden bir çekirdek mekanik** olmalı — master dokümanın "Aşama 2-3" (§3) tanımına denk düşer. [[spaced-practice]] ile birlikte kullanıldığında (gecikmeli retrieval) etkisi katlanır.

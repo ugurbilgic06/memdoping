@@ -38,6 +38,14 @@ Roediger (1980) makalesi yazarın kendi laboratuvar sitesinde (psychnet.wustl.ed
 
 **Tahmini süre:** 90–120 saniye/mission (+ askı setini ilk öğrenme için tek seferlik 60 saniyelik ek adım).
 
+## Psikolojik Uyum
+
+- **Dürüstlük/kaygı yaratmama — bu tekniğin en hassas noktası:** Kanıt karışık olduğu için ("anlık iyi, uzun vadeli zayıf") oyunun kendisi bu sınırı oyuncuya açıkça söylüyor ("tekrar etmezsen çabuk unutulabilir"). Bu, §9'un "no 100% improvement guarantee" ilkesinin mekanik düzeyde somutlaşmış hâli — oyuncuya sahte bir güven verilmiyor.
+- **Bilişsel yük:** Askı setinin bir kez öğrenilip tekrar tekrar kullanılması, her yeni listede sıfırdan yük oluşturmaz — sabit bir "iskelet" üzerine yeni bilgi eklenir, bu klasik bir yük-azaltma stratejisidir.
+- **Özyeterlik:** Hızlı sunum seviyesinde (5+) oyuncunun daha çok hata yapması beklenir — bu, araştırmanın kendi bulgusuyla tutarlı bir şekilde çerçevelenmeli ("bu seviye hızlı, herkes burada zorlanır") ki oyuncu başarısızlığı kendi yetersizliğine değil, görevin doğasına atfetsin.
+- **Motivasyon:** Askı setinin kişiselleştirilebilir olması (ör. oyuncunun kendi seçtiği imgeler, ileri seviye özelliği) sahiplenme/ajans hissini artırabilir.
+- **Etik sınır:** Kısa vadeli/uzun vadeli performans farkının XP ödülüne yansıtılması gerekiyor mu sorusu önemli: [[spaced-practice]] entegrasyonu olmadan sadece anlık doğruluğa göre XP vermek, oyuncuyu yanıltıcı biçimde "bunu öğrendim" sandırabilir (§9 dürüstlük ilkesine risk) — bu yüzden gecikmeli tekrar zorunlu bir tamamlayıcı, opsiyonel değil.
+
 ## Bağımlılıklar
 
 Önkoşul: [[method-of-loci]] (kavramsal olarak akraba, önce mekânsal versiyon önerilir çünkü kanıtı daha güçlü) ve [[association-imagery]]. Doğal tamamlayıcısı: [[spaced-practice]] (uzun vadeli zayıflığı telafi etmek için tekrar şart).

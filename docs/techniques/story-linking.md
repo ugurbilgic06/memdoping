@@ -34,6 +34,14 @@ Orijinal makale Springer/Psychonomic Society dergisinde, ücretli. Kamuya açık
 
 **Tahmini süre:** 100–130 saniye/mission (hikâye kurma + hikâyeyi geri çağırma iki adımlı bir döngü).
 
+## Psikolojik Uyum
+
+- **Motivasyon (§4 keyif ve merak):** Hikâye kurma, doğası gereği oyunlaştırılabilir ve eğlenceli bir eylem — bu teknik, diğerlerine göre "görev" değil "yaratma" hissi verdiği için içsel motivasyonu en güçlü besleyen mekaniklerden biri olabilir.
+- **Bilişsel yük:** Hazır eylem kartlarından seçim (seviye 1-2), oyuncunun aynı anda hem hikâye kurgusu hem dil üretimi yapmasını gerektirmez — bilişsel yük, önce "bağlama" eylemine, sonra (ileri seviyede) serbest anlatıma kademeli olarak kayar.
+- **Özyeterlik:** Çıkış ekranında oyuncunun kendi kurduğu hikâyenin özetlenerek gösterilmesi ("Senin hikâyen: ..."), bunun oyuncunun **kendi** yaratımı olduğunu vurgular — bu, dışarıdan verilen bir başarı değil, sahiplenilen bir sonuçtur.
+- **Kaygı karşıtı tasarım:** "Doğru" tek bir hikâye yok — herhangi bir mantıklı bağlantı kabul edilir, bu da oyuncunun "yanlış hikâye kurdum" kaygısı yaşamasını önler (yaratıcı görevlerde değerlendirme kaygısını azaltan açık-uçlu tasarım).
+- **Etik sınır:** İleri seviyedeki serbest metin girişi (varsa) moderasyon/filtreleme gerektirir — özellikle çocuk kullanıcılarda uygunsuz içerik üretimine karşı §5'in çocuk koruma ilkeleriyle uyumlu bir güvenlik katmanı şart.
+
 ## Bağımlılıklar
 
 Önkoşul: [[association-imagery]] (hikâye bağları, ikili öğe çağrışımlarının zincirlenmiş hâlidir). [[chunking]] ile de doğal olarak birleşir (bir "öbek" kendi içinde küçük bir hikâye olabilir). İleri seviyede [[method-of-loci]]'ye köprü kurar (mekân + hikâye = klasik "seyahat hikâyesi" mnemonik sistemleri).

@@ -37,6 +37,13 @@ Makale Taylor & Francis (Experimental Aging Research) dergisinde, ücretli eriş
 
 **Tahmini süre:** 100-120 saniye/mission (+ ilk ses-kod öğrenimi için tek seferlik ek adım).
 
+## Psikolojik Uyum
+
+- **Dürüstlük — bu tekniğin en önemli psikolojik çerçevelemesi:** Tek RCT'nin bulgusu "ilk seferde fark yaratmaz, günler sonra fark yaratır" diyor. Oyun bu beklentiyi baştan yönetmezse (immediate gratification bekleyen oyuncu), oyuncu "bu işe yaramadı" diye tekniği terk edebilir — bu yüzden mekanik açıklaması özellikle "sabırlı ol, fayda birkaç gün sonra görünür" mesajını taşıyor; bu hem dürüstlük hem de elde tutma (retention) açısından kritik.
+- **Bilişsel yük — bu teknik için en yüksek risk:** Major System, 13 teknik arasında bilişsel olarak en talepkâr olanlardan biri (soyut ses-rakam eşlemesi + kelime üretimi + görsel sahne, üç katmanlı). Sadece 3-4 ses-kodla başlanması ve önce tek haneli rakamlarla sınırlı tutulması zorunlu bir yük yönetimi — aksi halde oyuncu erken aşamada bunalabilir (§3 "one rule at a time" ilkesinin ciddiyetle uygulanması gereken bir örneği).
+- **Yaş/gelişim uyumu:** Soyut fonetik-sembol dönüşümü gerektirdiği için bu teknik büyük olasılıkla genç/yetişkin kullanıcılara uygun, küçük çocuklara değil — [[number-system]]'in basit şekil-sayı eşlemesinin aksine. Bu, ladder'da bu tekniğin neden geç ve muhtemelen yaş-kapılı (age-gated) konması gerektiğinin ek bir gerekçesi.
+- **Özyeterlik:** Türkçeleştirme adımı (kendi ses-kod sistemini kurma) zaten oyunda değil içerik ekibinde yapılacak bir iş, ama oyuncuya "bu senin kendi kodun" hissi vermek için kişiselleştirme (bazı kod seçimlerini oyuncunun kendisinin yapması) özyeterliği artırabilir.
+
 ## Bağımlılıklar
 
 Önkoşul: [[number-system]] (basitleştirilmiş öncül), [[chunking]], [[association-imagery]]. Doğal sonraki adım: [[peg-system]] ile birleşerek 00-99 sabit kelime askıları, ardından [[pao]]'ya köprü kurar.

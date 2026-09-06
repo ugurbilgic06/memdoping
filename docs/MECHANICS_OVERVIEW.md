@@ -66,6 +66,16 @@ Master dokümanın §3'teki 5 aşamalı tasarım modeliyle hizalı:
 - **Telif:** Hiçbir kaynağın tam metni oyun içine kopyalanmadı/kopyalanmamalı; tüm mekanikler bulguların *özgün oyunlaştırılmış yorumu*. Bazı "ücretsiz PDF" bağlantıları bu oturumda erişim/sertifika sorunları nedeniyle doğrulanamadı — kullanım öncesi manuel teyit önerilir.
 - **Yaş/dil uyarlaması:** Hiçbir mekanik için henüz çocuk/genç/yetişkin ayrımına göre ayrıntılı zorluk kalibrasyonu yapılmadı — bu, pilot testlerle belirlenmesi gereken bir sonraki adım (§7).
 
+## Psikolojik/davranış bilimi uyumu — genel bakış
+
+Master dokümanda dağınık biçimde geçen psikoloji/davranış bilimi ilkeleri (§2 kaygı/utanç karşıtı feedback, §4 içsel motivasyon ve Night Doping, §5 karanlık desen yasakları ve yaş/gelişim ayrımı, §6 sağlıklı-alışkanlık vs. bağımlılık sınırı, §7 etik/bilişsel yük/özyeterlik, §9 dürüstlük) her 13 teknik dosyasına ayrı bir **"Psikolojik Uyum"** bölümü olarak, mekaniğe özel şekilde işlendi. Öne çıkan ortak bulgular:
+
+- **En yüksek karanlık-desen riski taşıyan iki teknik:** [[spaced-practice]] (bildirim/streak mekanizması kolayca zorlayıcı alışkanlık döngüsüne dönüşebilir — §6 açıkça "compulsive time spent" değil "satisfaction" optimize edilmeli diyor) ve [[peg-system]] (anlık başarı uzun vadeli öğrenme yanılsaması yaratabilir, gecikmeli tekrar olmadan XP vermek yanıltıcı olur).
+- **En yüksek kaygı/utanç riski taşıyan iki teknik:** [[retrieval-practice]] ve [[interleaving]] — ikisi de araştırma bulgusu gereği kısa vadede performansı düşürür/zorlaştırır; "bu normal ve iyi bir işaret" çerçevelemesi olmadan oyuncuyu yıldırabilir.
+- **Yaş-kapılı (age-gated) olması gereken teknikler:** [[elaboration]] (arka plan bilgisi + üst ilkokul+ gerektirir), [[major-system]] ve [[pao]] (soyut/karmaşık, muhtemelen çocuklara uygun değil) — [[method-of-loci]] ve [[number-system]] ise erken yaşta bile sunulabilir (somut/mekânsal/görsel temelli).
+- **Özyeterliği en güçlü besleyen teknik:** [[method-of-loci]] — Maguire'ın (2003) bulgusu doğrudan "bu bir yetenek değil, öğrenilebilir bir strateji" mesajını destekliyor; bu, §9'un IQ/yetenek-değil sınırına en somut game-design karşılığı.
+- **Veri/etik dikkat gerektiren teknikler:** [[association-imagery]] ve [[elaboration]] (oyuncunun ürettiği serbest metin/seçimler profillenip satışa yönlendirilmemeli, §7) ve [[story-linking]] (serbest metin girişi çocuklarda moderasyon gerektirir, §5).
+
 ## Sonraki adım
 
 Bu doküman onaylandıktan sonra sıradaki iş: **Aşama A**'ya (gerçek oyun motoru — ses/haptik/animasyon) dönmek ve ardından T01/T03/T04/T05/T09'u ilk üretim dalgası olarak `Content.swift`/`GameStore.swift` şemasına uygulamak.

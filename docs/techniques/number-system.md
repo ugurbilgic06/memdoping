@@ -36,6 +36,13 @@ Bulunan pratisyen kaynakları (Mindtools vb.) ticari eğitim siteleri; içerik d
 
 **Tahmini süre:** 90 saniye/mission (+ ilk kod öğrenimi için tek seferlik 45-60 saniye).
 
+## Psikolojik Uyum
+
+- **Yaş/gelişim uyumu:** Sayı-şekil eşlemesi somut-görsel düşünmeye dayandığı için (soyut sembol işlemeden önce gelen bir bilişsel aşama), bu teknik küçük yaş grupları için diğer mnemonik sistemlere (Major System, PAO) göre daha erken tanıtılabilir bir aday — Piaget'nin somut işlemler dönemi gibi genel gelişim çerçeveleriyle kabaca uyumlu, ancak bu oturumda MemDoping'e özgü bir gelişimsel doğrulama yapılmadı [AWAITING MATERIALS].
+- **Dürüstlük/kaygı yaratmama:** Kanıt zayıf olduğu için oyun içi metinde "her sayıyı unutmazsın" gibi abartılı bir vaat **verilmemeli** — bu, §9'un genel dürüstlük ilkesinin bu spesifik, kanıtı ince tekniğe uygulanmış hâli.
+- **Bilişsel yük:** Kod tablosunun başta ekranda görünür kalması (seviye 1-2), oyuncunun aynı anda hem kodu ezberlemesini hem de uygulamasını istemez — önce uygulama pratiği, sonra ezber testi.
+- **Motivasyon:** Şekil-sayı eşlemesi doğası gereği oyunsu ve görsel olduğu için (mum, kuğu gibi somut nesneler), bu teknik diğer daha soyut sistemlere göre "eğlenceli" hissettirme potansiyeli daha yüksek — ama bu gözlem doğrulanmamış bir tasarım varsayımı, pilot testle kontrol edilmeli.
+
 ## Bağımlılıklar
 
 Önkoşul: [[chunking]], [[association-imagery]]. Doğal sonraki adım: [[major-system]] (aynı fikrin çok daha güçlü ve ölçeklenebilir bir versiyonu — Major System her rakam çiftine değil, ünsüz seslere dayandığı için çok daha fazla sayıyı kodlayabilir).

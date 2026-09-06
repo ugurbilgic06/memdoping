@@ -40,6 +40,14 @@ Mevcut prototipteki "emoji göster → kelimeyi çoktan seçmeli sor" mekaniği 
 
 **Tahmini süre:** 90–120 saniye/mission (kart seçme + cümle okuma nedeniyle temel quiz'den biraz uzun).
 
+## Psikolojik Uyum
+
+- **Motivasyon (§4 Sensory Motivation Engine — yetkinlik ve keyif):** Oyuncunun kendi tuhaf/eğlenceli sahnesini kurması (3 karttan seçim), pasif izlemekten daha fazla ajans/yetkinlik hissi verir — içsel motivasyonu, dışsal ödülden çok "kendi yarattığın şey işe yarıyor" hissinden besler.
+- **Bilişsel yük:** Seviye 1-2'de sadece 3 hazır karttan seçim yapılması, oyuncunun "boş sayfa" kaygısı yaşamadan (serbest üretim zihinsel olarak pahalıdır) düşük yükle katkı sağlamasını sağlar; serbest metin sadece ileri/isteğe bağlı modda açılır.
+- **Kaygı/utanç karşıtı tasarım:** Dürüst "sihirli değildir" notu, oyuncunun tekniği uygulayıp yine de yanlış yaptığında kendini "yetersiz" hissetmesini önler — başarısızlık tekniğin garantisiz doğasına atfedilir, oyuncunun yeteneğine değil (§2 "retry without shame" ilkesi).
+- **Özyeterlik:** Kademeli serbestlik artışı (hazır kart → yarı-serbest → tam serbest) klasik "scaffolding" (destek yapısını kademeli kaldırma) ilkesine uyar — her aşamada başarı, bir sonraki aşamaya geçme özgüvenini besler.
+- **Etik sınır:** Oyuncunun ürettiği "tuhaf/eğlenceli" içerik hiçbir şekilde saklanıp profillenmiyor veya reklam/satış hedeflemesi için kullanılmıyor (§7 "do not use... to target purchases" ilkesiyle uyumlu tasarım gereksinimi).
+
 ## Bağımlılıklar
 
 Önkoşul: [[attention-encoding]] (derin/anlamsal işleme ilkesi üzerine biner — imge kurmak zaten anlamsal bir karardır). Sonraki adım: [[elaboration]] ve [[story-linking]] bu tekniğin doğal uzantısı.

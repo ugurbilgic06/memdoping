@@ -37,6 +37,14 @@ Maguire (2003) ve Dresler (2017) dergi telifli (Nature Neuroscience, Neuron), ü
 
 **Tahmini süre:** 100–140 saniye/mission (mekânsal gezinme adımı ekler).
 
+## Psikolojik Uyum
+
+- **Motivasyon ve yetkinlik (§4):** "Kendi sarayını kur" özelliği (ileri seviye), oyuncuya güçlü bir kişiselleştirme/ajans hissi verir — Dresler'in (2017) eğitim çalışmasında bile katılımcıların bu tekniği öğrendikten sonra performans artışını **kendi** stratejilerine atfetmesi bekleniyor, bu da özyeterliği doğrudan besler.
+- **Bilişsel yük:** 3 duraktan 8+ durağa kademeli büyüme, mekânsal belleğin (zaten güçlü bir doğal kapasite olduğu bilinen) aşamalı olarak zorlanmasını sağlar — Maguire'ın (2003) bulgusu zaten bu kapasitenin "özel bir yetenek değil, eğitilebilir bir strateji" olduğunu gösteriyor; bu mesaj oyunda oyuncuya doğrudan iletilmeli ("herkes bunu öğrenebilir", IQ/yetenek çerçevesi değil).
+- **Özyeterlik:** Bu teknik, master dokümanın §9'daki "IQ/yetenek değil" sınırına en doğrudan destek veren teknik — Maguire'ın bulgusu tam olarak bunu kanıtlıyor (yarışmacıların IQ'su farklı değildi). Oyun içi mesajlaşma bunu açıkça kullanmalı: "Bu bir yetenek değil, öğrenilen bir strateji."
+- **Kaygı karşıtı tasarım:** Tanıdık bir mekân (ev, okul) kullanımı, yabancı/soyut bir görevden çok daha az kaygı uyandırır — oyuncu zaten bildiği bir şeyi kullanıyor, yeni bir şey ezberlemiyor.
+- **Yaş/gelişim uyumu:** Mekânsal gezinme küçük çocuklarda da doğal bir yetenektir (oyun/keşif davranışıyla örtüşür) — bu teknik erken yaşlarda bile (basitleştirilmiş, 3 duraklı versiyonla) sunulabilir, tamamen soyut sistemlerin (Major System gibi) aksine.
+
 ## Bağımlılıklar
 
 Önkoşul: [[association-imagery]] (her durakta bir imge kurmak gerekir) ve [[story-linking]] (duraklar arası geçiş bir mini-anlatıya benzer). Bu teknik, ladder'da mnemonik sistemler grubunun (T09-T13) **giriş noktası** olmalı — en güçlü kanıta sahip olduğu için önce bu, sonra diğerleri.
