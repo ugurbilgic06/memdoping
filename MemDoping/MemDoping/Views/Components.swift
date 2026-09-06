@@ -10,10 +10,13 @@ import SwiftUI
 
 /// MemDoping brand palette.
 enum Brand {
-    static let primary = Color(red: 0.20, green: 0.58, blue: 1.0)    // bright blue
-    static let accent  = Color(red: 1.0,  green: 0.62, blue: 0.20)   // warm orange
-    static let success = Color(red: 0.20, green: 0.85, blue: 0.52)   // luminous green
-    static let danger  = Color(red: 1.0,  green: 0.36, blue: 0.48)   // luminous rose
+    static let primary = Color(red: 0.30, green: 0.62, blue: 1.0)    // calm blue
+    static let accent  = Color(red: 0.36, green: 0.86, blue: 0.82)   // soft, calming aqua
+    static let success = Color(red: 0.28, green: 0.84, blue: 0.60)   // soft green
+    static let danger  = Color(red: 1.0,  green: 0.45, blue: 0.55)   // soft rose
+
+    /// Dark ink used on light/aqua fills (e.g. the primary button).
+    static let ink = Color(red: 0.04, green: 0.16, blue: 0.18)
 
     static var backgroundGradient: LinearGradient {
         LinearGradient(
@@ -49,31 +52,44 @@ enum Brand {
     }
 }
 
-/// Full-screen brand background with a soft top glow for depth. Pass a `tint`
-/// (e.g. the level's motif colour) to shift the whole backdrop per level while
-/// staying dark and readable.
+/// Full-screen brand background that slowly, endlessly cycles hue so the colour
+/// is always shifting. A `tint` (the level's motif colour) offsets the starting
+/// hue, so different levels begin on different colours. Still and readable under
+/// Reduce Motion.
 struct BrandBackground: View {
     var tint: Color? = nil
-
-    private var gradient: LinearGradient {
-        guard let tint else { return Brand.backgroundGradient }
-        return LinearGradient(
-            colors: [Color(red: 0.06, green: 0.05, blue: 0.14),
-                     tint.brightness(0.42)],
-            startPoint: .top, endPoint: .bottom)
-    }
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        ZStack {
-            gradient
-            RadialGradient(
-                colors: [(tint ?? Brand.primary).brightness(1.2).opacity(0.5), .clear],
-                center: .init(x: 0.5, y: 0.0), startRadius: 0, endRadius: 520
-            )
-            .blendMode(.screen)
+        Group {
+            if reduceMotion {
+                gradient(hue: 0.50)
+            } else {
+                TimelineView(.animation) { timeline in
+                    let t = timeline.date.timeIntervalSinceReferenceDate
+                    // Ping-pong through a cheerful green→cyan→blue band, so the
+                    // colour is always shifting but never lands on purple/amber.
+                    let cycle = (t * 0.03).truncatingRemainder(dividingBy: 2.0)
+                    let tri = cycle < 1 ? cycle : 2 - cycle
+                    gradient(hue: 0.30 + tri * 0.33)
+                }
+            }
         }
         .ignoresSafeArea()
         .accessibilityHidden(true)
+    }
+
+    private func gradient(hue: Double) -> some View {
+        ZStack {
+            LinearGradient(
+                colors: [Color(hue: hue, saturation: 0.45, brightness: 0.22),
+                         Color(hue: hue, saturation: 0.58, brightness: 0.50)],
+                startPoint: .top, endPoint: .bottom)
+            RadialGradient(
+                colors: [Color(hue: hue, saturation: 0.85, brightness: 0.62).opacity(0.5), .clear],
+                center: .init(x: 0.5, y: 0.0), startRadius: 0, endRadius: 520)
+            .blendMode(.screen)
+        }
     }
 }
 
@@ -115,7 +131,7 @@ struct PrimaryButton: View {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(Brand.edgeHighlight, lineWidth: 1)
             )
-            .foregroundStyle(.white)
+            .foregroundStyle(Brand.ink)
             .shadow(color: tint.opacity(0.45), radius: 12, x: 0, y: 6)
         }
         .buttonStyle(.plain)
