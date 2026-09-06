@@ -145,11 +145,14 @@ struct MissionView: View {
             }
 
             PrimaryButton(title: "See results", systemImage: "arrow.right") {
-                outcome = store.complete(
+                let result = store.complete(
                     level: session.level,
                     correct: session.correctCount,
                     total: session.totalQuestions
                 )
+                outcome = result
+                if store.soundEnabled { SoundPlayer.shared.play(result.mastered ? .levelUp : .correct) }
+                if store.hapticsEnabled { HapticsPlayer.shared.notify(success: result.mastered) }
                 session.showSummary()
             }
         }
@@ -157,12 +160,24 @@ struct MissionView: View {
 
     // MARK: Summary (XP, Memory Score, clear stopping point)
 
+    @State private var celebrationScale: CGFloat = 0.6
+
     private var summaryPhase: some View {
         VStack(spacing: 20) {
             Spacer()
             Image(systemName: session.passedMastery ? "star.circle.fill" : "arrow.counterclockwise.circle.fill")
                 .font(.system(size: 72))
                 .foregroundStyle(session.passedMastery ? Brand.accent : .white.opacity(0.8))
+                .scaleEffect(celebrationScale)
+                .onAppear {
+                    if reduceMotion {
+                        celebrationScale = 1
+                    } else {
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) {
+                            celebrationScale = 1
+                        }
+                    }
+                }
 
             Text(session.passedMastery ? "Level cleared!" : "Good effort")
                 .font(.largeTitle.bold())
@@ -286,6 +301,7 @@ private struct LearnPhaseView: View {
 private struct RecallPhaseView: View {
     @Bindable var session: MissionSession
     @Environment(GameStore.self) private var store
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var revealed = false
 
     var body: some View {
@@ -338,6 +354,8 @@ private struct RecallPhaseView: View {
             guard !revealed else { return }
             session.answerCurrent(option)
             revealed = true
+            if store.soundEnabled { SoundPlayer.shared.play(isCorrectAnswer ? .correct : .incorrect) }
+            if store.hapticsEnabled { HapticsPlayer.shared.notify(success: isCorrectAnswer) }
         } label: {
             HStack {
                 Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
@@ -355,8 +373,10 @@ private struct RecallPhaseView: View {
                 RoundedRectangle(cornerRadius: 14)
                     .stroke(.white.opacity(0.12), lineWidth: 1)
             )
+            .scaleEffect(isChosen && revealed ? 1.03 : 1.0)
         }
         .buttonStyle(.plain)
         .disabled(revealed)
+        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.55), value: revealed)
     }
 }
