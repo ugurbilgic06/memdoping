@@ -212,16 +212,32 @@ extension GameLevel {
     }
 }
 
+/// How cartoonish content symbols should look: 0 = restrained/flat (adults),
+/// 1 = big, bouncy, thick-outlined (young children). Set once from the age band
+/// (see ContentView) and inherited by every `SymbolBadge`.
+private struct CartoonLevelKey: EnvironmentKey {
+    static let defaultValue: Double = 0.55
+}
+extension EnvironmentValues {
+    var cartoonLevel: Double {
+        get { self[CartoonLevelKey.self] }
+        set { self[CartoonLevelKey.self] = newValue }
+    }
+}
+
 /// A large, illustrated presentation of a content emoji: the symbol sits on a
 /// glossy, depth-shaded plate whose colour is distinct per item, so a row of
 /// them reads as a set of friendly, recognisable tokens rather than flat emoji.
-/// Helps young / pre-reading players lean on the picture, not the word.
+/// Helps young / pre-reading players lean on the picture, not the word. The look
+/// gets rounder, bolder and more colourful for younger players (`cartoonLevel`).
 struct SymbolBadge: View {
     let symbol: String
     /// Varies the plate colour so neighbouring badges are easy to tell apart.
     var seed: Int = 0
     /// Overall plate size; the emoji fills most of it.
     var size: CGFloat = 84
+
+    @Environment(\.cartoonLevel) private var cartoon
 
     /// A cheerful palette — cyan/teal/green/blue/pink/coral. Purple and amber
     /// are avoided on purpose (the owner's steer).
@@ -230,13 +246,18 @@ struct SymbolBadge: View {
         // hue family back-to-back.
         let hues: [Double] = [0.53, 0.92, 0.34, 0.02, 0.60, 0.42, 0.90, 0.50, 0.38, 0.58]
         let h = hues[abs(seed) % hues.count]
-        return Color(hue: h, saturation: 0.55, brightness: 0.9)
+        // Younger players get more saturated, vivid plates.
+        return Color(hue: h, saturation: 0.52 + 0.16 * cartoon, brightness: 0.9)
     }
 
     var body: some View {
-        let corner = size * 0.30
+        // Rounder corners, bigger emoji, thicker outline and softer shadow the
+        // more cartoonish the level — a tick bigger for everyone.
+        let corner = size * (0.28 + 0.10 * cartoon)
+        let emojiSize = size * (0.66 + 0.09 * cartoon)
+        let outline = 1.5 + 2.2 * cartoon
         Text(symbol)
-            .font(.system(size: size * 0.6))
+            .font(.system(size: emojiSize))
             .shadow(color: .black.opacity(0.18), radius: 1, y: 1)
             .frame(width: size, height: size)
             .background(
@@ -256,10 +277,10 @@ struct SymbolBadge: View {
             .overlay(
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .strokeBorder(LinearGradient(
-                        colors: [.white.opacity(0.7), .black.opacity(0.18)],
-                        startPoint: .top, endPoint: .bottom), lineWidth: 1.5)
+                        colors: [.white.opacity(0.8), .black.opacity(0.20)],
+                        startPoint: .top, endPoint: .bottom), lineWidth: outline)
             )
-            .shadow(color: plate.opacity(0.5), radius: 9, y: 6)
+            .shadow(color: plate.opacity(0.5), radius: 9 + 4 * cartoon, y: 6)
             .accessibilityHidden(true)   // the caller labels the pair with its word
     }
 }

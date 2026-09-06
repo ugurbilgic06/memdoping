@@ -18,7 +18,18 @@ struct ContentView: View {
                 OnboardingView()
             }
         }
+        .environment(\.cartoonLevel, cartoonLevel)
         .animation(.easeInOut, value: store.hasOnboarded)
+    }
+
+    /// Younger players get a more cartoonish symbol treatment.
+    private var cartoonLevel: Double {
+        switch store.ageBand {
+        case .child:  return 1.0
+        case .teen:   return 0.5
+        case .adult:  return 0.2
+        case .none:   return 0.6
+        }
     }
 }
 
