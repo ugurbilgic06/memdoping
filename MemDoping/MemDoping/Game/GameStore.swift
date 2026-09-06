@@ -28,6 +28,31 @@ struct SessionResult: Codable, Identifiable {
     }
 }
 
+/// A studied item waiting for its next spaced review (T05). Keyed by a stable
+/// "themeId:word" string so it survives the per-run UUIDs on MemoryPair.
+struct ReviewRecord: Codable, Identifiable {
+    var id: String { key }
+    let key: String
+    let themeId: String
+    let word: String
+    let symbol: String
+    var stage: Int          // index into ReviewSchedule.intervalDays
+    var dueDate: Date
+    var lastRemembered: Bool?
+}
+
+/// Expanding review intervals — a simplified, transparent form of the
+/// evidence-based "expanding retrieval" principle (Cepeda et al. 2006/2008).
+/// Late reviews are only deferred, never punished (§6 no coercive streaks).
+enum ReviewSchedule {
+    static let intervalDays: [Int] = [1, 3, 7, 14]
+
+    static func nextDue(stage: Int, from date: Date = .now) -> Date {
+        let days = intervalDays[min(max(stage, 0), intervalDays.count - 1)]
+        return Calendar.current.date(byAdding: .day, value: days, to: date) ?? date
+    }
+}
+
 @Observable
 final class GameStore {
 
@@ -38,6 +63,14 @@ final class GameStore {
     private(set) var bestAccuracy: [Int: Double] = [:]     // levelIndex -> best
     private(set) var recentResults: [SessionResult] = []   // most recent first
     private(set) var lastDailyMissionDate: Date?
+
+    // MARK: Spaced review (T05 — system layer)
+
+    /// Items scheduled for spaced review, keyed by "themeId:word".
+    private(set) var reviews: [String: ReviewRecord] = [:]
+    /// Outcomes of delayed reviews (newest first) — the basis for the
+    /// Retention indicator, which is §2's "delayed recall" component.
+    private(set) var retentionHistory: [Bool] = []
 
     // MARK: Preferences (§4 accessibility / comfort)
 
@@ -110,6 +143,61 @@ final class GameStore {
 
     enum ScoreTrend { case up, down, steady }
 
+    // MARK: - Spaced review queue (T05)
+
+    /// Items whose review time has arrived, oldest-due first.
+    var dueReviews: [ReviewRecord] {
+        reviews.values.filter { $0.dueDate <= .now }.sorted { $0.dueDate < $1.dueDate }
+    }
+    var dueReviewCount: Int { dueReviews.count }
+    var hasScheduledReviews: Bool { !reviews.isEmpty }
+
+    /// The soonest upcoming review, used for the quiet "next review" line when
+    /// nothing is due yet.
+    var nextReviewDate: Date? {
+        reviews.values.map(\.dueDate).filter { $0 > .now }.min()
+    }
+
+    /// Retention: how much of what was learned survives a delay. Distinct from
+    /// the Memory Score (same-session recall). Not an IQ or clinical measure.
+    var retentionScore: Int? {
+        guard retentionHistory.count >= 3 else { return nil }
+        let sample = retentionHistory.prefix(20)
+        let remembered = sample.filter { $0 }.count
+        return Int((Double(remembered) / Double(sample.count) * 100).rounded())
+    }
+
+    /// Enqueues the items a pair-based mission just taught. Re-learning an item
+    /// already in the queue leaves its schedule untouched, so replaying a level
+    /// can't farm the review system.
+    func scheduleReviews(themeId: String, pairs: [MemoryPair]) {
+        let now = Date.now
+        for pair in pairs {
+            let key = "\(themeId):\(pair.word)"
+            guard reviews[key] == nil else { continue }
+            reviews[key] = ReviewRecord(
+                key: key, themeId: themeId, word: pair.word, symbol: pair.symbol,
+                stage: 0, dueDate: ReviewSchedule.nextDue(stage: 0, from: now),
+                lastRemembered: nil
+            )
+        }
+        save()
+    }
+
+    /// Records a spaced-review outcome and reschedules the item. Success widens
+    /// the interval; a miss steps back one stage (gentle, never a reset — §6).
+    func recordReview(key: String, remembered: Bool) {
+        guard var record = reviews[key] else { return }
+        record.lastRemembered = remembered
+        record.stage = remembered ? record.stage + 1 : max(0, record.stage - 1)
+        record.dueDate = ReviewSchedule.nextDue(stage: record.stage)
+        reviews[key] = record
+
+        retentionHistory.insert(remembered, at: 0)
+        if retentionHistory.count > 40 { retentionHistory.removeLast() }
+        save()
+    }
+
     // MARK: - Recording a completed session
 
     /// Records a finished mission: awards XP, updates best accuracy, unlocks the
@@ -176,6 +264,8 @@ final class GameStore {
         var lastDailyMissionDate: Date?
         var soundEnabled: Bool
         var hapticsEnabled: Bool
+        var reviews: [String: ReviewRecord]?
+        var retentionHistory: [Bool]?
     }
 
     private func save() {
@@ -186,7 +276,9 @@ final class GameStore {
             recentResults: recentResults,
             lastDailyMissionDate: lastDailyMissionDate,
             soundEnabled: soundEnabled,
-            hapticsEnabled: hapticsEnabled
+            hapticsEnabled: hapticsEnabled,
+            reviews: reviews,
+            retentionHistory: retentionHistory
         )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: defaultsKey)
@@ -204,6 +296,8 @@ final class GameStore {
         lastDailyMissionDate = snapshot.lastDailyMissionDate
         soundEnabled = snapshot.soundEnabled
         hapticsEnabled = snapshot.hapticsEnabled
+        reviews = snapshot.reviews ?? [:]
+        retentionHistory = snapshot.retentionHistory ?? []
     }
 
     /// Wipes all progress. Used from the profile screen.
@@ -213,6 +307,8 @@ final class GameStore {
         bestAccuracy = [:]
         recentResults = []
         lastDailyMissionDate = nil
+        reviews = [:]
+        retentionHistory = []
         save()
     }
 }

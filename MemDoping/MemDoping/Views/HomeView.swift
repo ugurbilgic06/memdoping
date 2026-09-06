@@ -12,6 +12,7 @@ struct HomeView: View {
     @Environment(GameStore.self) private var store
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var activeLevel: GameLevel?
+    @State private var showReview = false
 
     var body: some View {
         NavigationStack {
@@ -22,6 +23,7 @@ struct HomeView: View {
                         header
                         statsRow
                         dailyMissionCard
+                        reviewCard
                         continueCard
                         levelLadder
                         disclaimer
@@ -35,6 +37,9 @@ struct HomeView: View {
                 case .chunking:   ChunkingMissionView(level: level)
                 case .retrieval:  RetrievalMissionView(level: level)
                 }
+            }
+            .navigationDestination(isPresented: $showReview) {
+                ReviewMissionView(items: store.dueReviews)
             }
         }
     }
@@ -96,6 +101,51 @@ struct HomeView: View {
                         .foregroundStyle(.white.opacity(0.75))
                 }
                 Spacer()
+            }
+        }
+    }
+
+    // MARK: Spaced review (T05 — quiet, opt-in, no streak pressure)
+
+    @ViewBuilder
+    private var reviewCard: some View {
+        if store.dueReviewCount > 0 {
+            Button {
+                showReview = true
+            } label: {
+                Card {
+                    HStack(spacing: 14) {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.title)
+                            .foregroundStyle(Brand.accent)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(store.dueReviewCount) items due for review")
+                                .font(.headline).foregroundStyle(.white)
+                            Text("You learned these earlier — let's see if they stuck.")
+                                .font(.subheadline)
+                                .foregroundStyle(.white.opacity(0.75))
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+        } else if let next = store.nextReviewDate {
+            Card {
+                HStack(spacing: 14) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(Brand.success)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("All caught up on reviews")
+                            .font(.headline).foregroundStyle(.white)
+                        Text("Next review \(next.formatted(.relative(presentation: .named))).")
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.75))
+                    }
+                    Spacer()
+                }
             }
         }
     }

@@ -315,6 +315,7 @@ struct RetrievalMissionView: View {
                     total: session.totalQuestions
                 )
                 outcome = result
+                store.scheduleReviews(themeId: session.level.theme.id, pairs: session.studyPairs)
                 if store.soundEnabled { SoundPlayer.shared.play(result.mastered ? .levelUp : .correct) }
                 if store.hapticsEnabled { HapticsPlayer.shared.notify(success: result.mastered) }
                 session.showSummary()

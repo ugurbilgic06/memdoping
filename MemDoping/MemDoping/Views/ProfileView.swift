@@ -58,11 +58,11 @@ struct ProfileView: View {
 
                 HStack {
                     stat("MemDoping XP", "\(store.xp)")
-                    stat("Missions", "\(store.recentResults.count)")
+                    stat("Retention", store.retentionScore.map { "\($0)" } ?? "—")
                     stat("Levels", "\(store.highestUnlockedLevel)/\(store.totalLevels)")
                 }
 
-                Text("An in-game recall indicator from recent tasks — not an IQ or clinical score.")
+                Text("Retention tracks delayed recall in spaced reviews. Both are in-game indicators from recent tasks — not an IQ or clinical score.")
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.5))
             }
