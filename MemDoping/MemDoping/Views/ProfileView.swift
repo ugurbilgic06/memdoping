@@ -197,5 +197,5 @@ struct ProfileView: View {
 #Preview {
     NavigationStack { ProfileView() }
         .environment(GameStore())
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
 }

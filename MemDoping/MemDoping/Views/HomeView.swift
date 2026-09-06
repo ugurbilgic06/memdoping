@@ -21,14 +21,14 @@ struct HomeView: View {
                 BrandBackground()
                 ScrollView {
                     VStack(spacing: 20) {
-                        header
-                        statsRow
-                        dailyMissionCard
-                        reviewCard
-                        continueCard
-                        levelLadder
-                        nightCard
-                        disclaimer
+                        header.dealIn(0)
+                        statsRow.dealIn(1)
+                        dailyMissionCard.dealIn(2)
+                        reviewCard.dealIn(3)
+                        continueCard.dealIn(4)
+                        levelLadder.dealIn(5)
+                        nightCard.dealIn(6)
+                        disclaimer.dealIn(7)
                     }
                     .padding()
                 }
@@ -313,5 +313,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .environment(GameStore())
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
 }
