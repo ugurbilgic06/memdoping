@@ -151,7 +151,7 @@ struct InterleavingMissionView: View {
     private func answerButton(_ option: String, question q: InterleavingSession.Question) -> some View {
         let isChosen = q.chosenAnswer == option
         let isCorrectAnswer = option == q.pair.word
-        var base = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+        var base = session.level.tileBase
         if revealed {
             if isCorrectAnswer { base = Brand.success }
             else if isChosen { base = Brand.danger }

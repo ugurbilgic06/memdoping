@@ -240,7 +240,7 @@ struct ChunkingMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.enter(digit)
         } label: {
-            GameTile(cornerRadius: 16) {
+            GameTile(base: session.level.tileBase, cornerRadius: 16) {
                 Text("\(digit)")
                     .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
                     .frame(maxWidth: .infinity)

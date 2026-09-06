@@ -161,6 +161,19 @@ extension Color {
     }
 }
 
+extension GameLevel {
+    /// The tile motif evolves as you climb the ladder, so later levels feel new.
+    /// Grouped into four colour tiers across the level range.
+    var tileBase: Color {
+        switch index {
+        case ..<4:    return Color(hue: 0.72, saturation: 0.38, brightness: 0.30) // indigo
+        case 4..<7:   return Color(hue: 0.50, saturation: 0.45, brightness: 0.30) // teal
+        case 7..<10:  return Color(hue: 0.83, saturation: 0.40, brightness: 0.33) // magenta
+        default:      return Color(hue: 0.09, saturation: 0.55, brightness: 0.34) // amber
+        }
+    }
+}
+
 /// A chunky, beveled, glossy game tile — reads as a 3D piece (mahjong-style)
 /// while staying transparent, fast, and tap-friendly for the many interactive
 /// pieces. Real SceneKit is reserved for hero/celebration moments.

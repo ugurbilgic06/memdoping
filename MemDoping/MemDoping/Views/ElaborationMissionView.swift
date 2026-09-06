@@ -123,7 +123,7 @@ struct ElaborationMissionView: View {
             if store.soundEnabled { SoundPlayer.shared.play(ok ? .correct : .incorrect) }
             if store.hapticsEnabled { HapticsPlayer.shared.notify(success: ok) }
         } label: {
-            GameTile(cornerRadius: 14) {
+            GameTile(base: session.level.tileBase, cornerRadius: 14) {
                 HStack {
                     Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
                         .multilineTextAlignment(.leading)
@@ -201,7 +201,7 @@ struct ElaborationMissionView: View {
     private func answerButton(_ option: String, question q: ElaborationSession.RecallQ) -> some View {
         let isChosen = q.chosen == option
         let isCorrectAnswer = option == q.fact.because
-        var base = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+        var base = session.level.tileBase
         if revealed {
             if isCorrectAnswer { base = Brand.success }
             else if isChosen { base = Brand.danger }

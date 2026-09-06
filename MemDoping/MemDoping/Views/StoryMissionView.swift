@@ -136,7 +136,7 @@ struct StoryMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.chooseAction(action)
         } label: {
-            GameTile(cornerRadius: 14) {
+            GameTile(base: session.level.tileBase, cornerRadius: 14) {
                 Text(action.localizedContent)
                     .foregroundStyle(.white).fontWeight(.medium)
                     .frame(maxWidth: .infinity)
@@ -186,7 +186,7 @@ struct StoryMissionView: View {
                         if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                         session.placeNext(pair)
                     } label: {
-                        GameTile(cornerRadius: 14) {
+                        GameTile(base: session.level.tileBase, cornerRadius: 14) {
                             Text(pair.symbol)
                                 .font(.system(size: 40))
                                 .frame(width: 66, height: 66)

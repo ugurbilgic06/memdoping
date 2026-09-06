@@ -274,7 +274,7 @@ private struct LearnPhaseView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(session.studyPairs) { pair in
-                        GameTile {
+                        GameTile(base: session.level.tileBase) {
                             VStack(spacing: 8) {
                                 Text(pair.symbol).font(.system(size: 46))
                                 Text(pair.word.localizedContent)
@@ -357,7 +357,7 @@ private struct RecallPhaseView: View {
         let isChosen = q.chosen == option
         let isCorrectAnswer = option == q.prompt.word
 
-        var base = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+        var base = session.level.tileBase
         if revealed {
             if isCorrectAnswer { base = Brand.success }
             else if isChosen { base = Brand.danger }
@@ -401,7 +401,7 @@ private struct RecallPhaseView: View {
 // MARK: - Previews
 
 #Preview("Recall (multiple choice)") {
-    let session = MissionSession(level: SampleLevels.level(at: 3)!)
+    let session = MissionSession(level: SampleLevels.level(at: 8)!)
     session.beginLearning()
     session.beginRecall()
     return ZStack {

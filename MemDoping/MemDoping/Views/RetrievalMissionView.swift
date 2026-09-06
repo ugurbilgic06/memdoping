@@ -89,7 +89,7 @@ struct RetrievalMissionView: View {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     ForEach(session.studyPairs) { pair in
-                        GameTile {
+                        GameTile(base: session.level.tileBase) {
                             VStack(spacing: 8) {
                                 Text(pair.symbol).font(.system(size: 46))
                                 Text(pair.word.localizedContent)
@@ -194,7 +194,7 @@ struct RetrievalMissionView: View {
                     if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                     session.place(tileID: tile.id)
                 } label: {
-                    GameTile(cornerRadius: 12) {
+                    GameTile(base: session.level.tileBase, cornerRadius: 12) {
                         Text(String(tile.letter))
                             .font(.system(size: 24, weight: .bold, design: .rounded))
                             .frame(width: 46, height: 52)

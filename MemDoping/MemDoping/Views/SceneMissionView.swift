@@ -134,7 +134,7 @@ struct SceneMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.choose(modifier)
         } label: {
-            GameTile(cornerRadius: 14) {
+            GameTile(base: session.level.tileBase, cornerRadius: 14) {
                 HStack(spacing: 12) {
                     Text(modifier.emoji).font(.title2)
                     Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
@@ -185,7 +185,7 @@ struct SceneMissionView: View {
     private func answerButton(_ option: String, question q: RecallQuestion) -> some View {
         let isChosen = q.chosen == option
         let isCorrectAnswer = option == q.prompt.word
-        var base = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+        var base = session.level.tileBase
         if revealed {
             if isCorrectAnswer { base = Brand.success }
             else if isChosen { base = Brand.danger }

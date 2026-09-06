@@ -185,7 +185,7 @@ struct LociMissionView: View {
     private func trayBase(isChosen: Bool, isRight: Bool) -> Color {
         if isRight { return Brand.success }
         if isChosen { return Brand.danger }
-        return Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+        return session.level.tileBase
     }
 
     @ViewBuilder
