@@ -60,7 +60,8 @@ struct HomeView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack {
+            HStack(spacing: 10) {
+                Hero3DView(size: 58, interactive: false)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("MemDoping")
                         .font(.largeTitle.bold())
