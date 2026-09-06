@@ -19,6 +19,7 @@ struct ProfileView: View {
                 VStack(spacing: 20) {
                     scoreCard
                     settingsCard
+                    privacyCard
                     aboutCard
                     resetButton
                 }
@@ -61,6 +62,11 @@ struct ProfileView: View {
                     stat("Retention", store.retentionScore.map { "\($0)" } ?? "—")
                     stat("Levels", "\(store.highestUnlockedLevel)/\(store.totalLevels)")
                 }
+                HStack {
+                    stat("Missions", "\(store.recentResults.count)")
+                    stat("Reviews", "\(store.retentionHistory.count)")
+                    stat("Difficulty", difficultyText)
+                }
 
                 Text("Retention tracks delayed recall in spaced reviews. Both are in-game indicators from recent tasks — not an IQ or clinical score.")
                     .font(.caption2)
@@ -86,6 +92,15 @@ struct ProfileView: View {
             Text(title).font(.caption2).foregroundStyle(.white.opacity(0.6))
         }
         .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var difficultyText: String {
+        switch store.difficultyState {
+        case .eased:    String(localized: "Eased")
+        case .standard: String(localized: "Standard")
+        case .ramped:   String(localized: "Ramped")
+        }
     }
 
     private var settingsCard: some View {
@@ -102,6 +117,18 @@ struct ProfileView: View {
             }
             .tint(Brand.accent)
             .foregroundStyle(.white)
+        }
+    }
+
+    private var privacyCard: some View {
+        Card {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Privacy", systemImage: "lock.shield.fill")
+                    .font(.headline).foregroundStyle(.white)
+                Text("Your progress is stored on this device only. MemDoping doesn't collect, track, or send your personal data, and there are no accounts or ads.")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
         }
     }
 
@@ -139,4 +166,10 @@ struct ProfileView: View {
             Text("This clears your XP, Memory Score, and unlocked levels. It cannot be undone.")
         }
     }
+}
+
+#Preview {
+    NavigationStack { ProfileView() }
+        .environment(GameStore())
+        .preferredColorScheme(.dark)
 }
