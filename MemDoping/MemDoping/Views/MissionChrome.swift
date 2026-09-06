@@ -96,11 +96,17 @@ struct MissionSummary: View {
     private var content: some View {
         VStack(spacing: 20) {
             Spacer()
-            Image(systemName: passedMastery ? "star.circle.fill" : "arrow.counterclockwise.circle.fill")
-                .font(.system(size: 72))
-                .foregroundStyle(passedMastery ? Brand.accent : .white.opacity(0.8))
-                .scaleEffect(celebrationScale)
-                .onAppear(perform: revealCelebration)
+            Group {
+                if passedMastery {
+                    Celebration3DView(size: 150, spins: !reduceMotion)
+                } else {
+                    Image(systemName: "arrow.counterclockwise.circle.fill")
+                        .font(.system(size: 72))
+                        .foregroundStyle(.white.opacity(0.8))
+                        .scaleEffect(celebrationScale)
+                }
+            }
+            .onAppear(perform: revealCelebration)
 
             Text(passedMastery ? "Level cleared!" : "Good effort")
                 .font(.largeTitle.bold())
