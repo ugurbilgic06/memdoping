@@ -194,12 +194,13 @@ struct RetrievalMissionView: View {
                     if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                     session.place(tileID: tile.id)
                 } label: {
-                    Text(String(tile.letter))
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
-                        .frame(width: 46, height: 52)
-                        .background(.white.opacity(tile.used ? 0.03 : 0.12),
-                                    in: RoundedRectangle(cornerRadius: 12))
-                        .foregroundStyle(tile.used ? .white.opacity(0.2) : .white)
+                    GameTile(cornerRadius: 12) {
+                        Text(String(tile.letter))
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .frame(width: 46, height: 52)
+                            .foregroundStyle(.white)
+                    }
+                    .opacity(tile.used ? 0.3 : 1)
                 }
                 .buttonStyle(.plain)
                 .disabled(tile.used)

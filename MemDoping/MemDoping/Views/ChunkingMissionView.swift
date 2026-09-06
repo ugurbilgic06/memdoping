@@ -240,12 +240,13 @@ struct ChunkingMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.enter(digit)
         } label: {
-            Text("\(digit)")
-                .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 18)
-                .background(.white.opacity(0.09), in: RoundedRectangle(cornerRadius: 16))
-                .foregroundStyle(.white)
+            GameTile(cornerRadius: 16) {
+                Text("\(digit)")
+                    .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .foregroundStyle(.white)
+            }
         }
         .buttonStyle(.plain)
     }
