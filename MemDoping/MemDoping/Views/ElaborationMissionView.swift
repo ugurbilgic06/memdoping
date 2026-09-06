@@ -170,7 +170,8 @@ struct ElaborationMissionView: View {
 
             if let q = session.currentQuestion {
                 VStack(spacing: 8) {
-                    Symbol3DTile(symbol: q.fact.symbol, tint: session.level.tileBase, size: 116)
+                    Symbol3DTile(symbol: q.fact.symbol, tint: session.level.tileBase, size: 116,
+                                 celebrate: revealed && q.isCorrect)
                     Text(q.fact.subject.localizedContent)
                         .font(.headline).foregroundStyle(.white)
                         .multilineTextAlignment(.center)

@@ -73,7 +73,8 @@ struct InterleavingMissionView: View {
             ProgressView(value: session.progress).tint(Brand.accent)
 
             if let q = session.current {
-                Symbol3DTile(symbol: q.pair.symbol, tint: session.level.tileBase, size: 132)
+                Symbol3DTile(symbol: q.pair.symbol, tint: session.level.tileBase, size: 132,
+                             celebrate: revealed && q.answerCorrect)
                     .padding(.top, 4)
 
                 if session.step == .category {

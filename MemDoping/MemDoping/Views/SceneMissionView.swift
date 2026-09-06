@@ -158,7 +158,8 @@ struct SceneMissionView: View {
                 .font(.title3.weight(.semibold)).foregroundStyle(.white)
 
             if let q = session.currentQuestion {
-                Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150)
+                Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150,
+                             celebrate: revealed && q.isCorrect)
                     .padding(.vertical, 8)
 
                 VStack(spacing: 12) {

@@ -15,6 +15,8 @@ struct Symbol3DTile: View {
     let symbol: String
     var tint: Color
     var size: CGFloat = 150
+    /// When true, the tile emits a 3D spark burst (e.g. on a correct answer).
+    var celebrate: Bool = false
 
     var body: some View {
         ZStack {
@@ -23,13 +25,14 @@ struct Symbol3DTile: View {
                 .blur(radius: 6)
                 .frame(width: size * 1.05, height: size * 1.05)
 
-            SceneView(scene: Symbol3DTile.makeScene(symbol: symbol, tint: tint), options: [])
+            SceneView(scene: Symbol3DTile.makeScene(symbol: symbol, tint: tint, burst: celebrate),
+                      options: [])
                 .frame(width: size, height: size)
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .stroke(Brand.edgeHighlight, lineWidth: 1))
                 .shadow(color: .black.opacity(0.35), radius: 12, y: 7)
-                .id(symbol)   // rebuild + re-pop when the prompt changes
+                .id("\(symbol)-\(celebrate)")   // rebuild on prompt change or celebration
         }
         .frame(width: size, height: size)
         .accessibilityLabel(Text(symbol))
@@ -37,7 +40,7 @@ struct Symbol3DTile: View {
 
     // MARK: - Scene
 
-    static func makeScene(symbol: String, tint: Color) -> SCNScene {
+    static func makeScene(symbol: String, tint: Color, burst: Bool = false) -> SCNScene {
         let scene = SCNScene()
         scene.background.contents = cg(0.13, 0.10, 0.27)
 
@@ -77,11 +80,16 @@ struct Symbol3DTile: View {
             tile.addChildNode(planeNode)
         }
 
-        // Pop in, then a gentle, readable sway (never turning fully away).
-        tile.scale = SCNVector3(0.02, 0.02, 0.02)
-        let pop = SCNAction.scale(to: 1, duration: 0.4)
-        pop.timingMode = .easeOut
-        tile.runAction(pop)
+        // On a fresh prompt, pop in; on a celebration rebuild, stay put so the
+        // tile doesn't re-pop while sparks fly.
+        if burst {
+            tile.scale = SCNVector3(1, 1, 1)
+        } else {
+            tile.scale = SCNVector3(0.02, 0.02, 0.02)
+            let pop = SCNAction.scale(to: 1, duration: 0.4)
+            pop.timingMode = .easeOut
+            tile.runAction(pop)
+        }
 
         let swayRight = SCNAction.rotateBy(x: 0.12, y: 0.5, z: 0, duration: 2.2)
         let swayLeft = SCNAction.rotateBy(x: -0.12, y: -0.5, z: 0, duration: 2.2)
@@ -119,6 +127,33 @@ struct Symbol3DTile: View {
         ambient.light?.intensity = 320
         ambient.light?.color = cg(0.6, 0.6, 0.85)
         scene.rootNode.addChildNode(ambient)
+
+        // A 3D spark burst on a correct answer.
+        if burst {
+            let sparks = SCNParticleSystem()
+            sparks.loops = false
+            sparks.birthRate = 220
+            sparks.emissionDuration = 0.12
+            sparks.particleLifeSpan = 0.9
+            sparks.particleLifeSpanVariation = 0.4
+            sparks.particleVelocity = 3.6
+            sparks.particleVelocityVariation = 2.2
+            sparks.spreadingAngle = 180
+            sparks.particleSize = 0.05
+            sparks.particleSizeVariation = 0.03
+            sparks.acceleration = SCNVector3(0, -5, 0)
+            sparks.blendMode = .additive
+            sparks.isAffectedByGravity = false
+            #if canImport(UIKit)
+            sparks.particleColor = UIColor(cgColor: cgColor(tint.brightness(1.7)))
+            #elseif canImport(AppKit)
+            sparks.particleColor = NSColor(cgColor: cgColor(tint.brightness(1.7))) ?? .white
+            #endif
+            let emitter = SCNNode()
+            emitter.position = SCNVector3(0, 0, 0.3)
+            emitter.addParticleSystem(sparks)
+            scene.rootNode.addChildNode(emitter)
+        }
 
         return scene
     }
