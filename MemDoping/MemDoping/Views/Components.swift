@@ -233,6 +233,16 @@ struct ShakeEffect: GeometryEffect {
     }
 }
 
+extension View {
+    /// A one-shot Y-axis flip when `active` becomes true — the tile "turns over"
+    /// to reveal its result (mahjong-style). A full 360° keeps content upright.
+    func flipReveal(_ active: Bool) -> some View {
+        rotation3DEffect(.degrees(active ? 360 : 0), axis: (x: 0, y: 1, z: 0),
+                         perspective: 0.4)
+            .animation(.easeInOut(duration: 0.5), value: active)
+    }
+}
+
 /// A one-shot radial spark burst — the little "explosion" when a tile lands
 /// correctly. Fires its animation on appear, so show it conditionally.
 struct SparkBurst: View {

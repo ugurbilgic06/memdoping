@@ -227,6 +227,7 @@ struct ElaborationMissionView: View {
                 .padding().frame(maxWidth: .infinity, alignment: .leading)
             }
             .scaleEffect(isChosen && revealed ? 1.05 : 1.0)
+            .flipReveal(revealed && isChosen && isCorrectAnswer && !reduceMotion)
             .modifier(ShakeEffect(animatableData:
                 (revealed && isChosen && !isCorrectAnswer && !reduceMotion) ? 1 : 0))
             .overlay { if revealed && isCorrectAnswer && !reduceMotion { SparkBurst(color: .white) } }

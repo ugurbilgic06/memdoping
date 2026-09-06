@@ -172,6 +172,7 @@ struct LociMissionView: View {
                     }
                     .opacity(used && !isChosen && !isRight ? 0.3 : 1)
                     .scaleEffect(isRight && revealed ? 1.06 : 1)
+                    .flipReveal(isRight && revealed && !reduceMotion)
                     .modifier(ShakeEffect(animatableData:
                         (revealed && isChosen && !isRight && !reduceMotion) ? 1 : 0))
                     .overlay { if isRight && revealed && !reduceMotion { SparkBurst(color: .white) } }
