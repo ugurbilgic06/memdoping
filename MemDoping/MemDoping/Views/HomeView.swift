@@ -40,6 +40,7 @@ struct HomeView: View {
                 case .scene:      SceneMissionView(level: level)
                 case .interleaving: InterleavingMissionView(level: level)
                 case .elaboration: ElaborationMissionView(level: level)
+                case .story:      StoryMissionView(level: level)
                 }
             }
             .navigationDestination(isPresented: $showReview) {

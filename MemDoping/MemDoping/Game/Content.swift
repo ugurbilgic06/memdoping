@@ -43,6 +43,9 @@ enum LevelMechanic: String, Hashable {
     /// Pick the plausible "why" for a fact, then recall which reason went with
     /// which fact (T07 Elaboration — "Neden Böyle?").
     case elaboration
+    /// Link items into a chain story with action cards, then recall the order
+    /// (T08 Story Linking — serial recall).
+    case story
 }
 
 /// A fact plus the reason behind it, for elaborative interrogation (T07).
@@ -163,6 +166,7 @@ struct GameLevel: Identifiable, Hashable {
             return min(0.78, 0.55 + Double(max(0, choiceCount - 2)) * 0.08)
         case .chunking:  return 0.80   // reproduce a number from grouped memory
         case .interleaving: return 0.85   // discriminate category, then recall
+        case .story:     return 0.88   // serial recall of a linked sequence
         case .loci:      return 0.90   // serial reconstruction along a route
         case .retrieval: return 0.95   // free recall — produce every letter
         }
@@ -249,6 +253,12 @@ enum SampleContent {
         .init(emoji: "🌀", text: "is spinning"),
         .init(emoji: "🎈", text: "is floating"),
         .init(emoji: "😱", text: "is screaming")
+    ]
+
+    /// Vivid linking actions for chain stories (T08). Read as "<A> <action> <B>".
+    static let storyActions: [String] = [
+        "chased", "swallowed", "hugged", "jumped over", "carried",
+        "painted", "tickled", "followed", "kicked", "threw"
     ]
 
     /// Everyday "why" facts — familiar enough that most players have some
@@ -399,6 +409,15 @@ enum SampleLevels {
             theme: SampleContent.animals,   // unused by this mechanic
             mechanic: .elaboration,
             whyDeck: SampleContent.whyEveryday
+        ),
+        GameLevel(
+            index: 11,
+            title: "Chain Story",
+            technique: "Story Linking",
+            tip: "Don't memorize a list — tie the items into one silly story. A story you built brings the order back for you.",
+            itemCount: 4, questionCount: 4, choiceCount: 3, memorizeSeconds: 0,
+            theme: SampleContent.animals,
+            mechanic: .story
         )
     ]
 
