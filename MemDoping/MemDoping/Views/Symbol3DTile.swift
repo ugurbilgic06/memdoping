@@ -63,6 +63,7 @@ struct Symbol3DTile: View {
         box.materials = [mat]
 
         let cube = SCNNode(geometry: box)
+        cube.name = "cube"
         cube.eulerAngles = SCNVector3(0.12, 0.5, 0)   // slight tilt for depth
 
         // The emoji on each of the four side faces, so a character always faces
@@ -75,7 +76,7 @@ struct Symbol3DTile: View {
                 (SCNVector3(d, 0, 0),  SCNVector3(0, 1.5708, 0)),      // right
                 (SCNVector3(-d, 0, 0), SCNVector3(0, -1.5708, 0))      // left
             ]
-            for (i, face) in faces.enumerated() {
+            for (pos, rot) in faces {
                 let plane = SCNPlane(width: 2.0, height: 2.0)
                 let pm = SCNMaterial()
                 pm.diffuse.contents = image
@@ -84,21 +85,8 @@ struct Symbol3DTile: View {
                 pm.blendMode = .alpha
                 plane.materials = [pm]
                 let node = SCNNode(geometry: plane)
-                node.position = face.0
-                node.eulerAngles = face.1
-                // Make the character feel alive: a gentle "breathing" pulse and
-                // a small wobble, phase-shifted per face so it looks organic.
-                let phase = Double(i) * 0.35
-                let grow = SCNAction.scale(to: 1.07, duration: 0.85)
-                grow.timingMode = .easeInEaseOut
-                let shrink = SCNAction.scale(to: 1.0, duration: 0.85)
-                shrink.timingMode = .easeInEaseOut
-                let breathe = SCNAction.sequence([grow, shrink])
-                let wobble = SCNAction.rotateBy(x: 0, y: 0, z: 0.07, duration: 1.05)
-                wobble.timingMode = .easeInEaseOut
-                let sway = SCNAction.sequence([wobble, wobble.reversed()])
-                node.runAction(.sequence([.wait(duration: phase), .repeatForever(breathe)]))
-                node.runAction(.sequence([.wait(duration: phase), .repeatForever(sway)]))
+                node.position = pos
+                node.eulerAngles = rot
                 cube.addChildNode(node)
             }
         }
@@ -111,7 +99,8 @@ struct Symbol3DTile: View {
             cube.runAction(pop)
         }
         // Endless calm spin so the character turns without being dizzying…
-        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 13)))
+        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 13)),
+                       forKey: "spin")
         // …and a gentle float up and down, like a living character.
         let up = SCNAction.moveBy(x: 0, y: 0.11, z: 0, duration: 1.7)
         up.timingMode = .easeInEaseOut
@@ -121,7 +110,7 @@ struct Symbol3DTile: View {
         // Camera — close enough that the cube fills the frame.
         let camera = SCNNode()
         camera.camera = SCNCamera()
-        camera.position = SCNVector3(0, 0, 4.05)   // closer, so the cube fills the frame
+        camera.position = SCNVector3(0, 0, 3.75)   // closer, so the cube is big and fills the frame
         scene.rootNode.addChildNode(camera)
 
         let key = SCNNode()
@@ -242,19 +231,52 @@ private struct TransparentSceneView {
 
 #if canImport(UIKit)
 extension TransparentSceneView: UIViewRepresentable {
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
     func makeUIView(context: Context) -> SCNView {
         let v = SCNView()
         v.backgroundColor = .clear
         v.isOpaque = false
         v.antialiasingMode = .multisampling4X
         v.rendersContinuously = true
-        v.allowsCameraControl = true                       // drag to spin it yourself
-        v.defaultCameraController.interactionMode = .orbitTurntable
         v.scene = scene
+        // Drag to spin the cube yourself — a plain rotation, no camera zoom.
+        let pan = UIPanGestureRecognizer(target: context.coordinator,
+                                         action: #selector(Coordinator.handlePan(_:)))
+        v.addGestureRecognizer(pan)
+        context.coordinator.view = v
         return v
     }
+
     func updateUIView(_ v: SCNView, context: Context) {
-        if v.scene !== scene { v.scene = scene }
+        if v.scene !== scene {
+            v.scene = scene
+            context.coordinator.view = v
+        }
+    }
+
+    final class Coordinator: NSObject {
+        weak var view: SCNView?
+
+        @objc func handlePan(_ g: UIPanGestureRecognizer) {
+            guard let cube = view?.scene?.rootNode.childNode(withName: "cube", recursively: false)
+            else { return }
+            let t = g.translation(in: view)
+            switch g.state {
+            case .began:
+                cube.removeAction(forKey: "spin")           // stop auto-spin while held
+            case .changed:
+                let k: Float = 0.01
+                cube.eulerAngles.y += Float(t.x) * k
+                cube.eulerAngles.x += Float(t.y) * k
+                g.setTranslation(.zero, in: view)
+            case .ended, .cancelled:
+                cube.runAction(.repeatForever(
+                    .rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 13)), forKey: "spin")
+            default:
+                break
+            }
+        }
     }
 }
 #elseif canImport(AppKit)
@@ -264,8 +286,6 @@ extension TransparentSceneView: NSViewRepresentable {
         v.backgroundColor = .clear
         v.antialiasingMode = .multisampling4X
         v.rendersContinuously = true
-        v.allowsCameraControl = true
-        v.defaultCameraController.interactionMode = .orbitTurntable
         v.scene = scene
         return v
     }
