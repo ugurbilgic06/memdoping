@@ -2,14 +2,19 @@
 //  Symbol3DTile.swift
 //  MemDoping
 //
-//  The recall prompt as a real 3D object: the symbol textured onto the face of
-//  a glossy SceneKit tile that pops in and gently sways. One SceneView per
-//  screen (the prompt is the star of each question), so it stays performant.
-//  Tinted by the level's evolving tile motif.
+//  The recall prompt as a real 3D object: a glossy, tinted cube that floats and
+//  spins on a transparent background (no white plate) — the emoji "character"
+//  rides its four side faces, so one always turns to face you. Filling the frame
+//  makes the character read large. Tinted by the level's evolving motif.
 //
 
 import SwiftUI
 import SceneKit
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 struct Symbol3DTile: View {
     let symbol: String
@@ -19,95 +24,94 @@ struct Symbol3DTile: View {
     var celebrate: Bool = false
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(tint.brightness(0.5).opacity(0.35))
-                .blur(radius: 6)
-                .frame(width: size * 1.05, height: size * 1.05)
-
-            SceneView(scene: Symbol3DTile.makeScene(symbol: symbol, tint: tint, burst: celebrate),
-                      options: [])
-                .frame(width: size, height: size)
-                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .stroke(Brand.edgeHighlight, lineWidth: 1))
-                .shadow(color: .black.opacity(0.35), radius: 12, y: 7)
-                .id("\(symbol)-\(celebrate)")   // rebuild on prompt change or celebration
-        }
-        .frame(width: size, height: size)
-        .accessibilityLabel(Text(symbol))
+        TransparentSceneView(scene: Symbol3DTile.makeScene(symbol: symbol, tint: tint, burst: celebrate))
+            .frame(width: size, height: size)
+            .id("\(symbol)-\(celebrate)")   // rebuild on prompt change or celebration
+            .shadow(color: tint.opacity(0.45), radius: 12, y: 8)
+            .accessibilityLabel(Text(symbol))
     }
 
     // MARK: - Scene
 
     static func makeScene(symbol: String, tint: Color, burst: Bool = false) -> SCNScene {
         let scene = SCNScene()
-        scene.background.contents = cg(0.93, 0.96, 0.99)
+        // No background — the view is transparent, so the app's own backdrop
+        // shows through instead of a white box.
+        scene.background.contents = nil
 
-        // Image-based lighting so the glossy tile has something to reflect.
         let env = environmentImage()
         if let env {
             scene.lightingEnvironment.contents = env
-            scene.lightingEnvironment.intensity = 1.3
+            scene.lightingEnvironment.intensity = 1.2
         }
 
-        // The tile body — glossy, lightly reflective, with a fresnel edge sheen.
-        let box = SCNBox(width: 2.4, height: 2.4, length: 0.5, chamferRadius: 0.2)
+        // The character cube — big, glossy, tinted. Fills the frame.
+        let box = SCNBox(width: 2.6, height: 2.6, length: 2.6, chamferRadius: 0.45)
         let mat = SCNMaterial()
         mat.lightingModel = .physicallyBased
-        mat.diffuse.contents = cgColor(tint.brightness(1.15))
-        mat.metalness.contents = 0.5
-        mat.roughness.contents = 0.28
+        mat.diffuse.contents = cgColor(tint.brightness(1.12))
+        mat.metalness.contents = 0.25
+        mat.roughness.contents = 0.2
         if let env {
             mat.reflective.contents = env
-            mat.reflective.intensity = 0.45
+            mat.reflective.intensity = 0.5
         }
-        mat.fresnelExponent = 1.6
+        mat.fresnelExponent = 1.5
         box.materials = [mat]
-        let tile = SCNNode(geometry: box)
 
-        // The symbol, drawn to an image and mapped onto a plane on the face so
-        // it turns with the tile.
+        let cube = SCNNode(geometry: box)
+        cube.eulerAngles = SCNVector3(0.12, 0.5, 0)   // slight tilt for depth
+
+        // The emoji on each of the four side faces, so a character always faces
+        // the camera and turns with the cube.
         if let image = symbolImage(symbol) {
-            let plane = SCNPlane(width: 2.05, height: 2.05)
-            let pm = SCNMaterial()
-            pm.diffuse.contents = image
-            pm.isDoubleSided = true
-            pm.lightingModel = .constant
-            plane.materials = [pm]
-            let planeNode = SCNNode(geometry: plane)
-            planeNode.position = SCNVector3(0, 0, 0.26)
-            tile.addChildNode(planeNode)
+            let d: Float = 1.315
+            let faces: [(SCNVector3, SCNVector3)] = [
+                (SCNVector3(0, 0, d),  SCNVector3(0, 0, 0)),           // front
+                (SCNVector3(0, 0, -d), SCNVector3(0, 3.14159, 0)),     // back
+                (SCNVector3(d, 0, 0),  SCNVector3(0, 1.5708, 0)),      // right
+                (SCNVector3(-d, 0, 0), SCNVector3(0, -1.5708, 0))      // left
+            ]
+            for (pos, rot) in faces {
+                let plane = SCNPlane(width: 2.0, height: 2.0)
+                let pm = SCNMaterial()
+                pm.diffuse.contents = image
+                pm.lightingModel = .constant
+                pm.isDoubleSided = false
+                pm.blendMode = .alpha
+                plane.materials = [pm]
+                let node = SCNNode(geometry: plane)
+                node.position = pos
+                node.eulerAngles = rot
+                cube.addChildNode(node)
+            }
         }
 
-        // On a fresh prompt, pop in; on a celebration rebuild, stay put so the
-        // tile doesn't re-pop while sparks fly.
-        if burst {
-            tile.scale = SCNVector3(1, 1, 1)
-        } else {
-            tile.scale = SCNVector3(0.02, 0.02, 0.02)
-            let pop = SCNAction.scale(to: 1, duration: 0.4)
+        // Pop in on a fresh prompt (skip while sparks fly so it doesn't re-pop).
+        if !burst {
+            cube.scale = SCNVector3(0.02, 0.02, 0.02)
+            let pop = SCNAction.scale(to: 1, duration: 0.42)
             pop.timingMode = .easeOut
-            tile.runAction(pop)
+            cube.runAction(pop)
         }
+        // Endless slow spin so the character turns…
+        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 9)))
+        // …and a gentle float up and down, like a living character.
+        let up = SCNAction.moveBy(x: 0, y: 0.13, z: 0, duration: 1.6)
+        up.timingMode = .easeInEaseOut
+        cube.runAction(.repeatForever(.sequence([up, up.reversed()])))
+        scene.rootNode.addChildNode(cube)
 
-        let swayRight = SCNAction.rotateBy(x: 0.12, y: 0.5, z: 0, duration: 2.2)
-        let swayLeft = SCNAction.rotateBy(x: -0.12, y: -0.5, z: 0, duration: 2.2)
-        swayRight.timingMode = .easeInEaseOut
-        swayLeft.timingMode = .easeInEaseOut
-        tile.runAction(.repeatForever(.sequence([swayRight, swayLeft])))
-        scene.rootNode.addChildNode(tile)
-
-        // Camera + lighting.
+        // Camera — close enough that the cube fills the frame.
         let camera = SCNNode()
         camera.camera = SCNCamera()
-        camera.position = SCNVector3(0, 0, 4.1)
+        camera.position = SCNVector3(0, 0, 4.35)
         scene.rootNode.addChildNode(camera)
 
         let key = SCNNode()
         key.light = SCNLight()
         key.light?.type = .directional
-        key.light?.intensity = 1100
+        key.light?.intensity = 1050
         key.light?.color = cg(1.0, 0.97, 0.92)
         key.eulerAngles = SCNVector3(-0.6, -0.5, 0)
         scene.rootNode.addChildNode(key)
@@ -116,7 +120,7 @@ struct Symbol3DTile: View {
         let rim = SCNNode()
         rim.light = SCNLight()
         rim.light?.type = .omni
-        rim.light?.intensity = 650
+        rim.light?.intensity = 700
         rim.light?.color = cgColor(tint.brightness(1.6))
         rim.position = SCNVector3(-3.5, 2.5, -2)
         scene.rootNode.addChildNode(rim)
@@ -124,20 +128,20 @@ struct Symbol3DTile: View {
         let ambient = SCNNode()
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
-        ambient.light?.intensity = 320
-        ambient.light?.color = cg(0.6, 0.6, 0.85)
+        ambient.light?.intensity = 450
+        ambient.light?.color = cg(0.72, 0.78, 0.9)
         scene.rootNode.addChildNode(ambient)
 
         // A 3D spark burst on a correct answer.
         if burst {
             let sparks = SCNParticleSystem()
             sparks.loops = false
-            sparks.birthRate = 220
+            sparks.birthRate = 240
             sparks.emissionDuration = 0.12
             sparks.particleLifeSpan = 0.9
             sparks.particleLifeSpanVariation = 0.4
-            sparks.particleVelocity = 3.6
-            sparks.particleVelocityVariation = 2.2
+            sparks.particleVelocity = 3.8
+            sparks.particleVelocityVariation = 2.4
             sparks.spreadingAngle = 180
             sparks.particleSize = 0.05
             sparks.particleSizeVariation = 0.03
@@ -150,7 +154,7 @@ struct Symbol3DTile: View {
             sparks.particleColor = NSColor(cgColor: cgColor(tint.brightness(1.7))) ?? .white
             #endif
             let emitter = SCNNode()
-            emitter.position = SCNVector3(0, 0, 0.3)
+            emitter.position = SCNVector3(0, 0, 0)
             emitter.addParticleSystem(sparks)
             scene.rootNode.addChildNode(emitter)
         }
@@ -168,7 +172,7 @@ struct Symbol3DTile: View {
         return renderer.image { _ in
             let paragraph = NSMutableParagraphStyle()
             paragraph.alignment = .center
-            let font = UIFont.systemFont(ofSize: side * 0.78)
+            let font = UIFont.systemFont(ofSize: side * 0.8)
             let attrs: [NSAttributedString.Key: Any] = [.font: font, .paragraphStyle: paragraph]
             let str = symbol as NSString
             let bounds = str.boundingRect(with: CGSize(width: side, height: side),
@@ -183,7 +187,7 @@ struct Symbol3DTile: View {
     }
 
     /// A cheap gradient environment map — bright top to dark bottom gives the
-    /// glossy tile a believable window-like reflection without an HDR asset.
+    /// glossy cube a believable window-like reflection without an HDR asset.
     private static func environmentImage() -> Any? {
         #if canImport(UIKit)
         let size = CGSize(width: 256, height: 256)
@@ -213,3 +217,40 @@ struct Symbol3DTile: View {
         #endif
     }
 }
+
+/// A SceneKit view with a transparent background, so 3D content floats directly
+/// on the app's backdrop (SwiftUI's `SceneView` is always opaque).
+private struct TransparentSceneView {
+    let scene: SCNScene
+}
+
+#if canImport(UIKit)
+extension TransparentSceneView: UIViewRepresentable {
+    func makeUIView(context: Context) -> SCNView {
+        let v = SCNView()
+        v.backgroundColor = .clear
+        v.isOpaque = false
+        v.antialiasingMode = .multisampling4X
+        v.rendersContinuously = true
+        v.scene = scene
+        return v
+    }
+    func updateUIView(_ v: SCNView, context: Context) {
+        if v.scene !== scene { v.scene = scene }
+    }
+}
+#elseif canImport(AppKit)
+extension TransparentSceneView: NSViewRepresentable {
+    func makeNSView(context: Context) -> SCNView {
+        let v = SCNView()
+        v.backgroundColor = .clear
+        v.antialiasingMode = .multisampling4X
+        v.rendersContinuously = true
+        v.scene = scene
+        return v
+    }
+    func updateNSView(_ v: SCNView, context: Context) {
+        if v.scene !== scene { v.scene = scene }
+    }
+}
+#endif
