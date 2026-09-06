@@ -199,7 +199,7 @@ struct LociMissionView: View {
 
     private var itemTray: some View {
         FlowRow(spacing: 12) {
-            ForEach(session.itemTray) { item in
+            ForEach(Array(session.itemTray.enumerated()), id: \.element.id) { i, item in
                 let used = session.isItemUsed(item)
                 let isChosen = revealed && session.lastPick?.chosenItem.id == item.id
                 let isRight = revealed && session.lastPick?.placement.item.id == item.id
@@ -223,6 +223,7 @@ struct LociMissionView: View {
                 }
                 .buttonStyle(TileButtonStyle())
                 .disabled(revealed || used)
+                .dealIn(i)
             }
         }
     }
@@ -267,7 +268,7 @@ struct LociMissionView: View {
 
             ScrollView {
                 VStack(spacing: 10) {
-                    ForEach(session.picks) { pick in
+                    ForEach(Array(session.picks.enumerated()), id: \.element.id) { i, pick in
                         HStack(spacing: 12) {
                             Text(pick.placement.stop.icon).font(.title2)
                             Text(pick.placement.stop.name.localizedContent)
@@ -279,6 +280,7 @@ struct LociMissionView: View {
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .dealIn(i)
                     }
                 }
             }

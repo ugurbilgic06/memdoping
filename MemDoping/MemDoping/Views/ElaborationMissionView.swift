@@ -249,7 +249,7 @@ struct ElaborationMissionView: View {
 
             ScrollView {
                 VStack(spacing: 10) {
-                    ForEach(session.questions) { q in
+                    ForEach(Array(session.questions.enumerated()), id: \.element.id) { i, q in
                         HStack(spacing: 12) {
                             Text(q.fact.symbol).font(.title)
                             Text(q.fact.subject.localizedContent)
@@ -261,6 +261,7 @@ struct ElaborationMissionView: View {
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .dealIn(i)
                     }
                 }
             }

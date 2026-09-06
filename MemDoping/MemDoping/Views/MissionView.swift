@@ -93,7 +93,7 @@ struct MissionView: View {
 
             ScrollView {
                 VStack(spacing: 10) {
-                    ForEach(session.questions) { q in
+                    ForEach(Array(session.questions.enumerated()), id: \.element.id) { i, q in
                         HStack(spacing: 12) {
                             Text(q.prompt.symbol).font(.title)
                             VStack(alignment: .leading, spacing: 2) {
@@ -112,6 +112,7 @@ struct MissionView: View {
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .dealIn(i)
                     }
                 }
             }

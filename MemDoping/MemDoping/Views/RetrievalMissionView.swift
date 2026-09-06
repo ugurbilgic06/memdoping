@@ -303,7 +303,7 @@ struct RetrievalMissionView: View {
 
             ScrollView {
                 VStack(spacing: 10) {
-                    ForEach(session.recalls) { r in
+                    ForEach(Array(session.recalls.enumerated()), id: \.element.id) { i, r in
                         HStack(spacing: 12) {
                             Text(r.pair.symbol).font(.title)
                             Text(r.pair.word.localizedContent)
@@ -317,6 +317,7 @@ struct RetrievalMissionView: View {
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .dealIn(i)
                     }
                 }
             }

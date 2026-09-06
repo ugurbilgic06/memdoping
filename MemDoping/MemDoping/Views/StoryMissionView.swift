@@ -240,7 +240,7 @@ struct StoryMissionView: View {
             // The chain the player built.
             ScrollView {
                 VStack(spacing: 8) {
-                    ForEach(Array(session.links.enumerated()), id: \.offset) { _, link in
+                    ForEach(Array(session.links.enumerated()), id: \.offset) { i, link in
                         HStack(spacing: 8) {
                             Text(link.from.symbol)
                             Text(link.from.word.localizedContent)
@@ -254,6 +254,7 @@ struct StoryMissionView: View {
                         .foregroundStyle(.primary)
                         .padding(10)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .dealIn(i)
                     }
                 }
             }
