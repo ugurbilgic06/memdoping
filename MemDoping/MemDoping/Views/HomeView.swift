@@ -10,6 +10,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(GameStore.self) private var store
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var activeLevel: GameLevel?
 
     var body: some View {
@@ -103,6 +104,7 @@ struct HomeView: View {
                 HStack {
                     ProgressRing(progress: store.ringProgress)
                         .frame(width: 54, height: 54)
+                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.7), value: store.ringProgress)
                         .overlay(
                             Text("\(store.ringLevel)")
                                 .font(.headline).foregroundStyle(.white)

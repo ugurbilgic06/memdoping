@@ -161,6 +161,7 @@ struct MissionView: View {
     // MARK: Summary (XP, Memory Score, clear stopping point)
 
     @State private var celebrationScale: CGFloat = 0.6
+    @State private var badgesVisible = false
 
     private var summaryPhase: some View {
         VStack(spacing: 20) {
@@ -172,9 +173,13 @@ struct MissionView: View {
                 .onAppear {
                     if reduceMotion {
                         celebrationScale = 1
+                        badgesVisible = true
                     } else {
                         withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) {
                             celebrationScale = 1
+                        }
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.6).delay(0.25)) {
+                            badgesVisible = true
                         }
                     }
                 }
@@ -197,9 +202,13 @@ struct MissionView: View {
                     }
                     if outcome.unlockedNextLevel {
                         badge("New level unlocked!", "lock.open.fill", Brand.success)
+                            .scaleEffect(badgesVisible ? 1 : 0.7)
+                            .opacity(badgesVisible ? 1 : 0)
                     }
                     if outcome.isNewBest {
                         badge("New personal best", "rosette", Brand.accent)
+                            .scaleEffect(badgesVisible ? 1 : 0.7)
+                            .opacity(badgesVisible ? 1 : 0)
                     }
                     if outcome.memoryScore == nil {
                         Text("Play \(GameStore.minSessionsForScore) missions to reveal your Memory Score.")
