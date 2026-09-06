@@ -123,15 +123,15 @@ struct ElaborationMissionView: View {
             if store.soundEnabled { SoundPlayer.shared.play(ok ? .correct : .incorrect) }
             if store.hapticsEnabled { HapticsPlayer.shared.notify(success: ok) }
         } label: {
-            HStack {
-                Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
-                    .multilineTextAlignment(.leading)
-                Spacer(minLength: 8)
+            GameTile(cornerRadius: 14) {
+                HStack {
+                    Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
+                        .multilineTextAlignment(.leading)
+                    Spacer(minLength: 8)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(.white.opacity(0.12), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }

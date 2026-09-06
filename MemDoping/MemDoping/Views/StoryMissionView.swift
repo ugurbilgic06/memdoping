@@ -136,12 +136,12 @@ struct StoryMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.chooseAction(action)
         } label: {
-            Text(action.localizedContent)
-                .foregroundStyle(.white).fontWeight(.medium)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-                .overlay(RoundedRectangle(cornerRadius: 14).stroke(.white.opacity(0.12), lineWidth: 1))
+            GameTile(cornerRadius: 14) {
+                Text(action.localizedContent)
+                    .foregroundStyle(.white).fontWeight(.medium)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            }
         }
         .buttonStyle(.plain)
     }
@@ -186,12 +186,12 @@ struct StoryMissionView: View {
                         if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                         session.placeNext(pair)
                     } label: {
-                        Text(pair.symbol)
-                            .font(.system(size: 40))
-                            .frame(width: 66, height: 66)
-                            .background(.white.opacity(used ? 0.03 : 0.1),
-                                        in: RoundedRectangle(cornerRadius: 14))
-                            .opacity(used ? 0.25 : 1)
+                        GameTile(cornerRadius: 14) {
+                            Text(pair.symbol)
+                                .font(.system(size: 40))
+                                .frame(width: 66, height: 66)
+                        }
+                        .opacity(used ? 0.3 : 1)
                     }
                     .buttonStyle(.plain)
                     .disabled(used)

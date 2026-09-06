@@ -165,16 +165,12 @@ struct LociMissionView: View {
                     session.pick(item)
                     showReveal()
                 } label: {
-                    Text(item.symbol)
-                        .font(.system(size: 40))
-                        .frame(width: 66, height: 66)
-                        .background(trayFill(used: used, isChosen: isChosen, isRight: isRight),
-                                    in: RoundedRectangle(cornerRadius: 14))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14)
-                                .stroke(.white.opacity(0.12), lineWidth: 1)
-                        )
-                        .opacity(used && !isChosen && !isRight ? 0.25 : 1)
+                    GameTile(base: trayBase(isChosen: isChosen, isRight: isRight), cornerRadius: 14) {
+                        Text(item.symbol)
+                            .font(.system(size: 40))
+                            .frame(width: 66, height: 66)
+                    }
+                    .opacity(used && !isChosen && !isRight ? 0.3 : 1)
                 }
                 .buttonStyle(.plain)
                 .disabled(revealed || used)
@@ -182,10 +178,10 @@ struct LociMissionView: View {
         }
     }
 
-    private func trayFill(used: Bool, isChosen: Bool, isRight: Bool) -> Color {
-        if isRight { return Brand.success.opacity(0.35) }
-        if isChosen { return Brand.danger.opacity(0.35) }
-        return .white.opacity(0.08)
+    private func trayBase(isChosen: Bool, isRight: Bool) -> Color {
+        if isRight { return Brand.success }
+        if isChosen { return Brand.danger }
+        return Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
     }
 
     @ViewBuilder

@@ -116,16 +116,16 @@ struct InterleavingMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.pickCategory(theme)
         } label: {
-            HStack(spacing: 12) {
-                Text(themeIcon(theme.id)).font(.title2)
-                Text(theme.title.localizedContent)
-                    .foregroundStyle(.white).fontWeight(.semibold)
-                Spacer()
+            GameTile(base: themeColor(theme.id).brightness(0.62), cornerRadius: 14) {
+                HStack(spacing: 12) {
+                    Text(themeIcon(theme.id)).font(.title2)
+                    Text(theme.title.localizedContent)
+                        .foregroundStyle(.white).fontWeight(.semibold)
+                    Spacer()
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(themeColor(theme.id).opacity(0.22), in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(themeColor(theme.id), lineWidth: 1.5))
         }
         .buttonStyle(.plain)
     }

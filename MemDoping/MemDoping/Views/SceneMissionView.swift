@@ -134,16 +134,16 @@ struct SceneMissionView: View {
             if store.hapticsEnabled { HapticsPlayer.shared.tap() }
             session.choose(modifier)
         } label: {
-            HStack(spacing: 12) {
-                Text(modifier.emoji).font(.title2)
-                Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
-                    .foregroundStyle(.white).fontWeight(.medium)
-                Spacer()
+            GameTile(cornerRadius: 14) {
+                HStack(spacing: 12) {
+                    Text(modifier.emoji).font(.title2)
+                    Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
+                        .foregroundStyle(.white).fontWeight(.medium)
+                    Spacer()
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(.white.opacity(0.12), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
