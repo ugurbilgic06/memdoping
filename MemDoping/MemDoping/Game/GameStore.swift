@@ -18,13 +18,18 @@ struct SessionResult: Codable, Identifiable {
     let total: Int
     let choiceCount: Int
     let date: Date
+    /// Mechanic-aware difficulty (see GameLevel.memoryDifficulty). Optional so
+    /// saves written before mechanic-aware weighting still decode.
+    var difficulty: Double? = nil
 
     var accuracy: Double { total == 0 ? 0 : Double(correct) / Double(total) }
 
-    /// Difficulty weight (0.5...1.0): more answer choices means a harder task,
-    /// so a correct answer counts for more toward the Memory Score.
+    /// How much this result counts toward the Memory Score. Prefers the stored
+    /// mechanic-aware difficulty; falls back to the old choiceCount formula for
+    /// legacy results that predate it.
     var difficultyWeight: Double {
-        min(1.0, 0.5 + Double(choiceCount - 2) * 0.15)
+        if let difficulty { return min(1.0, max(0.2, difficulty)) }
+        return min(1.0, 0.5 + Double(choiceCount - 2) * 0.15)
     }
 }
 
@@ -210,7 +215,8 @@ final class GameStore {
             correct: correct,
             total: total,
             choiceCount: level.choiceCount,
-            date: .now
+            date: .now,
+            difficulty: level.memoryDifficulty
         )
         recentResults.insert(result, at: 0)
         if recentResults.count > 30 { recentResults.removeLast() }

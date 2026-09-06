@@ -107,6 +107,21 @@ struct GameLevel: Identifiable, Hashable {
 
     /// Accuracy required to master this level and unlock the next one.
     var masteryPercent: Double { 0.6 }
+
+    /// How much a correct answer here counts toward the Memory Score (§2
+    /// "comparable tasks"). Free recall and reconstruction demand more than
+    /// multiple-choice recognition, so they weigh more — independent of
+    /// choiceCount, which is 0 for the non-recognition mechanics.
+    var memoryDifficulty: Double {
+        switch mechanic {
+        case .pairRecall:
+            // Recognition; a little harder with more distractors.
+            return min(0.75, 0.5 + Double(max(0, choiceCount - 2)) * 0.08)
+        case .chunking:  return 0.80   // reproduce a number from grouped memory
+        case .loci:      return 0.90   // serial reconstruction along a route
+        case .retrieval: return 0.95   // free recall — produce every letter
+        }
+    }
 }
 
 // MARK: - Sample themed decks  (SAMPLE CONTENT — not final curriculum)
