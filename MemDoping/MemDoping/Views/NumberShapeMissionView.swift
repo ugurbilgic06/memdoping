@@ -204,7 +204,7 @@ struct NumberShapeMissionView: View {
                     Text("\(digit)")
                         .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
                         .foregroundStyle(.primary)
-                    Text(session.shape(for: digit)).font(.caption)
+                    Text(session.shape(for: digit)).font(.title3)
                 }
                 .frame(maxWidth: .infinity).padding(.vertical, 12)
             }

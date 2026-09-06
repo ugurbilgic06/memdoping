@@ -11,7 +11,7 @@ import SwiftUI
 /// MemDoping brand palette.
 enum Brand {
     static let primary = Color(red: 0.30, green: 0.62, blue: 1.0)    // calm blue
-    static let accent  = Color(red: 0.36, green: 0.86, blue: 0.82)   // soft, calming aqua
+    static let accent  = Color(red: 0.10, green: 0.74, blue: 0.70)   // vivid turquoise (visible on light)
     static let success = Color(red: 0.28, green: 0.84, blue: 0.60)   // soft green
     static let danger  = Color(red: 1.0,  green: 0.45, blue: 0.55)   // soft rose
 

@@ -192,10 +192,10 @@ struct StoryMissionView: View {
             FlowRow(spacing: 12) {
                 ForEach(session.tray) { pair in
                     let used = session.isUsed(pair)
-                    GameTile(base: session.level.tileBase, cornerRadius: 14) {
+                    GameTile(base: session.level.tileBase, cornerRadius: 16) {
                         Text(pair.symbol)
-                            .font(.system(size: 40))
-                            .frame(width: 66, height: 66)
+                            .font(.system(size: 56))
+                            .frame(width: 84, height: 84)
                     }
                     .opacity(used ? 0.3 : 1)
                     .offset(dragId == pair.id ? dragOffset : .zero)

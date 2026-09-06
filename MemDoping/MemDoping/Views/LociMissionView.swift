@@ -207,10 +207,10 @@ struct LociMissionView: View {
                     session.pick(item)
                     showReveal()
                 } label: {
-                    GameTile(base: trayBase(isChosen: isChosen, isRight: isRight), cornerRadius: 14) {
+                    GameTile(base: trayBase(isChosen: isChosen, isRight: isRight), cornerRadius: 16) {
                         Text(item.symbol)
-                            .font(.system(size: 40))
-                            .frame(width: 66, height: 66)
+                            .font(.system(size: 56))
+                            .frame(width: 84, height: 84)
                     }
                     .opacity(used && !isChosen && !isRight ? 0.3 : 1)
                     .scaleEffect(isRight && revealed ? 1.06 : 1)

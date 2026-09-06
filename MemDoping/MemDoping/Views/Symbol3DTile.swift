@@ -14,7 +14,7 @@ import SceneKit
 struct Symbol3DTile: View {
     let symbol: String
     var tint: Color
-    var size: CGFloat = 150
+    var size: CGFloat = 168
     /// When true, the tile emits a 3D spark burst (e.g. on a correct answer).
     var celebrate: Bool = false
 
@@ -69,7 +69,7 @@ struct Symbol3DTile: View {
         // The symbol, drawn to an image and mapped onto a plane on the face so
         // it turns with the tile.
         if let image = symbolImage(symbol) {
-            let plane = SCNPlane(width: 1.7, height: 1.7)
+            let plane = SCNPlane(width: 2.05, height: 2.05)
             let pm = SCNMaterial()
             pm.diffuse.contents = image
             pm.isDoubleSided = true
@@ -168,7 +168,7 @@ struct Symbol3DTile: View {
         return renderer.image { _ in
             let paragraph = NSMutableParagraphStyle()
             paragraph.alignment = .center
-            let font = UIFont.systemFont(ofSize: side * 0.66)
+            let font = UIFont.systemFont(ofSize: side * 0.78)
             let attrs: [NSAttributedString.Key: Any] = [.font: font, .paragraphStyle: paragraph]
             let str = symbol as NSString
             let bounds = str.boundingRect(with: CGSize(width: side, height: side),
