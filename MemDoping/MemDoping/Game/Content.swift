@@ -24,10 +24,13 @@ extension String {
 /// Which game a level actually plays. Each case has its own session model and
 /// screen; the ladder, XP and Memory Score are shared across all of them.
 enum LevelMechanic: String, Hashable {
-    /// Study symbol/word pairs, then pick the right word (T02/T04/T06/T08).
+    /// Study symbol/word pairs, then pick the right word (T02/T06/T08).
     case pairRecall
     /// Split a number into groups, hold it, type it back (T03).
     case chunking
+    /// Study the deck, then rebuild each word from scrambled letters — free
+    /// recall, no options (T04 Retrieval Practice).
+    case retrieval
 }
 
 /// How deeply the Learn-phase orienting question makes the player process an
@@ -198,19 +201,21 @@ enum SampleLevels {
         ),
         GameLevel(
             index: 5,
-            title: "Fewer Hints",
+            title: "Say It Yourself",
             technique: "Retrieval Practice",
-            tip: "Actively pulling an answer from memory strengthens it more than re-reading.",
-            itemCount: 5, questionCount: 5, choiceCount: 4, memorizeSeconds: 14,
-            theme: SampleContent.space
+            tip: "No options this time — spell each word from memory. Pulling it out yourself is what makes it last.",
+            itemCount: 5, questionCount: 4, choiceCount: 4, memorizeSeconds: 14,
+            theme: SampleContent.space,
+            mechanic: .retrieval
         ),
         GameLevel(
             index: 6,
-            title: "Hold It Longer",
+            title: "No Peeking",
             technique: "Retrieval Practice",
-            tip: "A short delay before recall makes the memory work — and last.",
+            tip: "Stuck on a word? Tap Hint for the next letter — it's free. Finishing it yourself still counts.",
             itemCount: 6, questionCount: 5, choiceCount: 4, memorizeSeconds: 13,
-            theme: SampleContent.travel
+            theme: SampleContent.travel,
+            mechanic: .retrieval
         ),
         GameLevel(
             index: 7,

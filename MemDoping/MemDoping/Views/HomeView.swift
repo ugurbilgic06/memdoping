@@ -33,6 +33,7 @@ struct HomeView: View {
                 switch level.mechanic {
                 case .pairRecall: MissionView(level: level)
                 case .chunking:   ChunkingMissionView(level: level)
+                case .retrieval:  RetrievalMissionView(level: level)
                 }
             }
         }
