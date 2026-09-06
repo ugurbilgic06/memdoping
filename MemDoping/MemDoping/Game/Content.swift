@@ -176,6 +176,35 @@ struct GameLevel: Identifiable, Hashable {
         }
     }
 
+    /// A short "how this technique works" explanation, shown on the level intro
+    /// so players learn the method up front. Honest, no over-claiming (§9).
+    var techniqueExplanation: String {
+        let key: String
+        switch mechanic {
+        case .pairRecall:
+            key = orientingDepth != nil
+                ? "You remember what you think about. Making a small decision about each item forces deeper processing — that's what makes it stick."
+                : "Study the pairs, then recall the right word on cue. Pulling a memory up on purpose is what strengthens it."
+        case .scene:
+            key = "Link two things with a vivid, silly mental picture. An image you build yourself is easier to find again than a plain fact."
+        case .chunking:
+            key = "Working memory holds only a few things at once — but a group counts as one. Break a long number into small chunks and you carry fewer pieces."
+        case .retrieval:
+            key = "Pulling an answer out of memory yourself, instead of re-reading it, is one of the strongest ways to make it last. It feels harder — that's the point."
+        case .interleaving:
+            key = "Mixing categories instead of blocking them trains you to pick the right one each time. Harder now, but it pays off later."
+        case .elaboration:
+            key = "Ask 'why is this true?' and build an answer. Tying a fact to what you already know gives memory more hooks to grab."
+        case .story:
+            key = "Chain the items into one short story. The story carries the order for you, so a long list becomes easy to recall in sequence."
+        case .loci:
+            key = "Place each item along a route you know, then walk it back in your mind. This borrows your powerful spatial memory — a learnable skill, not a talent."
+        case .numberShape:
+            key = "Every digit has a shape — 1 a candle, 2 a swan. Turning numbers into pictures gives memory something concrete to hold."
+        }
+        return key.localizedContent
+    }
+
     /// A difficulty-scaled clone at a new index, keeping the mechanic and its
     /// wired content. Used to extend the curated levels into the 100-level
     /// ladder; counts are capped and sessions clamp to available content.

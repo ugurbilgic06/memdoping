@@ -45,8 +45,17 @@ struct MissionIntro: View {
                     Label(level.technique.localizedContent, systemImage: "brain.head.profile")
                         .font(.headline)
                         .foregroundStyle(.white)
-                    Text(level.tip.localizedContent)
+                    Text(level.techniqueExplanation)
+                        .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.85))
+                    Label {
+                        Text(level.tip.localizedContent)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.white)
+                    } icon: {
+                        Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
+                    }
+                    .padding(.top, 2)
                 }
             }
 
