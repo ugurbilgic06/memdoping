@@ -226,7 +226,9 @@ struct SymbolBadge: View {
     /// A cheerful palette — cyan/teal/green/blue/pink/coral. Purple and amber
     /// are avoided on purpose (the owner's steer).
     private var plate: Color {
-        let hues: [Double] = [0.53, 0.42, 0.60, 0.34, 0.92, 0.02, 0.50, 0.38, 0.58, 0.90]
+        // Ordered so consecutive seeds alternate cool/warm and never repeat a
+        // hue family back-to-back.
+        let hues: [Double] = [0.53, 0.92, 0.34, 0.02, 0.60, 0.42, 0.90, 0.50, 0.38, 0.58]
         let h = hues[abs(seed) % hues.count]
         return Color(hue: h, saturation: 0.55, brightness: 0.9)
     }
