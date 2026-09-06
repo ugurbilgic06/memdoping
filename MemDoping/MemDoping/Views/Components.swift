@@ -33,7 +33,7 @@ struct BrandBackground: View {
 
 /// A large primary call-to-action button.
 struct PrimaryButton: View {
-    let title: String
+    let title: LocalizedStringKey
     var systemImage: String? = nil
     var tint: Color = Brand.accent
     let action: () -> Void
@@ -55,7 +55,7 @@ struct PrimaryButton: View {
 
 /// A compact labelled stat chip (XP, Memory Score, level).
 struct StatChip: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
     var systemImage: String
     var tint: Color = .white

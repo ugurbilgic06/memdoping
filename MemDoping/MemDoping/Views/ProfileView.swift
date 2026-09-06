@@ -70,7 +70,7 @@ struct ProfileView: View {
     }
 
     private var trendLabel: some View {
-        let (text, icon, color): (String, String, Color) = switch store.memoryScoreTrend {
+        let (text, icon, color): (LocalizedStringKey, String, Color) = switch store.memoryScoreTrend {
         case .up:      ("Rising", "arrow.up.right", Brand.success)
         case .down:    ("Dipping", "arrow.down.right", Brand.danger)
         case .steady:  ("Steady", "arrow.right", .white.opacity(0.7))
@@ -80,7 +80,7 @@ struct ProfileView: View {
             .foregroundStyle(color)
     }
 
-    private func stat(_ title: String, _ value: String) -> some View {
+    private func stat(_ title: LocalizedStringKey, _ value: String) -> some View {
         VStack(spacing: 2) {
             Text(value).font(.headline).foregroundStyle(.white)
             Text(title).font(.caption2).foregroundStyle(.white.opacity(0.6))
@@ -115,9 +115,6 @@ struct ProfileView: View {
                     .foregroundStyle(.white.opacity(0.8))
                 Divider().overlay(.white.opacity(0.2))
                 Text("Regular use may support memory performance, focus, and recall. Results vary by person; there is no 100% improvement guarantee.")
-                    .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.6))
-                Text("Düzenli kullanım hafıza performansını, odaklanmayı ve hatırlamayı destekleyebilir. Sonuçlar kişiden kişiye değişir; %100 gelişim garantisi yoktur.")
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.6))
             }

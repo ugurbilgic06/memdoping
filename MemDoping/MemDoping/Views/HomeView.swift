@@ -86,7 +86,7 @@ struct HomeView: View {
                         .font(.headline).foregroundStyle(.white)
                     Text(store.isDailyMissionDone
                          ? "Done for today — nice work."
-                         : "Bugünkü hafıza dopingin birkaç dakikanı alır.")
+                         : "Today's memory doping takes just a few minutes.")
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.75))
                 }

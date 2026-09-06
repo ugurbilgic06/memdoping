@@ -1,0 +1,348 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "About" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "About" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Hakkında" } }
+      }
+    },
+    "Accuracy" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Accuracy" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Doğruluk" } }
+      }
+    },
+    "An in-game recall indicator from recent tasks — not an IQ or clinical score." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "An in-game recall indicator from recent tasks — not an IQ or clinical score." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Son görevlerden elde edilen oyun-içi bir hatırlama göstergesi — IQ ya da klinik bir skor değildir." } }
+      }
+    },
+    "Back to home" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Back to home" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Ana ekrana dön" } }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Vazgeç" } }
+      }
+    },
+    "Comfort" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Comfort" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Konfor" } }
+      }
+    },
+    "Complete at least %lld missions to see a score." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Complete at least %lld missions to see a score." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bir skor görmek için en az %lld görev tamamla." } }
+      }
+    },
+    "Continue your training" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue your training" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Antrenmanına devam et" } }
+      }
+    },
+    "Daily mission" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily mission" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Günlük görev" } }
+      }
+    },
+    "Done for today — nice work." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done for today — nice work." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bugünlük tamam — iyi iş çıkardın." } }
+      }
+    },
+    "Finish" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Finish" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bitir" } }
+      }
+    },
+    "Good effort" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Good effort" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "İyi çaba" } }
+      }
+    },
+    "Haptics" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Haptics" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Titreşim" } }
+      }
+    },
+    "How did the links hold?" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "How did the links hold?" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bağlantılar ne kadar sağlam kaldı?" } }
+      }
+    },
+    "I'm ready" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "I'm ready" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Hazırım" } }
+      }
+    },
+    "Level" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Level" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Seviye" } }
+      }
+    },
+    "Level %lld" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Level %lld" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Seviye %lld" } }
+      }
+    },
+    "Level %lld: %@" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Level %lld: %@" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Seviye %lld: %@" } }
+      }
+    },
+    "Level cleared!" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Level cleared!" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Seviye tamamlandı!" } }
+      }
+    },
+    "Levels" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Levels" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Seviyeler" } }
+      }
+    },
+    "Memorize" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Memorize" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Ezberle" } }
+      }
+    },
+    "Memory Doping · Play, Learn, Remember" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Memory Doping · Play, Learn, Remember" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Hafıza Dopingi · Oyna, Öğren, Hatırla" } }
+      }
+    },
+    "Memory Score" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Memory Score" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Hafıza Skoru" } }
+      }
+    },
+    "MemDoping turns science-based memory techniques into short, playful missions. This build is an early prototype using clearly-labeled sample content." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "MemDoping turns science-based memory techniques into short, playful missions. This build is an early prototype using clearly-labeled sample content." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "MemDoping, bilime dayalı hafıza tekniklerini kısa, oyunsu görevlere dönüştürür. Bu sürüm, açıkça etiketlenmiş örnek içerik kullanan erken bir prototiptir." } }
+      }
+    },
+    "MemDoping XP" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "MemDoping XP" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "MemDoping XP" } }
+      }
+    },
+    "Missed one? That's the technique working. Recalling — and correcting — is how the link gets stronger." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Missed one? That's the technique working. Recalling — and correcting — is how the link gets stronger." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Birini mi kaçırdın? Bu, tekniğin işe yaradığının kanıtı. Hatırlamak — ve düzeltmek — bağlantıyı güçlendirir." } }
+      }
+    },
+    "Missions" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Missions" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Görevler" } }
+      }
+    },
+    "New level unlocked!" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New level unlocked!" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Yeni seviye açıldı!" } }
+      }
+    },
+    "New personal best" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New personal best" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Yeni kişisel rekor" } }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "İleri" } }
+      }
+    },
+    "Not enough data yet" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not enough data yet" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Henüz yeterli veri yok" } }
+      }
+    },
+    "%lld of %lld recalled" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld of %lld recalled" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "%lld / %lld hatırlandı" } }
+      }
+    },
+    "Play" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Play" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Oyna" } }
+      }
+    },
+    "Play again" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Play again" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Tekrar oyna" } }
+      }
+    },
+    "Play %lld missions to reveal your Memory Score." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Play %lld missions to reveal your Memory Score." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Hafıza Skorunu görmek için %lld görev oyna." } }
+      }
+    },
+    "Quit" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Çık" } }
+      }
+    },
+    "Reduced motion follows your system accessibility setting." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reduced motion follows your system accessibility setting." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Azaltılmış hareket, sistem erişilebilirlik ayarını takip eder." } }
+      }
+    },
+    "Regular use may support memory performance, focus, and recall. Results vary by person; there is no 100% improvement guarantee." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Regular use may support memory performance, focus, and recall. Results vary by person; there is no 100% improvement guarantee." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Düzenli kullanım hafıza performansını, odaklanmayı ve hatırlamayı destekleyebilir. Sonuçlar kişiden kişiye değişir; %100 gelişim garantisi yoktur." } }
+      }
+    },
+    "Reset all progress?" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset all progress?" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Tüm ilerleme sıfırlansın mı?" } }
+      }
+    },
+    "Reset everything" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset everything" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Her şeyi sıfırla" } }
+      }
+    },
+    "Reset progress" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset progress" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "İlerlemeyi sıfırla" } }
+      }
+    },
+    "Sample content — a prototype mission, not final curriculum." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sample content — a prototype mission, not final curriculum." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Örnek içerik — bir prototip görevi, nihai müfredat değildir." } }
+      }
+    },
+    "See results" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "See results" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Sonuçları gör" } }
+      }
+    },
+    "%lld seconds left" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld seconds left" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "%lld saniye kaldı" } }
+      }
+    },
+    "Sound" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sound" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Ses" } }
+      }
+    },
+    "Start" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Başla" } }
+      }
+    },
+    "This clears your XP, Memory Score, and unlocked levels. It cannot be undone." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This clears your XP, Memory Score, and unlocked levels. It cannot be undone." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bu, XP'ni, Hafıza Skorunu ve açılmış seviyelerini siler. Geri alınamaz." } }
+      }
+    },
+    "to learn" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "to learn" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "öğrenilecek" } }
+      }
+    },
+    "to recall" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "to recall" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "hatırlanacak" } }
+      }
+    },
+    "to study" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "to study" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "çalışılacak" } }
+      }
+    },
+    "Today's memory doping takes just a few minutes." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's memory doping takes just a few minutes." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bugünkü hafıza dopingin birkaç dakikanı alır." } }
+      }
+    },
+    "Which word goes here?" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Which word goes here?" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Buraya hangi kelime geliyor?" } }
+      }
+    },
+    "You chose: %@" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You chose: %@" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Seçtiğin: %@" } }
+      }
+    },
+    "Your Progress" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Your Progress" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "İlerlemen" } }
+      }
+    },
+    "Rising" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rising" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Yükseliyor" } }
+      }
+    },
+    "Dipping" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dipping" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Düşüyor" } }
+      }
+    },
+    "Steady" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Steady" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Sabit" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

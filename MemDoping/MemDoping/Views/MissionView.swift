@@ -88,7 +88,7 @@ struct MissionView: View {
         }
     }
 
-    private func miniStat(_ value: String, _ label: String, _ icon: String) -> some View {
+    private func miniStat(_ value: String, _ label: LocalizedStringKey, _ icon: String) -> some View {
         VStack(spacing: 4) {
             Image(systemName: icon).foregroundStyle(Brand.accent)
             Text(value).font(.headline).foregroundStyle(.white)
@@ -209,7 +209,7 @@ struct MissionView: View {
         }
     }
 
-    private func badge(_ text: String, _ icon: String, _ tint: Color) -> some View {
+    private func badge(_ text: LocalizedStringKey, _ icon: String, _ tint: Color) -> some View {
         Label(text, systemImage: icon)
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(.white)
