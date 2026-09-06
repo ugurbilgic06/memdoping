@@ -103,9 +103,11 @@ struct OnboardingView: View {
                 HStack(spacing: 14) {
                     Image(systemName: step.0)
                         .font(.title2)
-                        .foregroundStyle(Brand.accent)
-                        .frame(width: 40, height: 40)
-                        .background(.white.opacity(0.08), in: Circle())
+                        .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .background(Brand.gloss(Brand.accent), in: Circle())
+                        .overlay(Circle().strokeBorder(Brand.edgeHighlight, lineWidth: 1))
+                        .shadow(color: Brand.accent.opacity(0.4), radius: 6, y: 3)
                     Text(step.1)
                         .font(.headline)
                         .foregroundStyle(.white)
@@ -125,10 +127,14 @@ struct OnboardingView: View {
 
     private var honestArt: some View {
         ZStack {
-            Circle().fill(Brand.success.opacity(0.25)).frame(width: 150, height: 150)
+            Circle()
+                .fill(RadialGradient(colors: [Brand.success.opacity(0.55), .clear],
+                                     center: .center, startRadius: 6, endRadius: 130))
+                .frame(width: 200, height: 200)
             Image(systemName: "building.columns.fill")
-                .font(.system(size: 64))
-                .foregroundStyle(.white)
+                .font(.system(size: 72))
+                .foregroundStyle(Brand.gloss(Brand.success))
+                .shadow(color: Brand.success.opacity(0.5), radius: 16)
         }
     }
 
