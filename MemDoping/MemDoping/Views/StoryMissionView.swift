@@ -17,6 +17,8 @@ struct StoryMissionView: View {
 
     @State private var session: StorySession
     @State private var outcome: GameStore.SessionOutcome?
+    @State private var dragId: UUID? = nil
+    @State private var dragOffset: CGSize = .zero
 
     init(level: GameLevel) {
         _session = State(initialValue: StorySession(level: level))
@@ -152,7 +154,7 @@ struct StoryMissionView: View {
         VStack(spacing: 18) {
             ProgressView(value: session.recallProgress).tint(Brand.accent)
 
-            Text("Retell it — tap the items in order")
+            Text("Retell it — drag the items up, in order")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.center)
@@ -177,24 +179,35 @@ struct StoryMissionView: View {
                 }
             }
 
-            // Remaining items to place.
+            // Remaining items — drag one up to drop it into the next slot.
             FlowRow(spacing: 12) {
                 ForEach(session.tray) { pair in
                     let used = session.isUsed(pair)
-                    Button {
-                        if store.soundEnabled { SoundPlayer.shared.play(.pop) }
-                        if store.hapticsEnabled { HapticsPlayer.shared.tap() }
-                        session.placeNext(pair)
-                    } label: {
-                        GameTile(base: session.level.tileBase, cornerRadius: 14) {
-                            Text(pair.symbol)
-                                .font(.system(size: 40))
-                                .frame(width: 66, height: 66)
-                        }
-                        .opacity(used ? 0.3 : 1)
+                    GameTile(base: session.level.tileBase, cornerRadius: 14) {
+                        Text(pair.symbol)
+                            .font(.system(size: 40))
+                            .frame(width: 66, height: 66)
                     }
-                    .buttonStyle(TileButtonStyle())
-                    .disabled(used)
+                    .opacity(used ? 0.3 : 1)
+                    .offset(dragId == pair.id ? dragOffset : .zero)
+                    .zIndex(dragId == pair.id ? 1 : 0)
+                    .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.7),
+                               value: dragId == pair.id ? dragOffset : .zero)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { g in
+                                guard !used else { return }
+                                dragId = pair.id; dragOffset = g.translation
+                            }
+                            .onEnded { g in
+                                if !used, g.translation.height < -100 {
+                                    session.placeNext(pair)
+                                    if store.soundEnabled { SoundPlayer.shared.play(.pop) }
+                                    if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+                                }
+                                dragId = nil; dragOffset = .zero
+                            }
+                    )
                 }
             }
 
