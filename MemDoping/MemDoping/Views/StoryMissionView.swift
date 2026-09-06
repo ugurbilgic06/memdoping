@@ -132,12 +132,13 @@ struct StoryMissionView: View {
     }
 
     private func itemChip(_ pair: MemoryPair) -> some View {
-        VStack(spacing: 4) {
-            Text(pair.symbol).font(.system(size: 44))
-            Text(pair.word.localizedContent).font(.caption).foregroundStyle(.primary)
+        VStack(spacing: 6) {
+            SymbolBadge(symbol: pair.symbol, seed: pair.id.hashValue, size: 68)
+            Text(pair.word.localizedContent).font(.subheadline.weight(.medium))
+                .foregroundStyle(.primary)
         }
-        .padding(.vertical, 10).padding(.horizontal, 14)
-        .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(pair.word.localizedContent))
     }
 
     private func actionButton(_ action: String) -> some View {

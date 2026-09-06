@@ -90,10 +90,10 @@ struct SceneMissionView: View {
 
                 // The item — the drop target. The chosen twist lands on it.
                 ZStack(alignment: .topTrailing) {
-                    Text(card.pair.symbol).font(.system(size: 92))
+                    SymbolBadge(symbol: card.pair.symbol, seed: card.pair.id.hashValue, size: 124)
                     if let chosen = card.chosen {
-                        Text(chosen.emoji).font(.system(size: 44))
-                            .offset(x: 14, y: -6)
+                        Text(chosen.emoji).font(.system(size: 46))
+                            .offset(x: 16, y: -8)
                             .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
                     }
                 }

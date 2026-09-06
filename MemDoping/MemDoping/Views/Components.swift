@@ -69,15 +69,16 @@ struct BrandBackground: View {
     var body: some View {
         Group {
             if reduceMotion {
-                gradient(hue: 0.50)
+                gradient(hue: 0.60)
             } else {
                 TimelineView(.animation) { timeline in
                     let t = timeline.date.timeIntervalSinceReferenceDate
-                    // Ping-pong through a cheerful green→cyan→blue band, so the
-                    // colour is always shifting but never lands on purple/amber.
+                    // Ping-pong through a cool teal→sky→blue band. Staying cool
+                    // (and never green) keeps the airy backdrop clearly distinct
+                    // from the warm/green content tiles in front of it.
                     let cycle = (t * 0.03).truncatingRemainder(dividingBy: 2.0)
                     let tri = cycle < 1 ? cycle : 2 - cycle
-                    gradient(hue: 0.30 + tri * 0.33)
+                    gradient(hue: 0.52 + tri * 0.14)
                 }
             }
         }
@@ -208,6 +209,56 @@ extension GameLevel {
         let hues: [Double] = [0.50, 0.42, 0.55, 0.34, 0.93, 0.60, 0.02, 0.88]
         let hue = hues[(index - 1) % hues.count]
         return Color(hue: hue, saturation: 0.62, brightness: 0.86)
+    }
+}
+
+/// A large, illustrated presentation of a content emoji: the symbol sits on a
+/// glossy, depth-shaded plate whose colour is distinct per item, so a row of
+/// them reads as a set of friendly, recognisable tokens rather than flat emoji.
+/// Helps young / pre-reading players lean on the picture, not the word.
+struct SymbolBadge: View {
+    let symbol: String
+    /// Varies the plate colour so neighbouring badges are easy to tell apart.
+    var seed: Int = 0
+    /// Overall plate size; the emoji fills most of it.
+    var size: CGFloat = 84
+
+    /// A cheerful palette — cyan/teal/green/blue/pink/coral. Purple and amber
+    /// are avoided on purpose (the owner's steer).
+    private var plate: Color {
+        let hues: [Double] = [0.53, 0.42, 0.60, 0.34, 0.92, 0.02, 0.50, 0.38, 0.58, 0.90]
+        let h = hues[abs(seed) % hues.count]
+        return Color(hue: h, saturation: 0.55, brightness: 0.9)
+    }
+
+    var body: some View {
+        let corner = size * 0.30
+        Text(symbol)
+            .font(.system(size: size * 0.6))
+            .shadow(color: .black.opacity(0.18), radius: 1, y: 1)
+            .frame(width: size, height: size)
+            .background(
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .fill(LinearGradient(
+                        colors: [plate.brightness(1.22), plate, plate.brightness(0.82)],
+                        startPoint: .top, endPoint: .bottom))
+            )
+            // Top sheen for a rounded, glossy read.
+            .overlay(alignment: .top) {
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .fill(LinearGradient(colors: [.white.opacity(0.45), .clear],
+                                         startPoint: .top, endPoint: .center))
+                    .padding(2)
+                    .allowsHitTesting(false)
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .strokeBorder(LinearGradient(
+                        colors: [.white.opacity(0.7), .black.opacity(0.18)],
+                        startPoint: .top, endPoint: .bottom), lineWidth: 1.5)
+            )
+            .shadow(color: plate.opacity(0.5), radius: 9, y: 6)
+            .accessibilityHidden(true)   // the caller labels the pair with its word
     }
 }
 

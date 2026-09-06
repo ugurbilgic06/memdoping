@@ -118,16 +118,18 @@ struct NightDopingView: View {
 
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
-                    ForEach(pairs) { pair in
-                        VStack(spacing: 8) {
-                            Text(pair.symbol).font(.system(size: 48))
+                    ForEach(Array(pairs.enumerated()), id: \.element.id) { i, pair in
+                        VStack(spacing: 10) {
+                            SymbolBadge(symbol: pair.symbol, seed: i, size: 88)
                             Text(pair.word.localizedContent)
-                                .font(.headline).foregroundStyle(NightPalette.soft)
+                                .font(.title3.weight(.semibold)).foregroundStyle(NightPalette.soft)
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 22)
+                        .padding(.vertical, 18)
                         .background(NightPalette.glow.opacity(0.08),
                                     in: RoundedRectangle(cornerRadius: 18))
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel(Text(pair.word.localizedContent))
                     }
                 }
                 .padding(.top, 4)

@@ -275,17 +275,22 @@ private struct LearnPhaseView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(session.studyPairs) { pair in
-                        GameTile(base: session.level.tileBase) {
-                            VStack(spacing: 8) {
-                                Text(pair.symbol).font(.system(size: 46))
-                                Text(pair.word.localizedContent)
-                                    .font(.headline)
-                                    .foregroundStyle(.primary)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 20)
+                        VStack(spacing: 10) {
+                            SymbolBadge(symbol: pair.symbol, seed: pair.id.hashValue, size: 92)
+                            Text(pair.word.localizedContent)
+                                .font(.title3.weight(.semibold))
+                                .foregroundStyle(.primary)
+                                .multilineTextAlignment(.center)
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color.white.opacity(0.55),
+                                    in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
                         .gentleFloat(abs(pair.id.hashValue))
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel(Text(pair.word.localizedContent))
                     }
                 }
             }
