@@ -1,68 +1,77 @@
-# MemDoping — Deneme Logo/App Icon Notları
+# MemDoping — Logo & Brand Palette
 
-Durum: **DENEME** — bu, uygulamaya gerçekten işletilmiş ama nihai olmayan bir App Icon. Beğenilmezse aşağıdaki adımlarla kolayca değiştirilebilir.
+Status: **`logo-official.png` is the official logo**, supplied by the project owner and wired in as the app icon. The three earlier machine-generated concepts are kept below as archive only — they are not in use.
 
-## Tasarım kısıtları (MemDoping_Master_Project.md §1'den)
+## Official logo
 
-- İsim uyumu: "Mem" (hafıza) + "Doping" (motive edici bir "boost/güçlendirme" metaforu — ilaç/tıbbi tedavi çağrışımı **değil**).
-- §1: "The name does not imply drugs, medical treatment, or biological enhancement." → **Şırınga, hap, tıbbi haç gibi hiçbir sembol kullanılmadı.** "Doping" fikri evrensel bir "enerji/güç artışı" sembolü olan **yıldırım/bolt** ile temsil edildi (spor/oyun markalarında yaygın, zararsız bir görsel dil).
-- Hedef kitle çocuk-genç-yetişkin (§1) → sade, yuvarlak hatlı, oyun havasında, korkutucu/klinik olmayan bir görsel dil tercih edildi.
-- Küçük boyutta (App Store/ana ekran, ~60-120px) okunaklı olma zorunluluğu (Apple HIG) → üç konsept de 120px'de test edildi.
+`docs/branding/logo-official.png` — a smiling pink brain mascot pressing a barbell overhead, yellow burst rays around it, on a blue gradient rounded square.
 
-## Renk paleti
+It reads as "training your memory" literally rather than by metaphor, and stays clear of anything drug-like, which is the constraint the master brief puts on the name (§1: the name must not imply drugs, medical treatment, or biological enhancement).
 
-| Rol | Renk | Hex |
-|---|---|---|
-| Arka plan (koyu uç) | Derin indigo/mor | `#4C1D95` / `#4338CA` / `#3B0764` (konsepte göre değişir) |
-| Arka plan (açık uç) | Canlı mor | `#6D28D9` / `#7C3AED` |
-| Vurgu / "doping" enerjisi | Sıcak sarı-amber | `#FFC93C` |
-| Ön plan / kontrast | Kırık beyaz | `#F5F3FF` |
+### How it was prepared for the app icon
 
-**Neden mor+sarı:** Mor, hafıza/bilişsel gelişim uygulamalarında (Peak, Elevate gibi) sık kullanılan, "zihin/odak" çağrışımı yapan, klinik olmayan bir renk. Sarı-amber ise yüksek kontrastla "enerji/boost" hissini taşıyor ve mor üzerinde küçük boyutta bile göz alıcı kalıyor. İkisi birlikte "ciddi ama oyunsu" bir denge kuruyor — tıbbi (beyaz/yeşil/mavi-klinik) değil, oyunsu (canlı, kontrast) bir palet.
+The supplied file is 1254×1254 with the artwork's own rounded corners and white outside them. iOS masks app icons itself and requires a full square with no alpha, so:
 
-## Üç konsept
+1. Trimmed the flat white margin (3px left/right, 13px bottom).
+2. Squared to 1241×1241.
+3. Filled the four corner arcs — the white outside the rounded shape — using a flood fill from each corner. Flood fill rather than a "replace all near-white pixels" pass on purpose: the artwork has its own near-white highlights (the glossy top-left sheen, the shoe soles, the eye whites) that a global threshold would have eaten. Flood fill only reaches white connected to the outside, which the blue border ring seals off.
+4. Filled those corners with a zoomed, heavily blurred copy of the artwork itself, so each corner picks up the gradient tone next to it instead of a flat patch.
+5. Resized to 1024×1024, saved as RGB (no alpha channel — iOS rejects icons with alpha).
+6. Generated the macOS sizes (512/256/128/64/32/16) with `sips`.
 
-### Konsept A — "Beyin + Yıldırım" — **SEÇİLEN**
-`concept-a-brain-bolt.svg` / `.png`
+Verified on the simulator: no white slivers at the rounded edge, and iOS's own mask produces the rounded shape.
 
-Yuvarlak, bulut benzeri bir beyin silüeti (üst üste binen aynı renkli dairelerden oluşan, dikişsiz bir "brain cloud") üzerinden geçen sarı bir yıldırım. Beyin = "Mem" (hafıza), yıldırım = "Doping" (enerji/boost). En doğrudan ve en okunaklı kavram eşleşmesi; 120px'de bile hem bulut/beyin hem yıldırım net seçiliyor.
+### Known behaviour: dark mode
 
-**Neden seçildi:** İsimle en dolaysız/gösterge-değeri en yüksek eşleşme (metafor için ekstra açıklama gerektirmiyor), küçük boyutta net, oyunsu ve yuvarlak hatları çocuk-yetişkin geniş kitleye uygun, hiçbir tıbbi/ilaç çağrışımı yok.
+On iOS 26 the system applies its own dark-appearance treatment to the icon — the blue background renders much darker while the brain and rays stay bright. This is **not** an asset problem: it happens identically whether the catalog declares no appearance variants, or declares an explicit dark variant pointing at the same bright artwork. Both were tested on the simulator with a cleared asset cache.
 
-### Konsept B — "M-Bolt Monogram"
-`concept-b-m-bolt.svg` / `.png`
+Controlling the dark appearance properly needs purpose-made dark artwork (typically the mascot on a transparent background, so the system draws its own dark backdrop). That's a design task, not a code one. The current single-icon setup is the simplest correct configuration until that art exists.
 
-Kalın, yuvarlak köşeli bir "M" harfi (Mem/MemDoping'in baş harfi); harfin ortasındaki köşegen çizgiler bir yıldırım zikzağı gibi şekillendirilmiş. En sade/en yüksek ölçeklenebilirliğe sahip konsept (harfler küçük boyutta genelde en iyi okunur) ama "M" tek başına markaya özgü değil — birçok farklı uygulama da aynı harfle başlayabilir, kavramsal bağ (hafıza/doping) daha az doğrudan.
+## Brand palette
 
-### Konsept C — "Neuron Spark"
-`concept-c-neuron-spark.svg` / `.png`
+Sampled from the official logo's actual pixels, grouped by colour family (median plus the light and dark ends of each family), not eyeballed:
 
-Bir rozet/madalya halkası içinde, merkeze yakınsayan nöron/düğüm ağı ve ortada sarı bir enerji kıvılcımı — "sinir ağı + enerji" fikri, oyun içi başarı rozetlerine benzer bir estetik. En zayıf yönü: küçük boyutta (120px) düğüm-çizgi detayları görsel olarak karışıyor ve genel "yapay zeka/ağ" ikonografisine çok benziyor — MemDoping'e özgü bir imza bırakmıyor.
+| Role | Hex | Share of icon | Notes |
+|---|---|---|---|
+| Primary blue | `#0178F9` | 44% | The dominant background blue — the brand's core colour |
+| Primary blue, light | `#02C0FE` | — | Top-left sheen, highlight end of the gradient |
+| Primary blue, deep | `#0154DB` | — | Shadowed end of the same gradient |
+| Deep blue | `#0128A5` | 17% | Outer border ring; good for surfaces behind the primary |
+| Deep blue, darkest | `#001D82` | — | Border shadow |
+| Navy | `#010C48` | 6% | Outlines, limbs — the near-black in the artwork |
+| Cyan | `#4DEFFD` | 8% | Centre glow behind the mascot; use sparingly as a highlight |
+| Mascot pink | `#FD7C91` | 15% | The brain body |
+| Mascot pink, saturated | `#D729B3` | — | Brain outline / deepest fold |
+| Accent yellow | `#FDCE11` | 3% | Burst rays — the attention/energy accent |
+| White | `#F9FCFD` | 3% | Eye whites, shoe soles, specular highlights |
 
-## Nasıl değiştirilir
+**How this differs from what's in the app today.** `Brand` in `Views/Components.swift` currently uses an indigo primary (`#5C3DDB`) with an orange accent (`#FA873D`) — the palette from the earlier generated concept. The official logo is blue with a yellow accent, so the in-app palette does not match the icon yet. Aligning it (blue primary, yellow accent, pink as the reward/celebration colour) is a follow-up.
 
-1. Yeni bir konsept istiyorsanız: `docs/branding/*.svg` dosyalarından birini kopyalayıp düzenleyin (düz SVG, harici font/görsel bağımlılığı yok) veya sıfırdan yeni bir `.svg` yazın.
-2. PNG'ye çevirin (1024×1024 yeterli, gerisini Xcode/sips ölçekler):
-   ```
-   rsvg-convert -w 1024 -h 1024 yeni-logo.svg -o yeni-logo-1024.png
-   ```
-   (`rsvg-convert` yoksa: `brew install librsvg`)
-3. Yeni 1024 PNG'yi App Icon klasörüne kopyalayıp mac boyutlarını yeniden üretin:
+## Archived concepts (not in use)
+
+These were generated before the official logo arrived. Kept for reference; delete whenever.
+
+- `concept-a-brain-bolt.svg` / `.png` — brain cloud with a lightning bolt
+- `concept-b-m-bolt.svg` / `.png` — "M" monogram with a bolt-shaped middle stroke
+- `concept-c-neuron-spark.svg` / `.png` — neuron network badge with a central spark
+
+## Replacing the icon later
+
+1. Put the new square artwork somewhere and note its path.
+2. Produce a 1024×1024, alpha-free PNG. If it has its own rounded corners with white outside them, repeat the corner treatment above (the flood-fill approach is in this file's history and in the commit that introduced it).
+3. Overwrite `MemDoping/MemDoping/Assets.xcassets/AppIcon.appiconset/appicon-1024.png`, then regenerate the smaller sizes:
    ```
    ICONSET=MemDoping/MemDoping/Assets.xcassets/AppIcon.appiconset
-   cp yeni-logo-1024.png "$ICONSET/appicon-1024.png"
-   sips -z 512 512 "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-512.png"
-   sips -z 256 256 "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-256.png"
-   sips -z 128 128 "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-128.png"
-   sips -z 64 64   "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-64.png"
-   sips -z 32 32   "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-32.png"
-   sips -z 16 16   "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-16.png"
+   for s in 512 256 128 64 32 16; do
+     sips -z $s $s "$ICONSET/appicon-1024.png" --out "$ICONSET/appicon-$s.png"
+   done
    ```
-   `Contents.json` dosya adlarını değiştirmediğiniz sürece (hepsi `appicon-*.png` adında) tekrar düzenlemeye gerek yok — sadece dosyaların içeriğini değiştirmiş olursunuz.
-4. Xcode'da temiz bir build alıp (Cmd+Shift+K, sonra Cmd+B) simülatörde ana ekranda ikonu kontrol edin.
+   `Contents.json` needs no edit as long as the filenames stay the same.
+4. Uninstall the app from the simulator before reinstalling — Springboard caches icons.
 
-## Bilinen sınırlamalar (dürüstlük notu)
+## Open items
 
-- Bu bir **placeholder/deneme** logo — profesyonel bir marka tasarımcısı incelemesi, trademark taraması (Master doküman §1'de zaten belirtilen "trademark/legal review pending" şartı) ve gerçek App Store/Google Play boyut testleri yapılmadı.
-- Işık/koyu/tint (dark/tinted) modları için ayrı sanat üretilmedi — üçü de aynı görseli kullanıyor; iOS 18+'ın otomatik tint/dark dönüşümü görsel kaliteyi garanti etmez, ayrı varyant tasarımı ileride gerekebilir.
-- Adaptive/dinamik ikon (widget, Siri vb.) için ayrı katmanlı format (Icon Composer) hazırlanmadı.
+- Trademark clearance is still pending (master brief §1) — unchanged by this logo.
+- No dark-mode or tinted icon artwork yet (see above).
+- App Store / Play Store listing assets (screenshots, feature graphics) not produced.
+- In-app palette still needs to be aligned to this logo.
