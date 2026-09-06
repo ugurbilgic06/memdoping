@@ -10,6 +10,11 @@
 
 import SwiftUI
 import SceneKit
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 struct Celebration3DView: View {
     var size: CGFloat = 140
@@ -103,6 +108,33 @@ struct Celebration3DView: View {
         ambient.light?.intensity = 320
         ambient.light?.color = cg(0.6, 0.6, 0.8)
         scene.rootNode.addChildNode(ambient)
+
+        // Real 3D confetti: a one-shot particle burst around the trophy.
+        let confetti = SCNParticleSystem()
+        confetti.loops = false
+        confetti.birthRate = 260
+        confetti.emissionDuration = 0.18
+        confetti.particleLifeSpan = 1.5
+        confetti.particleLifeSpanVariation = 0.6
+        confetti.particleVelocity = 4.2
+        confetti.particleVelocityVariation = 2.6
+        confetti.spreadingAngle = 90
+        confetti.emittingDirection = SCNVector3(0, 1, 0)
+        confetti.acceleration = SCNVector3(0, -7, 0)
+        confetti.particleSize = 0.07
+        confetti.particleSizeVariation = 0.04
+        #if canImport(UIKit)
+        confetti.particleColor = UIColor(red: 1.0, green: 0.82, blue: 0.30, alpha: 1)
+        #elseif canImport(AppKit)
+        confetti.particleColor = NSColor(srgbRed: 1.0, green: 0.82, blue: 0.30, alpha: 1)
+        #endif
+        confetti.particleColorVariation = SCNVector4(0.12, 0.12, 0.12, 0)
+        confetti.blendMode = .additive
+        confetti.isAffectedByGravity = false
+        let emitter = SCNNode()
+        emitter.position = SCNVector3(0, 0.4, 0)
+        emitter.addParticleSystem(confetti)
+        scene.rootNode.addChildNode(emitter)
 
         return scene
     }
