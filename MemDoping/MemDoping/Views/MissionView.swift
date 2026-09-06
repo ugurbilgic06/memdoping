@@ -58,16 +58,16 @@ struct MissionView: View {
             Text("Level \(session.level.index)")
                 .font(.subheadline.weight(.bold))
                 .foregroundStyle(Brand.accent)
-            Text(session.level.title)
+            Text(session.level.title.localizedContent)
                 .font(.largeTitle.bold())
                 .foregroundStyle(.white)
 
             Card {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(session.level.technique, systemImage: "brain.head.profile")
+                    Label(session.level.technique.localizedContent, systemImage: "brain.head.profile")
                         .font(.headline)
                         .foregroundStyle(.white)
-                    Text(session.level.tip)
+                    Text(session.level.tip.localizedContent)
                         .foregroundStyle(.white.opacity(0.85))
                 }
             }
@@ -115,11 +115,11 @@ struct MissionView: View {
                         HStack(spacing: 12) {
                             Text(q.prompt.symbol).font(.title)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(q.prompt.word)
+                                Text(q.prompt.word.localizedContent)
                                     .font(.headline)
                                     .foregroundStyle(.white)
                                 if !q.isCorrect {
-                                    Text("You chose: \(q.chosen ?? "—")")
+                                    Text("You chose: \((q.chosen ?? "—").localizedContent)")
                                         .font(.caption)
                                         .foregroundStyle(Brand.danger)
                                 }
@@ -248,7 +248,7 @@ private struct LearnPhaseView: View {
                     ForEach(session.studyPairs) { pair in
                         VStack(spacing: 8) {
                             Text(pair.symbol).font(.system(size: 46))
-                            Text(pair.word)
+                            Text(pair.word.localizedContent)
                                 .font(.headline)
                                 .foregroundStyle(.white)
                         }
@@ -260,7 +260,7 @@ private struct LearnPhaseView: View {
                 }
             }
 
-            Text(session.level.tip)
+            Text(session.level.tip.localizedContent)
                 .font(.footnote)
                 .foregroundStyle(.white.opacity(0.75))
                 .multilineTextAlignment(.center)
@@ -340,7 +340,7 @@ private struct RecallPhaseView: View {
             revealed = true
         } label: {
             HStack {
-                Text(option).foregroundStyle(.white).fontWeight(.medium)
+                Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
                 Spacer()
                 if revealed && isCorrectAnswer {
                     Image(systemName: "checkmark.circle.fill").foregroundStyle(Brand.success)

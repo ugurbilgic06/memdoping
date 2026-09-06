@@ -11,6 +11,16 @@
 
 import Foundation
 
+/// Resolves a content-model string (level titles, technique names, tips,
+/// theme words) against Localizable.xcstrings for display. Kept separate from
+/// the stored String itself so gameplay matching (e.g. answer == prompt.word)
+/// stays keyed on one canonical value regardless of display language.
+extension String {
+    var localizedContent: String {
+        String(localized: String.LocalizationValue(self))
+    }
+}
+
 /// A single item to memorize: a symbol paired with a word.
 /// The "association & imagery" technique links the picture to the word.
 struct MemoryPair: Identifiable, Hashable {

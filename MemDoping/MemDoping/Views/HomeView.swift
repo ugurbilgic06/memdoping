@@ -110,7 +110,7 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Continue your training")
                             .font(.headline).foregroundStyle(.white)
-                        Text("Level \(store.currentLevel.index): \(store.currentLevel.title)")
+                        Text("Level \(store.currentLevel.index): \(store.currentLevel.title.localizedContent)")
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.75))
                     }
@@ -152,10 +152,10 @@ struct HomeView: View {
                         .foregroundStyle(.white)
                 }
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(level.title)
+                    Text(level.title.localizedContent)
                         .font(.headline)
                         .foregroundStyle(unlocked ? .white : .white.opacity(0.5))
-                    Text(level.technique)
+                    Text(level.technique.localizedContent)
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.6))
                 }
