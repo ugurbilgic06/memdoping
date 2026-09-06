@@ -98,7 +98,7 @@ struct StoryMissionView: View {
                         .padding(.vertical, 12).padding(.horizontal, 16)
                         .frame(maxWidth: .infinity)
                         .background(Brand.accent.opacity(0.2), in: RoundedRectangle(cornerRadius: 16))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.accent, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.accentText.opacity(0.5), lineWidth: 1))
 
                     Spacer()
                     PrimaryButton(

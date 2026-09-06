@@ -108,7 +108,7 @@ struct SceneMissionView: View {
                         .padding(.vertical, 14).padding(.horizontal, 18)
                         .frame(maxWidth: .infinity)
                         .background(Brand.accent.opacity(0.2), in: RoundedRectangle(cornerRadius: 16))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.accent, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.accentText.opacity(0.5), lineWidth: 1))
                         .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
 
                     Spacer()
