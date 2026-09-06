@@ -45,6 +45,7 @@ struct HomeView: View {
                 case .interleaving: InterleavingMissionView(level: l)
                 case .elaboration: ElaborationMissionView(level: l)
                 case .story:      StoryMissionView(level: l)
+                case .numberShape: NumberShapeMissionView(level: l)
                 }
             }
             .navigationDestination(isPresented: $showReview) {

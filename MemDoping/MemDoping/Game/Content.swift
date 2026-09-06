@@ -46,6 +46,9 @@ enum LevelMechanic: String, Hashable {
     /// Link items into a chain story with action cards, then recall the order
     /// (T08 Story Linking — serial recall).
     case story
+    /// Turn each digit into a shape image, memorize a number as shapes, then
+    /// type it back (T11 Number-Shape System). Evidence is weak — sample only.
+    case numberShape
 }
 
 /// A fact plus the reason behind it, for elaborative interrogation (T07).
@@ -167,6 +170,7 @@ struct GameLevel: Identifiable, Hashable {
         case .chunking:  return 0.80   // reproduce a number from grouped memory
         case .interleaving: return 0.85   // discriminate category, then recall
         case .story:     return 0.88   // serial recall of a linked sequence
+        case .numberShape: return 0.82 // reproduce a digit sequence via shapes
         case .loci:      return 0.90   // serial reconstruction along a route
         case .retrieval: return 0.95   // free recall — produce every letter
         }
@@ -252,6 +256,11 @@ enum SampleContent {
             .init(symbol: "🏔️", word: "Mountain", deepAnswer: false)
         ]
     )
+
+    /// Classic number-shape pegs (T11): each digit maps to an object that looks
+    /// like the digit. Language-independent (shape, not rhyme). Index = digit.
+    static let numberShapes: [String] = ["🥚", "🕯️", "🦢", "❤️", "⛵", "🐍", "🍒", "🚩", "⛄", "🎈"]
+    static let numberShapeNames: [String] = ["Egg", "Candle", "Swan", "Heart", "Sailboat", "Snake", "Cherry", "Flag", "Snowman", "Balloon"]
 
     /// Vivid modifiers for building associations (T02). Read as "<word> <text>".
     static let sceneModifiers: [SceneModifier] = [
@@ -447,6 +456,15 @@ enum SampleLevels {
             itemCount: 4, questionCount: 4, choiceCount: 3, memorizeSeconds: 0,
             theme: SampleContent.animals,
             mechanic: .story
+        ),
+        GameLevel(
+            index: 12,
+            title: "Secret Code",
+            technique: "Number Shapes",
+            tip: "Every digit has a shape — 1 is a candle, 2 a swan, 8 a snowman. Don't memorize the number; picture the shapes.",
+            itemCount: 4, questionCount: 4, choiceCount: 0, memorizeSeconds: 15,
+            theme: SampleContent.animals,   // unused by this mechanic
+            mechanic: .numberShape
         )
     ]
 
