@@ -21,12 +21,25 @@ extension String {
     }
 }
 
+/// How deeply the Learn-phase orienting question makes the player process an
+/// item (T01 Attention & Encoding — Craik & Lockhart's levels of processing).
+/// See docs/techniques/attention-encoding.md.
+enum OrientingDepth: String, Hashable {
+    case shallow   // surface form of the word itself
+    case medium    // sound-adjacent property
+    case deep      // meaning of the thing the word names
+}
+
 /// A single item to memorize: a symbol paired with a word.
 /// The "association & imagery" technique links the picture to the word.
 struct MemoryPair: Identifiable, Hashable {
     let id = UUID()
     let symbol: String
     let word: String
+    /// Answer to the owning theme's `deepQuestion`. A real-world fact, so it
+    /// holds regardless of display language (unlike the shallow/medium
+    /// questions, which are computed from the localized word at runtime).
+    let deepAnswer: Bool
 }
 
 /// A themed deck of memory pairs. Themes make the sample content approachable
@@ -34,6 +47,9 @@ struct MemoryPair: Identifiable, Hashable {
 struct MemoryTheme: Identifiable, Hashable {
     let id: String
     let title: String
+    /// Semantic yes/no question for the `deep` orienting level. Per-theme
+    /// because a single question can't meaningfully span every category.
+    let deepQuestion: String
     let pairs: [MemoryPair]
 }
 
@@ -50,6 +66,9 @@ struct GameLevel: Identifiable, Hashable {
     let choiceCount: Int        // answer options per question (incl. correct)
     let memorizeSeconds: Int    // Learn-phase window
     let theme: MemoryTheme
+    /// When set, the Learn phase asks a yes/no orienting question per item
+    /// (T01) instead of showing the whole deck at once. nil = classic deck.
+    var orientingDepth: OrientingDepth? = nil
 
     var id: Int { index }
 
@@ -64,60 +83,64 @@ enum SampleContent {
     static let animals = MemoryTheme(
         id: "animals",
         title: "Animals",
+        deepQuestion: "Can it fly?",
         pairs: [
-            .init(symbol: "🦊", word: "Fox"),
-            .init(symbol: "🐢", word: "Turtle"),
-            .init(symbol: "🦉", word: "Owl"),
-            .init(symbol: "🐝", word: "Bee"),
-            .init(symbol: "🐙", word: "Octopus"),
-            .init(symbol: "🦒", word: "Giraffe"),
-            .init(symbol: "🐧", word: "Penguin"),
-            .init(symbol: "🦋", word: "Butterfly")
+            .init(symbol: "🦊", word: "Fox", deepAnswer: false),
+            .init(symbol: "🐢", word: "Turtle", deepAnswer: false),
+            .init(symbol: "🦉", word: "Owl", deepAnswer: true),
+            .init(symbol: "🐝", word: "Bee", deepAnswer: true),
+            .init(symbol: "🐙", word: "Octopus", deepAnswer: false),
+            .init(symbol: "🦒", word: "Giraffe", deepAnswer: false),
+            .init(symbol: "🐧", word: "Penguin", deepAnswer: false),
+            .init(symbol: "🦋", word: "Butterfly", deepAnswer: true)
         ]
     )
 
     static let food = MemoryTheme(
         id: "food",
         title: "Food",
+        deepQuestion: "Does it taste sweet?",
         pairs: [
-            .init(symbol: "🍎", word: "Apple"),
-            .init(symbol: "🥑", word: "Avocado"),
-            .init(symbol: "🍇", word: "Grapes"),
-            .init(symbol: "🥕", word: "Carrot"),
-            .init(symbol: "🧀", word: "Cheese"),
-            .init(symbol: "🍯", word: "Honey"),
-            .init(symbol: "🥨", word: "Pretzel"),
-            .init(symbol: "🍉", word: "Melon")
+            .init(symbol: "🍎", word: "Apple", deepAnswer: true),
+            .init(symbol: "🥑", word: "Avocado", deepAnswer: false),
+            .init(symbol: "🍇", word: "Grapes", deepAnswer: true),
+            .init(symbol: "🥕", word: "Carrot", deepAnswer: false),
+            .init(symbol: "🧀", word: "Cheese", deepAnswer: false),
+            .init(symbol: "🍯", word: "Honey", deepAnswer: true),
+            .init(symbol: "🥨", word: "Pretzel", deepAnswer: false),
+            .init(symbol: "🍉", word: "Melon", deepAnswer: true)
         ]
     )
 
     static let space = MemoryTheme(
         id: "space",
         title: "Space",
+        deepQuestion: "Is it bigger than Earth?",
         pairs: [
-            .init(symbol: "🚀", word: "Rocket"),
-            .init(symbol: "🪐", word: "Saturn"),
-            .init(symbol: "🌙", word: "Moon"),
-            .init(symbol: "☄️", word: "Comet"),
-            .init(symbol: "🛰️", word: "Satellite"),
-            .init(symbol: "🌟", word: "Star"),
-            .init(symbol: "👩‍🚀", word: "Astronaut"),
-            .init(symbol: "🌌", word: "Galaxy")
+            .init(symbol: "🚀", word: "Rocket", deepAnswer: false),
+            .init(symbol: "🪐", word: "Saturn", deepAnswer: true),
+            .init(symbol: "🌙", word: "Moon", deepAnswer: false),
+            .init(symbol: "☄️", word: "Comet", deepAnswer: false),
+            .init(symbol: "🛰️", word: "Satellite", deepAnswer: false),
+            .init(symbol: "🌟", word: "Star", deepAnswer: true),
+            .init(symbol: "👩‍🚀", word: "Astronaut", deepAnswer: false),
+            .init(symbol: "🌌", word: "Galaxy", deepAnswer: true)
         ]
     )
 
     static let travel = MemoryTheme(
         id: "travel",
         title: "Travel",
+        deepQuestion: "Can you carry it in a bag?",
         pairs: [
-            .init(symbol: "🧳", word: "Suitcase"),
-            .init(symbol: "🗺️", word: "Map"),
-            .init(symbol: "🏝️", word: "Island"),
-            .init(symbol: "🚂", word: "Train"),
-            .init(symbol: "🎫", word: "Ticket"),
-            .init(symbol: "🧭", word: "Compass"),
-            .init(symbol: "⛺️", word: "Tent"),
-            .init(symbol: "🏔️", word: "Mountain")
+            .init(symbol: "🧳", word: "Suitcase", deepAnswer: false),
+            .init(symbol: "🗺️", word: "Map", deepAnswer: true),
+            .init(symbol: "🏝️", word: "Island", deepAnswer: false),
+            .init(symbol: "🚂", word: "Train", deepAnswer: false),
+            .init(symbol: "🎫", word: "Ticket", deepAnswer: true),
+            .init(symbol: "🧭", word: "Compass", deepAnswer: true),
+            .init(symbol: "⛺️", word: "Tent", deepAnswer: false),
+            .init(symbol: "🏔️", word: "Mountain", deepAnswer: false)
         ]
     )
 }
@@ -131,6 +154,15 @@ enum SampleLevels {
     static let all: [GameLevel] = [
         GameLevel(
             index: 1,
+            title: "Look Closer",
+            technique: "Attention & Encoding",
+            tip: "Don't just look — answer the question about each item. Deciding something about a word is what makes it stick.",
+            itemCount: 4, questionCount: 4, choiceCount: 3, memorizeSeconds: 0,
+            theme: SampleContent.animals,
+            orientingDepth: .shallow
+        ),
+        GameLevel(
+            index: 2,
             title: "First Links",
             technique: "Association & Imagery",
             tip: "Picture the symbol doing something with its word. Silly images stick.",
@@ -138,7 +170,7 @@ enum SampleLevels {
             theme: SampleContent.animals
         ),
         GameLevel(
-            index: 2,
+            index: 3,
             title: "Warm Up",
             technique: "Association & Imagery",
             tip: "Look at each pair for a beat, then move on. Trust the picture.",
@@ -146,7 +178,7 @@ enum SampleLevels {
             theme: SampleContent.food
         ),
         GameLevel(
-            index: 3,
+            index: 4,
             title: "Fewer Hints",
             technique: "Retrieval Practice",
             tip: "Actively pulling an answer from memory strengthens it more than re-reading.",
@@ -154,7 +186,7 @@ enum SampleLevels {
             theme: SampleContent.space
         ),
         GameLevel(
-            index: 4,
+            index: 5,
             title: "Hold It Longer",
             technique: "Retrieval Practice",
             tip: "A short delay before recall makes the memory work — and last.",
@@ -162,7 +194,7 @@ enum SampleLevels {
             theme: SampleContent.travel
         ),
         GameLevel(
-            index: 5,
+            index: 6,
             title: "Mixed Field",
             technique: "Interleaving",
             tip: "Switching between items keeps your brain choosing the right link.",
@@ -170,7 +202,7 @@ enum SampleLevels {
             theme: SampleContent.animals
         ),
         GameLevel(
-            index: 6,
+            index: 7,
             title: "On Your Own",
             technique: "Independent Strategy",
             tip: "Pick whichever memory trick fits each pair. You lead now.",

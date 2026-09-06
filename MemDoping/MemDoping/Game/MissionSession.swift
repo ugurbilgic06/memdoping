@@ -43,6 +43,62 @@ final class MissionSession {
     /// Seconds remaining in the Learn phase.
     private(set) var learnSecondsRemaining: Int
 
+    // MARK: Orienting questions (T01 Attention & Encoding)
+
+    /// Index of the pair currently being judged, when the level uses orienting
+    /// questions. Only meaningful while `level.orientingDepth != nil`.
+    private(set) var orientingIndex: Int = 0
+    /// One entry per judged pair: did the player's yes/no match the truth?
+    private(set) var orientingJudgements: [Bool] = []
+
+    var currentOrientingPair: MemoryPair? {
+        studyPairs.indices.contains(orientingIndex) ? studyPairs[orientingIndex] : nil
+    }
+
+    var orientingCorrectCount: Int { orientingJudgements.filter { $0 }.count }
+    var orientingTotal: Int { orientingJudgements.count }
+
+    /// The yes/no prompt shown for the current depth. Shallow and medium ask
+    /// about the word as displayed, so they're evaluated against the localized
+    /// text; deep asks about the thing itself and comes from the theme.
+    var orientingQuestion: String {
+        switch level.orientingDepth {
+        case .shallow: String(localized: "Is this word longer than 5 letters?")
+        case .medium:  String(localized: "Does this word end in a vowel?")
+        case .deep:    level.theme.deepQuestion.localizedContent
+        case .none:    ""
+        }
+    }
+
+    /// Ground truth for the orienting question about `pair`.
+    func expectedOrientingAnswer(for pair: MemoryPair) -> Bool {
+        let shown = pair.word.localizedContent
+        switch level.orientingDepth {
+        case .shallow:
+            return shown.count > 5
+        case .medium:
+            let vowels = Set("aeiouAEIOUıİöÖüÜ")
+            return shown.last.map { vowels.contains($0) } ?? false
+        case .deep:
+            return pair.deepAnswer
+        case .none:
+            return false
+        }
+    }
+
+    /// Records the player's judgement for the current pair and moves on. When
+    /// every pair has been judged, the mission continues into recall.
+    ///
+    /// The player is deliberately not told whether the judgement itself was
+    /// right: the point of the task is that deciding forces deeper encoding,
+    /// which shows up later in recall (Craik & Tulving, 1975).
+    func judgeCurrentPair(_ playerSaysYes: Bool) {
+        guard phase == .learn, let pair = currentOrientingPair else { return }
+        orientingJudgements.append(playerSaysYes == expectedOrientingAnswer(for: pair))
+        orientingIndex += 1
+        if currentOrientingPair == nil { phase = .recall }
+    }
+
     init(level: GameLevel) {
         self.level = level
         self.learnSecondsRemaining = level.memorizeSeconds
@@ -61,7 +117,7 @@ final class MissionSession {
         let questionPairs = studyPairs.shuffled().prefix(level.questionCount)
 
         questions = questionPairs.map { pair in
-            var distractors = allWords.filter { $0 != pair.word }.shuffled()
+            let distractors = allWords.filter { $0 != pair.word }.shuffled()
             let optionCount = max(2, level.choiceCount) - 1
             let picked = Array(distractors.prefix(optionCount))
             let options = (picked + [pair.word]).shuffled()

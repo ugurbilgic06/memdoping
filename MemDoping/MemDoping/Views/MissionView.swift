@@ -27,7 +27,7 @@ struct MissionView: View {
             Group {
                 switch session.phase {
                 case .intro:    introPhase
-                case .learn:    LearnPhaseView(session: session)
+                case .learn:    learnPhase
                 case .recall:   RecallPhaseView(session: session)
                 case .feedback: feedbackPhase
                 case .summary:  summaryPhase
@@ -47,6 +47,19 @@ struct MissionView: View {
                         .foregroundStyle(.white.opacity(0.8))
                 }
             }
+        }
+    }
+
+    // MARK: Learn
+
+    /// Levels with an orienting depth judge items one at a time (T01);
+    /// everything else studies the whole deck against a timer.
+    @ViewBuilder
+    private var learnPhase: some View {
+        if session.level.orientingDepth != nil {
+            OrientingLearnPhaseView(session: session)
+        } else {
+            LearnPhaseView(session: session)
         }
     }
 
@@ -75,7 +88,11 @@ struct MissionView: View {
             HStack(spacing: 12) {
                 miniStat("\(session.level.itemCount)", "to learn", "square.stack.3d.up")
                 miniStat("\(session.level.questionCount)", "to recall", "checklist")
-                miniStat("\(session.level.memorizeSeconds)s", "to study", "timer")
+                if session.level.orientingDepth != nil {
+                    miniStat("\(session.level.itemCount)", "to judge", "questionmark.circle")
+                } else {
+                    miniStat("\(session.level.memorizeSeconds)s", "to study", "timer")
+                }
             }
 
             Spacer()
@@ -142,6 +159,13 @@ struct MissionView: View {
                 } icon: {
                     Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
                 }
+            }
+
+            if session.level.orientingDepth != nil, session.orientingTotal > 0 {
+                Text("You judged \(session.orientingCorrectCount) of \(session.orientingTotal) items correctly along the way.")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.6))
+                    .multilineTextAlignment(.center)
             }
 
             PrimaryButton(title: "See results", systemImage: "arrow.right") {
@@ -249,6 +273,89 @@ struct MissionView: View {
             .padding(.horizontal, 14).padding(.vertical, 8)
             .background(tint.opacity(0.25), in: Capsule())
             .overlay(Capsule().stroke(tint, lineWidth: 1))
+    }
+}
+
+// MARK: - Learn phase: orienting questions (T01)
+
+/// One item at a time with a yes/no question about it. The judgement itself
+/// isn't scored on screen — answering is what forces the deeper encoding the
+/// later recall phase measures (see docs/techniques/attention-encoding.md).
+private struct OrientingLearnPhaseView: View {
+    @Bindable var session: MissionSession
+    @Environment(GameStore.self) private var store
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        VStack(spacing: 20) {
+            HStack {
+                Label("Look closely", systemImage: "eye.fill")
+                    .font(.headline).foregroundStyle(.white)
+                Spacer()
+                Text("\(session.orientingIndex + 1)/\(session.studyPairs.count)")
+                    .font(.subheadline.monospacedDigit())
+                    .foregroundStyle(Brand.accent)
+            }
+
+            ProgressView(value: Double(session.orientingIndex),
+                         total: Double(max(session.studyPairs.count, 1)))
+                .tint(Brand.accent)
+
+            Spacer()
+
+            if let pair = session.currentOrientingPair {
+                VStack(spacing: 14) {
+                    Text(pair.symbol).font(.system(size: 88))
+                    Text(pair.word.localizedContent)
+                        .font(.largeTitle.bold())
+                        .foregroundStyle(.white)
+                }
+                .id(pair.id)
+                .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
+
+                Card {
+                    Text(session.orientingQuestion)
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                HStack(spacing: 12) {
+                    judgeButton("Yes", systemImage: "hand.thumbsup.fill", answer: true)
+                    judgeButton("No", systemImage: "hand.thumbsdown.fill", answer: false)
+                }
+            }
+
+            Spacer()
+
+            Text("Your answer isn't graded — deciding is what helps you remember.")
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.5))
+                .multilineTextAlignment(.center)
+        }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: session.orientingIndex)
+    }
+
+    private func judgeButton(_ title: LocalizedStringKey, systemImage: String, answer: Bool) -> some View {
+        Button {
+            if store.soundEnabled { SoundPlayer.shared.play(.tap) }
+            if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+            session.judgeCurrentPair(answer)
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: systemImage)
+                Text(title).fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(.white.opacity(0.15), lineWidth: 1)
+            )
+            .foregroundStyle(.white)
+        }
+        .buttonStyle(.plain)
     }
 }
 
