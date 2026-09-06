@@ -2,11 +2,12 @@
 //  MusicPlayer.swift
 //  MemDoping
 //
-//  A calm, looping ambient pad synthesized in code (no bundled audio). A soft
-//  major chord under a slow "breathing" envelope that fades to silence at both
-//  ends of the buffer, so it loops seamlessly like gentle waves. Kept quiet and
-//  mixable; toggled by GameStore.musicEnabled. A real track can replace this
-//  later by loading a file into the same player.
+//  A calm, looping spa ambience synthesized in code (no bundled audio): soft
+//  pentatonic chimes — like singing bowls / a Chinese spa — wandering gently
+//  over a warm, breathing drone. The whole loop fades to silence at both edges
+//  so it repeats seamlessly. The pentatonic scale has no semitone tension, so it
+//  reads as soothing, never eerie. Kept quiet and mixable; toggled by
+//  GameStore.musicEnabled. A real track can replace this later.
 //
 
 import AVFoundation
@@ -46,28 +47,54 @@ final class MusicPlayer {
 
     func setEnabled(_ on: Bool) { on ? start() : stop() }
 
-    /// A ~12 s soft chord that swells and fades within the loop (zero at the
-    /// edges, so the loop point is silent → seamless).
+    /// A ~20 s spa loop: soft pentatonic bell chimes over a warm breathing drone,
+    /// fading to silence at both edges so the loop point is seamless.
     private func padBuffer() -> AVAudioPCMBuffer {
-        let duration = 12.0
+        let duration = 20.0
         let frames = AVAudioFrameCount(duration * sampleRate)
         let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)!
         buffer.frameLength = frames
         let channel = buffer.floatChannelData![0]
 
-        // A warm C major chord (C3, G3, C4, E4), lightly detuned for a chorus.
-        let notes: [Double] = [130.81, 196.00, 261.63, 329.63]
+        // C major pentatonic in a gentle chime octave (C5 D5 E5 G5 A5 C6). No
+        // semitones → nothing dissonant or tense.
+        let penta: [Double] = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50]
+        // A slow, wandering melody: (start time, index into `penta`).
+        let melody: [(Double, Int)] = [
+            (1.6, 0), (3.5, 2), (5.3, 1), (7.1, 3), (8.9, 2),
+            (10.7, 4), (12.5, 3), (14.3, 5), (16.0, 4), (17.4, 1)
+        ]
+        // A warm, quiet drone (C3 + G3), near whole-cycle counts over the loop.
+        let drone: [Double] = [130.80, 196.05]
+        let fade = 1.6   // seconds of fade at each edge → seamless loop
 
         for i in 0..<Int(frames) {
             let t = Double(i) / sampleRate
-            let envelope = pow(sin(.pi * t / duration), 2)   // 0 → 1 → 0
-            var sample = 0.0
-            for f in notes {
-                sample += sin(2 * .pi * f * t)
-                sample += 0.5 * sin(2 * .pi * (f * 1.004) * t)
+
+            // Edge fade so the loop is silent at the seam.
+            var g = 1.0
+            if t < fade { g = pow(sin(.pi * t / (2 * fade)), 2) }
+            else if t > duration - fade { g = pow(sin(.pi * (duration - t) / (2 * fade)), 2) }
+
+            // Warm drone with a slow breath.
+            let breath = 0.75 + 0.25 * sin(2 * .pi * t / duration)
+            var s = 0.0
+            for f in drone { s += 0.06 * breath * sin(2 * .pi * f * t) }
+
+            // Soft bell chimes that pluck and decay (singing-bowl timbre).
+            for (start, idx) in melody where t >= start {
+                let l = t - start
+                let env = exp(-l * 2.1)
+                if env > 0.001 {
+                    let f = penta[idx]
+                    let bell = sin(2 * .pi * f * l)
+                        + 0.35 * sin(2 * .pi * 2 * f * l)
+                        + 0.12 * sin(2 * .pi * 3 * f * l)
+                    s += 0.085 * env * bell
+                }
             }
-            sample /= Double(notes.count * 2)
-            channel[i] = Float(sample * envelope) * 0.11
+
+            channel[i] = Float(s * g)
         }
         return buffer
     }
