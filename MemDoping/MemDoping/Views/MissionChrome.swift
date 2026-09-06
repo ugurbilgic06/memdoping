@@ -108,6 +108,7 @@ struct MissionSummary: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var celebrationScale: CGFloat = 0.6
     @State private var badgesVisible = false
+    @State private var titleScale: CGFloat = 0.7
 
     var body: some View {
         ZStack {
@@ -136,18 +137,22 @@ struct MissionSummary: View {
             Text(passedMastery ? "Level cleared!" : "Good effort")
                 .font(.largeTitle.bold())
                 .foregroundStyle(.primary)
+                .scaleEffect(passedMastery ? titleScale : 1)
 
             if let outcome {
                 VStack(spacing: 12) {
                     HStack(spacing: 12) {
                         StatChip(title: "MemDoping XP", value: "+\(outcome.xpEarned)",
                                  systemImage: "bolt.fill", tint: Brand.accent)
+                            .dealIn(0)
                         StatChip(title: "Accuracy",
                                  value: "\(Int(accuracy * 100))%",
                                  systemImage: "target")
+                            .dealIn(1)
                         StatChip(title: "Memory Score",
                                  value: outcome.memoryScore.map { "\($0)" } ?? "—",
                                  systemImage: "brain.head.profile")
+                            .dealIn(2)
                     }
                     if outcome.unlockedNextLevel {
                         badge("New level unlocked!", "lock.open.fill", Brand.success)
@@ -182,11 +187,16 @@ struct MissionSummary: View {
     private func revealCelebration() {
         guard !reduceMotion else {
             celebrationScale = 1
+            titleScale = 1
             badgesVisible = true
             return
         }
         withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) {
             celebrationScale = 1
+        }
+        // A bouncy title pop just after the trophy lands.
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.5).delay(0.15)) {
+            titleScale = 1
         }
         withAnimation(.spring(response: 0.4, dampingFraction: 0.6).delay(0.25)) {
             badgesVisible = true
@@ -212,41 +222,52 @@ struct ConfettiView: View {
     private struct Piece: Identifiable {
         let id = UUID()
         let color: Color
-        let startX: CGFloat
-        let endX: CGFloat
-        let endY: CGFloat
+        let x: CGFloat          // horizontal start, as a 0…1 fraction of width
+        let drift: CGFloat      // sideways sway as it falls
+        let delay: Double
+        let duration: Double
         let rotation: Double
         let size: CGFloat
+        let isCircle: Bool
     }
 
     @State private var animate = false
-    private let pieces: [Piece] = (0..<24).map { _ in
+    private let pieces: [Piece] = (0..<64).map { _ in
         Piece(
-            color: [Brand.accent, Brand.success, Brand.primary, Brand.danger].randomElement()!,
-            startX: CGFloat.random(in: -16...16),
-            endX: CGFloat.random(in: -150...150),
-            endY: CGFloat.random(in: 240...460),
-            rotation: Double.random(in: 180...900),
-            size: CGFloat.random(in: 6...11)
+            color: [Brand.accent, Brand.success, Brand.primary,
+                    Brand.danger, Color(red: 1.0, green: 0.78, blue: 0.30)].randomElement()!,
+            x: CGFloat.random(in: 0.02...0.98),
+            drift: CGFloat.random(in: -60...60),
+            delay: Double.random(in: 0...0.5),
+            duration: Double.random(in: 1.3...2.2),
+            rotation: Double.random(in: 180...1080),
+            size: CGFloat.random(in: 7...13),
+            isCircle: Bool.random()
         )
     }
 
     var body: some View {
-        ZStack {
-            ForEach(pieces) { piece in
-                Rectangle()
-                    .fill(piece.color)
-                    .frame(width: piece.size, height: piece.size * 0.4)
-                    .rotationEffect(.degrees(animate ? piece.rotation : 0))
-                    .offset(x: animate ? piece.endX : piece.startX, y: animate ? piece.endY : -30)
+        GeometryReader { geo in
+            ZStack {
+                ForEach(pieces) { p in
+                    Group {
+                        if p.isCircle {
+                            Circle().fill(p.color).frame(width: p.size, height: p.size)
+                        } else {
+                            Rectangle().fill(p.color)
+                                .frame(width: p.size, height: p.size * 0.45)
+                        }
+                    }
+                    .rotationEffect(.degrees(animate ? p.rotation : 0))
+                    .position(x: p.x * geo.size.width + (animate ? p.drift : 0),
+                              y: animate ? geo.size.height + 50 : -50)
                     .opacity(animate ? 0 : 1)
+                    .animation(.easeIn(duration: p.duration).delay(p.delay), value: animate)
+                }
             }
         }
-        .onAppear {
-            withAnimation(.easeOut(duration: 1.1)) {
-                animate = true
-            }
-        }
+        .ignoresSafeArea()
+        .onAppear { animate = true }
         .accessibilityHidden(true)
     }
 }

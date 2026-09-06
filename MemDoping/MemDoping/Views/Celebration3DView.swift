@@ -41,7 +41,7 @@ struct Celebration3DView: View {
 
     static func makeScene(spins: Bool) -> SCNScene {
         let scene = SCNScene()
-        scene.background.contents = cg(0.16, 0.13, 0.34)
+        scene.background.contents = cg(0.96, 0.95, 0.99)   // light, airy pod
 
         let gold = SCNMaterial()
         gold.lightingModel = .physicallyBased
@@ -97,38 +97,39 @@ struct Celebration3DView: View {
         let rim = SCNNode()
         rim.light = SCNLight()
         rim.light?.type = .omni
-        rim.light?.intensity = 600
-        rim.light?.color = cg(0.5, 0.45, 1.0)
+        rim.light?.intensity = 650
+        rim.light?.color = cg(0.35, 0.92, 0.95)            // cheerful aqua rim
         rim.position = SCNVector3(-4, 3, -3)
         scene.rootNode.addChildNode(rim)
 
         let ambient = SCNNode()
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
-        ambient.light?.intensity = 320
-        ambient.light?.color = cg(0.6, 0.6, 0.8)
+        ambient.light?.intensity = 360
+        ambient.light?.color = cg(0.85, 0.85, 0.9)
         scene.rootNode.addChildNode(ambient)
 
         // Real 3D confetti: a one-shot particle burst around the trophy.
         let confetti = SCNParticleSystem()
         confetti.loops = false
-        confetti.birthRate = 260
-        confetti.emissionDuration = 0.18
-        confetti.particleLifeSpan = 1.5
-        confetti.particleLifeSpanVariation = 0.6
-        confetti.particleVelocity = 4.2
-        confetti.particleVelocityVariation = 2.6
-        confetti.spreadingAngle = 90
+        confetti.birthRate = 340
+        confetti.emissionDuration = 0.22
+        confetti.particleLifeSpan = 1.7
+        confetti.particleLifeSpanVariation = 0.7
+        confetti.particleVelocity = 4.6
+        confetti.particleVelocityVariation = 3.0
+        confetti.spreadingAngle = 110
         confetti.emittingDirection = SCNVector3(0, 1, 0)
         confetti.acceleration = SCNVector3(0, -7, 0)
-        confetti.particleSize = 0.07
-        confetti.particleSizeVariation = 0.04
+        confetti.particleSize = 0.08
+        confetti.particleSizeVariation = 0.05
         #if canImport(UIKit)
-        confetti.particleColor = UIColor(red: 1.0, green: 0.82, blue: 0.30, alpha: 1)
+        confetti.particleColor = UIColor(red: 1.0, green: 0.72, blue: 0.35, alpha: 1)
         #elseif canImport(AppKit)
-        confetti.particleColor = NSColor(srgbRed: 1.0, green: 0.82, blue: 0.30, alpha: 1)
+        confetti.particleColor = NSColor(srgbRed: 1.0, green: 0.72, blue: 0.35, alpha: 1)
         #endif
-        confetti.particleColorVariation = SCNVector4(0.12, 0.12, 0.12, 0)
+        // Wide hue variation so the burst reads as multi-colour confetti.
+        confetti.particleColorVariation = SCNVector4(0.6, 0.5, 0.5, 0)
         confetti.blendMode = .additive
         confetti.isAffectedByGravity = false
         let emitter = SCNNode()
