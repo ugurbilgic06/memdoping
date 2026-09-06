@@ -326,8 +326,7 @@ private struct RecallPhaseView: View {
                 .foregroundStyle(.white)
 
             if let q = session.currentQuestion {
-                Text(q.prompt.symbol)
-                    .font(.system(size: 90))
+                Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150)
                     .padding(.vertical, 8)
 
                 VStack(spacing: 12) {
