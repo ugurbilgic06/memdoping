@@ -36,6 +36,7 @@ struct HomeView: View {
                 case .pairRecall: MissionView(level: level)
                 case .chunking:   ChunkingMissionView(level: level)
                 case .retrieval:  RetrievalMissionView(level: level)
+                case .loci:       LociMissionView(level: level)
                 }
             }
             .navigationDestination(isPresented: $showReview) {

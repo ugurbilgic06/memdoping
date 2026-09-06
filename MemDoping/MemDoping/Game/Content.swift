@@ -31,6 +31,24 @@ enum LevelMechanic: String, Hashable {
     /// Study the deck, then rebuild each word from scrambled letters — free
     /// recall, no options (T04 Retrieval Practice).
     case retrieval
+    /// Place items along a familiar route, then walk it back and recall what
+    /// was left at each stop (T09 Method of Loci).
+    case loci
+}
+
+/// One stop along a memory-palace route (e.g. the front door of a home).
+struct RouteStop: Identifiable, Hashable {
+    let id = UUID()
+    let icon: String
+    let name: String
+}
+
+/// A familiar route the player mentally walks. Kept concrete and everyday so
+/// it feels known, not abstract (docs/techniques/method-of-loci.md).
+struct MemoryRoute: Identifiable, Hashable {
+    let id: String
+    let title: String
+    let stops: [RouteStop]
 }
 
 /// How deeply the Learn-phase orienting question makes the player process an
@@ -82,6 +100,8 @@ struct GameLevel: Identifiable, Hashable {
     /// When set, the Learn phase asks a yes/no orienting question per item
     /// (T01) instead of showing the whole deck at once. nil = classic deck.
     var orientingDepth: OrientingDepth? = nil
+    /// The route a Method-of-Loci level is walked along. nil for other mechanics.
+    var route: MemoryRoute? = nil
 
     var id: Int { index }
 
@@ -154,6 +174,22 @@ enum SampleContent {
             .init(symbol: "🧭", word: "Compass", deepAnswer: true),
             .init(symbol: "⛺️", word: "Tent", deepAnswer: false),
             .init(symbol: "🏔️", word: "Mountain", deepAnswer: false)
+        ]
+    )
+
+    /// A walk through a familiar home — the starter memory palace.
+    static let home = MemoryRoute(
+        id: "home",
+        title: "Your Home",
+        stops: [
+            .init(icon: "🚪", name: "Front door"),
+            .init(icon: "🛋️", name: "Couch"),
+            .init(icon: "🪟", name: "Window"),
+            .init(icon: "🍽️", name: "Table"),
+            .init(icon: "🛏️", name: "Bed"),
+            .init(icon: "🪴", name: "Plant"),
+            .init(icon: "🚿", name: "Shower"),
+            .init(icon: "📺", name: "TV")
         ]
     )
 }
@@ -232,6 +268,16 @@ enum SampleLevels {
             tip: "Pick whichever memory trick fits each pair. You lead now.",
             itemCount: 7, questionCount: 6, choiceCount: 4, memorizeSeconds: 11,
             theme: SampleContent.space
+        ),
+        GameLevel(
+            index: 9,
+            title: "Memory Palace",
+            technique: "Method of Loci",
+            tip: "Walk your home and leave each item at a spot — picture it vividly there. This isn't a talent; it's a strategy anyone can learn.",
+            itemCount: 5, questionCount: 5, choiceCount: 0, memorizeSeconds: 0,
+            theme: SampleContent.travel,
+            mechanic: .loci,
+            route: SampleContent.home
         )
     ]
 
