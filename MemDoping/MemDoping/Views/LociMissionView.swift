@@ -60,7 +60,7 @@ struct LociMissionView: View {
             stats: [
                 MissionStat("\(session.totalStops)", "stops", "map"),
                 MissionStat("\(session.totalStops)", "to place", "square.stack.3d.up"),
-                MissionStat("walk", "then recall", "figure.walk")
+                MissionStat("\(session.totalStops)", "to recall", "figure.walk")
             ],
             onStart: { session.beginPlacing() }
         )
