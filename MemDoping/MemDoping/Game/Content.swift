@@ -21,6 +21,15 @@ extension String {
     }
 }
 
+/// Which game a level actually plays. Each case has its own session model and
+/// screen; the ladder, XP and Memory Score are shared across all of them.
+enum LevelMechanic: String, Hashable {
+    /// Study symbol/word pairs, then pick the right word (T02/T04/T06/T08).
+    case pairRecall
+    /// Split a number into groups, hold it, type it back (T03).
+    case chunking
+}
+
 /// How deeply the Learn-phase orienting question makes the player process an
 /// item (T01 Attention & Encoding — Craik & Lockhart's levels of processing).
 /// See docs/techniques/attention-encoding.md.
@@ -66,6 +75,7 @@ struct GameLevel: Identifiable, Hashable {
     let choiceCount: Int        // answer options per question (incl. correct)
     let memorizeSeconds: Int    // Learn-phase window
     let theme: MemoryTheme
+    var mechanic: LevelMechanic = .pairRecall
     /// When set, the Learn phase asks a yes/no orienting question per item
     /// (T01) instead of showing the whole deck at once. nil = classic deck.
     var orientingDepth: OrientingDepth? = nil
@@ -163,6 +173,15 @@ enum SampleLevels {
         ),
         GameLevel(
             index: 2,
+            title: "Group It",
+            technique: "Chunking",
+            tip: "Your mind holds only a few things at once — but a group counts as one thing. Break the number up and carry fewer pieces.",
+            itemCount: 9, questionCount: 3, choiceCount: 0, memorizeSeconds: 15,
+            theme: SampleContent.animals,   // unused by this mechanic
+            mechanic: .chunking
+        ),
+        GameLevel(
+            index: 3,
             title: "First Links",
             technique: "Association & Imagery",
             tip: "Picture the symbol doing something with its word. Silly images stick.",
@@ -170,7 +189,7 @@ enum SampleLevels {
             theme: SampleContent.animals
         ),
         GameLevel(
-            index: 3,
+            index: 4,
             title: "Warm Up",
             technique: "Association & Imagery",
             tip: "Look at each pair for a beat, then move on. Trust the picture.",
@@ -178,7 +197,7 @@ enum SampleLevels {
             theme: SampleContent.food
         ),
         GameLevel(
-            index: 4,
+            index: 5,
             title: "Fewer Hints",
             technique: "Retrieval Practice",
             tip: "Actively pulling an answer from memory strengthens it more than re-reading.",
@@ -186,7 +205,7 @@ enum SampleLevels {
             theme: SampleContent.space
         ),
         GameLevel(
-            index: 5,
+            index: 6,
             title: "Hold It Longer",
             technique: "Retrieval Practice",
             tip: "A short delay before recall makes the memory work — and last.",
@@ -194,7 +213,7 @@ enum SampleLevels {
             theme: SampleContent.travel
         ),
         GameLevel(
-            index: 6,
+            index: 7,
             title: "Mixed Field",
             technique: "Interleaving",
             tip: "Switching between items keeps your brain choosing the right link.",
@@ -202,7 +221,7 @@ enum SampleLevels {
             theme: SampleContent.animals
         ),
         GameLevel(
-            index: 7,
+            index: 8,
             title: "On Your Own",
             technique: "Independent Strategy",
             tip: "Pick whichever memory trick fits each pair. You lead now.",

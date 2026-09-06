@@ -30,7 +30,10 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(item: $activeLevel) { level in
-                MissionView(level: level)
+                switch level.mechanic {
+                case .pairRecall: MissionView(level: level)
+                case .chunking:   ChunkingMissionView(level: level)
+                }
             }
         }
     }
