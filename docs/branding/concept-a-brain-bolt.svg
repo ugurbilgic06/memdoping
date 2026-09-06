@@ -1,0 +1,27 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4C1D95"/>
+      <stop offset="1" stop-color="#6D28D9"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- Brain silhouette: cluster of overlapping circles, same opaque fill so seams disappear -->
+  <g fill="#F5F3FF">
+    <circle cx="392" cy="430" r="148"/>
+    <circle cx="512" cy="372" r="168"/>
+    <circle cx="636" cy="430" r="148"/>
+    <circle cx="418" cy="576" r="158"/>
+    <circle cx="612" cy="576" r="158"/>
+    <circle cx="512" cy="636" r="140"/>
+  </g>
+
+  <!-- Hemisphere groove -->
+  <path d="M 512 244 C 470 340 470 460 512 512 C 554 564 554 700 512 776"
+        fill="none" stroke="#6D28D9" stroke-width="16" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Lightning bolt, cutting across the brain -->
+  <polygon points="592,150 452,520 552,520 458,900 690,510 574,510"
+           fill="#FFC93C" stroke="#4C1D95" stroke-width="10" stroke-linejoin="round"/>
+</svg>

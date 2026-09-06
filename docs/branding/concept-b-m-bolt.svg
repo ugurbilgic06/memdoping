@@ -1,0 +1,17 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4338CA"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- M monogram: two vertical strokes -->
+  <rect x="258" y="300" width="120" height="460" rx="60" fill="#F5F3FF"/>
+  <rect x="646" y="300" width="120" height="460" rx="60" fill="#F5F3FF"/>
+
+  <!-- Middle stroke of the M reshaped into a lightning bolt: single V, not W -->
+  <path d="M 340 320 L 452 500 L 410 500 L 512 640 L 614 500 L 572 500 L 684 320"
+        fill="none" stroke="#FFC93C" stroke-width="86" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
