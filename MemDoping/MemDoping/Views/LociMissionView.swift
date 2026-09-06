@@ -116,9 +116,7 @@ struct LociMissionView: View {
                         .frame(width: 88, height: 88)
                         .offset(LociMissionView.itemStart)
 
-                    Text(p.item.symbol)
-                        .font(.system(size: 60))
-                        .shadow(color: .black.opacity(0.45), radius: 7, y: 4)
+                    SymbolBadge(symbol: p.item.symbol, seed: p.item.id.hashValue, size: 78)
                         .scaleEffect(isItemOnSpot ? 1.12 : 1)
                         .offset(itemOffset)
                         .gesture(
