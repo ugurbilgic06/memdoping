@@ -19,6 +19,8 @@ struct RetrievalMissionView: View {
     @State private var outcome: GameStore.SessionOutcome?
     @State private var revealed = false
     @State private var learnTimer: Timer?
+    @State private var dragTileId: UUID? = nil
+    @State private var dragOffset: CGSize = .zero
 
     init(level: GameLevel) {
         _session = State(initialValue: RetrievalSession(level: level))
@@ -190,21 +192,39 @@ struct RetrievalMissionView: View {
     private var letterTray: some View {
         FlowRow(spacing: 10) {
             ForEach(session.tray) { tile in
-                Button {
-                    if store.soundEnabled { SoundPlayer.shared.play(.tap) }
-                    if store.hapticsEnabled { HapticsPlayer.shared.tap() }
-                    session.place(tileID: tile.id)
-                } label: {
-                    GameTile(base: session.level.tileBase, cornerRadius: 12) {
-                        Text(String(tile.letter))
-                            .font(.system(size: 24, weight: .bold, design: .rounded))
-                            .frame(width: 46, height: 52)
-                            .foregroundStyle(.white)
-                    }
-                    .opacity(tile.used ? 0.3 : 1)
+                GameTile(base: session.level.tileBase, cornerRadius: 12) {
+                    Text(String(tile.letter))
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .frame(width: 46, height: 52)
+                        .foregroundStyle(.white)
                 }
-                .buttonStyle(.plain)
-                .disabled(tile.used)
+                .opacity(tile.used ? 0.3 : 1)
+                .offset(dragTileId == tile.id ? dragOffset : .zero)
+                .zIndex(dragTileId == tile.id ? 1 : 0)
+                .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.7),
+                           value: dragTileId == tile.id ? dragOffset : .zero)
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { g in
+                            guard !tile.used else { return }
+                            dragTileId = tile.id; dragOffset = g.translation
+                        }
+                        .onEnded { g in
+                            if !tile.used, g.translation.height < -80 {
+                                session.place(tileID: tile.id)
+                                if store.soundEnabled { SoundPlayer.shared.play(.pop) }
+                                if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+                            } else if !tile.used {
+                                // A tap-like short drag still places it, for ease.
+                                let moved = abs(g.translation.width) + abs(g.translation.height)
+                                if moved < 8 {
+                                    session.place(tileID: tile.id)
+                                    if store.soundEnabled { SoundPlayer.shared.play(.tap) }
+                                }
+                            }
+                            dragTileId = nil; dragOffset = .zero
+                        }
+                )
             }
         }
     }
