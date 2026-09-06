@@ -367,7 +367,7 @@ private struct RecallPhaseView: View {
             guard !revealed else { return }
             session.answerCurrent(option)
             revealed = true
-            if store.soundEnabled { SoundPlayer.shared.play(isCorrectAnswer ? .correct : .incorrect) }
+            if store.soundEnabled { SoundPlayer.shared.play(isCorrectAnswer ? .pop : .incorrect) }
             if store.hapticsEnabled { HapticsPlayer.shared.notify(success: isCorrectAnswer) }
         } label: {
             GameTile(base: base, cornerRadius: 14) {
@@ -383,9 +383,16 @@ private struct RecallPhaseView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
             }
-            .scaleEffect(isChosen && revealed ? 1.03 : 1.0)
+            .scaleEffect(isChosen && revealed ? 1.05 : 1.0)
+            .modifier(ShakeEffect(animatableData:
+                (revealed && isChosen && !isCorrectAnswer && !reduceMotion) ? 1 : 0))
+            .overlay {
+                if revealed && isCorrectAnswer && !reduceMotion {
+                    SparkBurst(color: .white)
+                }
+            }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(TileButtonStyle())
         .disabled(revealed)
         .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.55), value: revealed)
     }

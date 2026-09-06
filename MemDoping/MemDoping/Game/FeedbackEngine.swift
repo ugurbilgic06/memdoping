@@ -24,6 +24,8 @@ final class SoundPlayer {
         case correct
         case incorrect
         case levelUp
+        case pop        // a tile lands / bursts
+        case sparkle    // confetti / celebration shimmer
     }
 
     private let engine = AVAudioEngine()
@@ -68,6 +70,8 @@ final class SoundPlayer {
         case .correct:   return tone(frequencies: [660, 990], noteDuration: 0.11, gain: 0.2)
         case .incorrect: return tone(frequencies: [220], noteDuration: 0.18, gain: 0.2, shape: .square)
         case .levelUp:   return tone(frequencies: [523, 659, 784], noteDuration: 0.13, gain: 0.22)
+        case .pop:       return tone(frequencies: [990, 1480], noteDuration: 0.045, gain: 0.2)
+        case .sparkle:   return tone(frequencies: [1320, 1760, 2100], noteDuration: 0.06, gain: 0.16)
         }
     }
 

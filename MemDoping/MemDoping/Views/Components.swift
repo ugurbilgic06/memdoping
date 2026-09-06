@@ -199,6 +199,53 @@ struct GameTile<Content: View>: View {
     }
 }
 
+/// A springy press-down for tiles — they physically depress when tapped.
+struct TileButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.94 : 1)
+            .animation(.spring(response: 0.22, dampingFraction: 0.5), value: configuration.isPressed)
+    }
+}
+
+/// A horizontal shake driven by an animatable progress value (0 → 1).
+struct ShakeEffect: GeometryEffect {
+    var travel: CGFloat = 9
+    var shakes: CGFloat = 3
+    var animatableData: CGFloat = 0
+
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        let dx = travel * sin(animatableData * .pi * shakes * 2)
+        return ProjectionTransform(CGAffineTransform(translationX: dx, y: 0))
+    }
+}
+
+/// A one-shot radial spark burst — the little "explosion" when a tile lands
+/// correctly. Fires its animation on appear, so show it conditionally.
+struct SparkBurst: View {
+    var color: Color = Brand.accent
+    var count: Int = 12
+    var radius: CGFloat = 40
+    @State private var go = false
+
+    var body: some View {
+        ZStack {
+            ForEach(0..<count, id: \.self) { i in
+                let angle = Double(i) / Double(count) * 2 * .pi
+                Circle()
+                    .fill(color)
+                    .frame(width: 7, height: 7)
+                    .offset(x: go ? cos(angle) * radius : 0,
+                            y: go ? sin(angle) * radius : 0)
+                    .scaleEffect(go ? 0.3 : 1)
+                    .opacity(go ? 0 : 1)
+            }
+        }
+        .onAppear { withAnimation(.easeOut(duration: 0.55)) { go = true } }
+        .allowsHitTesting(false)
+    }
+}
+
 /// A left-to-right layout that wraps to the next line when it runs out of
 /// width — used for the scrambled letter tray, whose tile count varies by word.
 struct FlowRow: Layout {
