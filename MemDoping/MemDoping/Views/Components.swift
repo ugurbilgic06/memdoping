@@ -179,12 +179,11 @@ extension GameLevel {
     /// The tile motif evolves as you climb the ladder, so later levels feel new.
     /// Grouped into four colour tiers across the level range.
     var tileBase: Color {
-        switch index {
-        case ..<4:    return Color(hue: 0.68, saturation: 0.74, brightness: 0.68) // vivid blue-violet
-        case 4..<7:   return Color(hue: 0.46, saturation: 0.72, brightness: 0.62) // vivid teal
-        case 7..<10:  return Color(hue: 0.92, saturation: 0.64, brightness: 0.74) // vivid pink
-        default:      return Color(hue: 0.08, saturation: 0.92, brightness: 0.66) // vivid amber (white-readable)
-        }
+        // Rotate the hue across the wheel so every level has its own vivid
+        // colour (cycling ~every seven levels), while keeping saturation and
+        // brightness where white text stays readable.
+        let hue = (Double(index - 1) * 0.14).truncatingRemainder(dividingBy: 1.0)
+        return Color(hue: hue, saturation: 0.72, brightness: 0.64)
     }
 }
 

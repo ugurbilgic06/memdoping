@@ -176,6 +176,21 @@ struct GameLevel: Identifiable, Hashable {
         }
     }
 
+    /// A difficulty-scaled clone at a new index, keeping the mechanic and its
+    /// wired content. Used to extend the curated levels into the 100-level
+    /// ladder; counts are capped and sessions clamp to available content.
+    func scaled(toIndex newIndex: Int, step: Int) -> GameLevel {
+        GameLevel(
+            index: newIndex, title: title, technique: technique, tip: tip,
+            itemCount: min(8, itemCount + step),
+            questionCount: min(8, max(questionCount, questionCount + step / 2)),
+            choiceCount: choiceCount == 0 ? 0 : min(5, choiceCount + step / 3),
+            memorizeSeconds: memorizeSeconds == 0 ? 0 : max(6, memorizeSeconds - step),
+            theme: theme, mechanic: mechanic, orientingDepth: orientingDepth,
+            route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck
+        )
+    }
+
     /// Returns a copy with adjusted gameplay parameters (for adaptive difficulty,
     /// §7). Identity, mechanic and content are preserved.
     func varying(itemCount: Int, questionCount: Int, choiceCount: Int, memorizeSeconds: Int) -> GameLevel {
@@ -353,9 +368,10 @@ enum SampleContent {
 
 enum SampleLevels {
 
-    /// The ordered ladder players climb. Stages 1-5 of the master brief are
-    /// expressed here as growing item counts, choice counts, and shorter windows.
-    static let all: [GameLevel] = [
+    /// Hand-crafted opening levels — each introduces a technique with its own
+    /// tip. The full 100-level ladder (`all`) extends these by cycling the
+    /// mechanics with a rising difficulty curve.
+    static let curated: [GameLevel] = [
         GameLevel(
             index: 1,
             title: "Look Closer",
@@ -467,6 +483,21 @@ enum SampleLevels {
             mechanic: .numberShape
         )
     ]
+
+    /// The full 100-level ladder: the curated levels, then difficulty-scaled
+    /// clones that cycle through every mechanic. Clearly sample content — a
+    /// data-driven progression, not a final, evidence-reviewed curriculum (§3).
+    static let all: [GameLevel] = {
+        var levels = curated
+        var index = curated.count + 1
+        while index <= 100 {
+            let template = curated[(index - 1) % curated.count]
+            let step = (index - 1) / curated.count        // 0,1,2… harder each cycle
+            levels.append(template.scaled(toIndex: index, step: step))
+            index += 1
+        }
+        return levels
+    }()
 
     static func level(at index: Int) -> GameLevel? {
         all.first { $0.index == index }
