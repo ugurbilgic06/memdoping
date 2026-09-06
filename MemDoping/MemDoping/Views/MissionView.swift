@@ -123,7 +123,7 @@ struct MissionView: View {
                         .font(.subheadline)
                         .foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                 }
             }
 
@@ -183,7 +183,7 @@ private struct OrientingLearnPhaseView: View {
                 Spacer()
                 Text("\(session.orientingIndex + 1)/\(session.studyPairs.count)")
                     .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(Brand.accent)
+                    .foregroundStyle(Brand.accentText)
             }
 
             ProgressView(value: Double(session.orientingIndex),
@@ -264,7 +264,7 @@ private struct LearnPhaseView: View {
                 Spacer()
                 Text("\(session.learnSecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
-                    .foregroundStyle(Brand.accent)
+                    .foregroundStyle(Brand.accentText)
                     .accessibilityLabel("\(session.learnSecondsRemaining) seconds left")
             }
 

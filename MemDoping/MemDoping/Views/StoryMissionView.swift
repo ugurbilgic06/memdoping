@@ -77,7 +77,7 @@ struct StoryMissionView: View {
                     .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.linkIndex + 1)/\(session.links.count)")
-                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accent)
+                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accentText)
             }
             ProgressView(value: session.buildProgress).tint(Brand.accent)
 
@@ -245,7 +245,7 @@ struct StoryMissionView: View {
                             Text(link.from.symbol)
                             Text(link.from.word.localizedContent)
                             Text((link.chosen ?? "→").localizedContent)
-                                .foregroundStyle(Brand.accent).fontWeight(.semibold)
+                                .foregroundStyle(Brand.accentText).fontWeight(.semibold)
                             Text(link.to.word.localizedContent)
                             Text(link.to.symbol)
                             Spacer()
@@ -264,7 +264,7 @@ struct StoryMissionView: View {
                     Text("A story you made yourself brings back the order — that's what makes long lists stick.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "book.pages.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "book.pages.fill").foregroundStyle(Brand.accentText)
                 }
             }
 

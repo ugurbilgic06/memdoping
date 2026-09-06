@@ -77,7 +77,7 @@ struct NumberShapeMissionView: View {
                     HStack(spacing: 3) {
                         Text("\(entry.digit)")
                             .font(.caption.monospacedDigit().bold())
-                            .foregroundStyle(Brand.accent)
+                            .foregroundStyle(Brand.accentText)
                         Text(entry.shape).font(.body)
                     }
                     .padding(.horizontal, 7).padding(.vertical, 5)
@@ -97,7 +97,7 @@ struct NumberShapeMissionView: View {
                 Spacer()
                 Text("\(session.studySecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
-                    .foregroundStyle(Brand.accent)
+                    .foregroundStyle(Brand.accentText)
             }
             ProgressView(value: Double(session.studySecondsRemaining),
                          total: Double(max(session.level.memorizeSeconds, 1)))
@@ -222,7 +222,7 @@ struct NumberShapeMissionView: View {
                     Text("Turning digits into shapes gives your memory a picture to hold. A handy trick for short codes — not a magic guarantee.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "square.on.circle.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "square.on.circle.fill").foregroundStyle(Brand.accentText)
                 }
             }
 

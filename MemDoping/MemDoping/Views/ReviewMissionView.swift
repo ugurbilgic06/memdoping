@@ -56,7 +56,7 @@ struct ReviewMissionView: View {
             Spacer()
             Label("Spaced review", systemImage: "clock.arrow.circlepath")
                 .font(.subheadline.weight(.bold))
-                .foregroundStyle(Brand.accent)
+                .foregroundStyle(Brand.accentText)
             Text("Still there?")
                 .font(.largeTitle.bold())
                 .foregroundStyle(.primary)
@@ -80,7 +80,7 @@ struct ReviewMissionView: View {
 
     private func statTile(_ value: String, _ label: LocalizedStringKey, _ icon: String) -> some View {
         VStack(spacing: 4) {
-            Image(systemName: icon).foregroundStyle(Brand.accent)
+            Image(systemName: icon).foregroundStyle(Brand.accentText)
             Text(value).font(.headline).foregroundStyle(.primary)
             Text(label).font(.caption2).foregroundStyle(Color.primary.opacity(0.7))
         }
@@ -234,7 +234,7 @@ struct ReviewMissionView: View {
             Spacer()
             Image(systemName: "clock.badge.checkmark.fill")
                 .font(.system(size: 68))
-                .foregroundStyle(Brand.accent)
+                .foregroundStyle(Brand.accentText)
             Text("Review done")
                 .font(.largeTitle.bold())
                 .foregroundStyle(.primary)

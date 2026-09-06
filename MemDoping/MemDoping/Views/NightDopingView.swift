@@ -61,6 +61,9 @@ struct NightDopingView: View {
             }
         }
         .onAppear(perform: setup)
+        // This screen is intentionally dark; keep the app's forced light scheme
+        // from turning nav/system elements dark-on-dark here.
+        .preferredColorScheme(.dark)
     }
 
     // MARK: Setup

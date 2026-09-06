@@ -198,7 +198,7 @@ struct OnboardingView: View {
             VStack(spacing: 8) {
                 Text(subtitle)
                     .font(.subheadline.weight(.bold))
-                    .foregroundStyle(Brand.accent)
+                    .foregroundStyle(Brand.accentText)
                 Text(title)
                     .font(.largeTitle.bold())
                     .foregroundStyle(.primary)

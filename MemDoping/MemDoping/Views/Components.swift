@@ -18,6 +18,11 @@ enum Brand {
     /// Dark ink used on light/aqua fills (e.g. the primary button).
     static let ink = Color(red: 0.04, green: 0.16, blue: 0.18)
 
+    /// A deep teal for accent *text* on the light theme — the light `accent`
+    /// aqua is used for fills/tints, but as text on a light surface it has too
+    /// little contrast, so coloured labels use this instead.
+    static let accentText = Color(red: 0.03, green: 0.45, blue: 0.43)
+
     static var backgroundGradient: LinearGradient {
         LinearGradient(
             colors: [Color(red: 0.05, green: 0.10, blue: 0.20),

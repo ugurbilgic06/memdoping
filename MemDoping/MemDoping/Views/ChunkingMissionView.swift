@@ -83,7 +83,7 @@ struct ChunkingMissionView: View {
 
             Text("\(session.chunks.count) groups")
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Brand.accent)
+                .foregroundStyle(Brand.accentText)
 
             Spacer()
 
@@ -137,7 +137,7 @@ struct ChunkingMissionView: View {
                 Spacer()
                 Text("\(session.studySecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
-                    .foregroundStyle(Brand.accent)
+                    .foregroundStyle(Brand.accentText)
                     .accessibilityLabel("\(session.studySecondsRemaining) seconds left")
             }
 
@@ -272,7 +272,7 @@ struct ChunkingMissionView: View {
                         .font(.subheadline)
                         .foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                 }
             }
 

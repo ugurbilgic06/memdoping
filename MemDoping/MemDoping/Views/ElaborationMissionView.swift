@@ -76,7 +76,7 @@ struct ElaborationMissionView: View {
                     .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.elaborateIndex + 1)/\(session.cards.count)")
-                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accent)
+                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accentText)
             }
 
             ProgressView(value: session.elaborateProgress).tint(Brand.accent)
@@ -271,7 +271,7 @@ struct ElaborationMissionView: View {
                     Text("Asking \"why\" ties a fact to what you already know. It helps most on familiar topics — and less when the material is brand new.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                 }
             }
 

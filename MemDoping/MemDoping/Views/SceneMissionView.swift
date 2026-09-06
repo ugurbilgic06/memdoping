@@ -80,7 +80,7 @@ struct SceneMissionView: View {
                     .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.buildIndex + 1)/\(session.studyPairs.count)")
-                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accent)
+                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accentText)
             }
 
             ProgressView(value: session.buildProgress).tint(Brand.accent)
@@ -275,7 +275,7 @@ struct SceneMissionView: View {
                     Text("Building your own image helps — but it's not magic. It works better for some people and some material. When it clicks, lean in.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "sparkles").foregroundStyle(Brand.accent)
+                    Image(systemName: "sparkles").foregroundStyle(Brand.accentText)
                 }
             }
 

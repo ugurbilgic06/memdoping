@@ -80,7 +80,7 @@ struct RetrievalMissionView: View {
                 Spacer()
                 Text("\(session.learnSecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
-                    .foregroundStyle(Brand.accent)
+                    .foregroundStyle(Brand.accentText)
                     .accessibilityLabel("\(session.learnSecondsRemaining) seconds left")
             }
 
@@ -310,7 +310,7 @@ struct RetrievalMissionView: View {
                                 .font(.headline).foregroundStyle(.primary)
                             Spacer()
                             if r.correct && !r.usedHint {
-                                Image(systemName: "star.fill").foregroundStyle(Brand.accent)
+                                Image(systemName: "star.fill").foregroundStyle(Brand.accentText)
                             }
                             Image(systemName: r.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(r.correct ? Brand.success : Brand.danger)
@@ -328,7 +328,7 @@ struct RetrievalMissionView: View {
                         .font(.subheadline)
                         .foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                 }
             }
 

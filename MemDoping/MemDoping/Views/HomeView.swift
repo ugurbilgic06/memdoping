@@ -150,7 +150,7 @@ struct HomeView: View {
                     HStack(spacing: 14) {
                         Image(systemName: "clock.arrow.circlepath")
                             .font(.title)
-                            .foregroundStyle(Brand.accent)
+                            .foregroundStyle(Brand.accentText)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("\(store.dueReviewCount) items due for review")
                                 .font(.headline).foregroundStyle(.primary)
@@ -212,7 +212,7 @@ struct HomeView: View {
                             .foregroundStyle(Color.primary.opacity(0.75))
                         Label(difficultyLabel, systemImage: "slider.horizontal.3")
                             .font(.caption2)
-                            .foregroundStyle(Brand.accent)
+                            .foregroundStyle(Brand.accentText)
                     }
                     Spacer()
                 }

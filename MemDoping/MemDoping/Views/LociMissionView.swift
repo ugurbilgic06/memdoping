@@ -83,7 +83,7 @@ struct LociMissionView: View {
                     .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.placeIndex + 1)/\(session.totalStops)")
-                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accent)
+                    .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accentText)
             }
 
             ProgressView(value: session.placeProgress).tint(Brand.accent)
@@ -290,7 +290,7 @@ struct LociMissionView: View {
                     Text("You just used a 2,000-year-old technique. It's not a talent — champions score no higher on IQ; they just walk a palace like you did.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "building.columns.fill").foregroundStyle(Brand.accent)
+                    Image(systemName: "building.columns.fill").foregroundStyle(Brand.accentText)
                 }
             }
 

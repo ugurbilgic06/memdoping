@@ -36,7 +36,7 @@ struct MissionIntro: View {
             Spacer()
             Text("Level \(level.index)")
                 .font(.subheadline.weight(.bold))
-                .foregroundStyle(Brand.accent)
+                .foregroundStyle(Brand.accentText)
             Text(level.title.localizedContent)
                 .font(.largeTitle.bold())
                 .foregroundStyle(.primary)
@@ -68,7 +68,7 @@ struct MissionIntro: View {
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(.primary)
                     } icon: {
-                        Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
+                        Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                     }
                     .padding(.top, 2)
                 }
@@ -77,7 +77,7 @@ struct MissionIntro: View {
             HStack(spacing: 12) {
                 ForEach(stats) { stat in
                     VStack(spacing: 4) {
-                        Image(systemName: stat.icon).foregroundStyle(Brand.accent)
+                        Image(systemName: stat.icon).foregroundStyle(Brand.accentText)
                         Text(stat.value).font(.headline).foregroundStyle(.primary)
                         Text(stat.label).font(.caption2).foregroundStyle(Color.primary.opacity(0.7))
                     }

@@ -228,7 +228,7 @@ struct InterleavingMissionView: View {
                          : "Mixed practice feels harder now but pays off later. Sorting the category first is the skill to watch.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
-                    Image(systemName: "arrow.triangle.branch").foregroundStyle(Brand.accent)
+                    Image(systemName: "arrow.triangle.branch").foregroundStyle(Brand.accentText)
                 }
             }
 
