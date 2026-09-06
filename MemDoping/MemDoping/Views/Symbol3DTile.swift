@@ -50,13 +50,16 @@ struct Symbol3DTile: View {
         let mat = SCNMaterial()
         mat.lightingModel = .physicallyBased
         mat.diffuse.contents = cgColor(tint.brightness(1.12))
-        mat.metalness.contents = 0.25
-        mat.roughness.contents = 0.2
+        mat.metalness.contents = 0.2
+        mat.roughness.contents = 0.15
         if let env {
             mat.reflective.contents = env
-            mat.reflective.intensity = 0.5
+            mat.reflective.intensity = 0.62
         }
         mat.fresnelExponent = 1.5
+        // A glossy clear-coat gives it a glassy, candy-like sheen.
+        mat.clearCoat.contents = 0.7
+        mat.clearCoatRoughness.contents = 0.08
         box.materials = [mat]
 
         let cube = SCNNode(geometry: box)
@@ -94,10 +97,10 @@ struct Symbol3DTile: View {
             pop.timingMode = .easeOut
             cube.runAction(pop)
         }
-        // Endless slow spin so the character turns…
-        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 9)))
+        // Endless calm spin so the character turns without being dizzying…
+        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 13)))
         // …and a gentle float up and down, like a living character.
-        let up = SCNAction.moveBy(x: 0, y: 0.13, z: 0, duration: 1.6)
+        let up = SCNAction.moveBy(x: 0, y: 0.11, z: 0, duration: 1.7)
         up.timingMode = .easeInEaseOut
         cube.runAction(.repeatForever(.sequence([up, up.reversed()])))
         scene.rootNode.addChildNode(cube)
@@ -105,7 +108,7 @@ struct Symbol3DTile: View {
         // Camera — close enough that the cube fills the frame.
         let camera = SCNNode()
         camera.camera = SCNCamera()
-        camera.position = SCNVector3(0, 0, 4.35)
+        camera.position = SCNVector3(0, 0, 4.05)   // closer, so the cube fills the frame
         scene.rootNode.addChildNode(camera)
 
         let key = SCNNode()
