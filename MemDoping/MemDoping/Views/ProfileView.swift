@@ -37,25 +37,25 @@ struct ProfileView: View {
         Card {
             VStack(alignment: .leading, spacing: 14) {
                 Text("Memory Score")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
 
                 if let score = store.memoryScore {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text("\(score)")
                             .font(.system(size: 52, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.primary)
                         trendLabel
                     }
                 } else {
                     Text("Not enough data yet")
                         .font(.title3.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(Color.primary.opacity(0.7))
                     Text("Complete at least \(GameStore.minSessionsForScore) missions to see a score.")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(Color.primary.opacity(0.6))
                 }
 
-                Divider().overlay(.white.opacity(0.2))
+                Divider().overlay(Color.primary.opacity(0.2))
 
                 HStack {
                     stat("MemDoping XP", "\(store.xp)")
@@ -70,7 +70,7 @@ struct ProfileView: View {
 
                 Text("Retention tracks delayed recall in spaced reviews. Both are in-game indicators from recent tasks — not an IQ or clinical score.")
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(Color.primary.opacity(0.5))
             }
         }
     }
@@ -79,7 +79,7 @@ struct ProfileView: View {
         let (text, icon, color): (LocalizedStringKey, String, Color) = switch store.memoryScoreTrend {
         case .up:      ("Rising", "arrow.up.right", Brand.success)
         case .down:    ("Dipping", "arrow.down.right", Brand.danger)
-        case .steady:  ("Steady", "arrow.right", .white.opacity(0.7))
+        case .steady:  ("Steady", "arrow.right", Color.primary.opacity(0.7))
         }
         return Label(text, systemImage: icon)
             .font(.caption.weight(.semibold))
@@ -88,8 +88,8 @@ struct ProfileView: View {
 
     private func stat(_ title: LocalizedStringKey, _ value: String) -> some View {
         VStack(spacing: 2) {
-            Text(value).font(.headline).foregroundStyle(.white)
-            Text(title).font(.caption2).foregroundStyle(.white.opacity(0.6))
+            Text(value).font(.headline).foregroundStyle(.primary)
+            Text(title).font(.caption2).foregroundStyle(Color.primary.opacity(0.6))
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
@@ -116,22 +116,22 @@ struct ProfileView: View {
         return Card {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Comfort")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Toggle("Music", isOn: $store.musicEnabled)
                 Toggle("Sound", isOn: $store.soundEnabled)
                 Toggle("Haptics", isOn: $store.hapticsEnabled)
 
-                Divider().overlay(.white.opacity(0.15))
-                Text("Audience").font(.subheadline.weight(.semibold)).foregroundStyle(.white)
+                Divider().overlay(Color.primary.opacity(0.15))
+                Text("Audience").font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
                 HStack(spacing: 8) {
                     ForEach(GameStore.AgeBand.allCases, id: \.self) { band in
                         Button { store.setAgeBand(band) } label: {
                             Text(bandLabel(band))
                                 .font(.caption.weight(.medium))
                                 .frame(maxWidth: .infinity).padding(.vertical, 8)
-                                .background(store.ageBand == band ? Brand.accent : .white.opacity(0.08),
+                                .background(store.ageBand == band ? Brand.accent : Color.primary.opacity(0.08),
                                             in: Capsule())
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.primary)
                         }
                         .buttonStyle(.plain)
                     }
@@ -139,10 +139,10 @@ struct ProfileView: View {
 
                 Text("Reduced motion follows your system accessibility setting.")
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(Color.primary.opacity(0.5))
             }
             .tint(Brand.accent)
-            .foregroundStyle(.white)
+            .foregroundStyle(.primary)
         }
     }
 
@@ -150,10 +150,10 @@ struct ProfileView: View {
         Card {
             VStack(alignment: .leading, spacing: 8) {
                 Label("Privacy", systemImage: "lock.shield.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Text("Your progress is stored on this device only. MemDoping doesn't collect, track, or send your personal data, and there are no accounts or ads.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(Color.primary.opacity(0.8))
             }
         }
     }
@@ -162,14 +162,14 @@ struct ProfileView: View {
         Card {
             VStack(alignment: .leading, spacing: 10) {
                 Text("About")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Text("MemDoping turns science-based memory techniques into short, playful missions. This build is an early prototype using clearly-labeled sample content.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.8))
-                Divider().overlay(.white.opacity(0.2))
+                    .foregroundStyle(Color.primary.opacity(0.8))
+                Divider().overlay(Color.primary.opacity(0.2))
                 Text("Regular use may support memory performance, focus, and recall. Results vary by person; there is no 100% improvement guarantee.")
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(Color.primary.opacity(0.6))
             }
         }
     }
@@ -181,7 +181,7 @@ struct ProfileView: View {
             Text("Reset progress")
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
                 .foregroundStyle(Brand.danger)
         }
         .buttonStyle(.plain)

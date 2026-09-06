@@ -48,7 +48,7 @@ struct StoryMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -74,7 +74,7 @@ struct StoryMissionView: View {
         VStack(spacing: 18) {
             HStack {
                 Label("Link the story", systemImage: "link")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.linkIndex + 1)/\(session.links.count)")
                     .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accent)
@@ -86,14 +86,14 @@ struct StoryMissionView: View {
                 // The two items being linked.
                 HStack(spacing: 14) {
                     itemChip(link.from)
-                    Image(systemName: "arrow.right").foregroundStyle(.white.opacity(0.5))
+                    Image(systemName: "arrow.right").foregroundStyle(Color.primary.opacity(0.5))
                     itemChip(link.to)
                 }
 
                 if let chosen = link.chosen {
                     Text("\(link.from.word.localizedContent) \(chosen.localizedContent) \(link.to.word.localizedContent)")
                         .font(.title3.weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                         .multilineTextAlignment(.center)
                         .padding(.vertical, 12).padding(.horizontal, 16)
                         .frame(maxWidth: .infinity)
@@ -109,7 +109,7 @@ struct StoryMissionView: View {
                     }
                 } else {
                     Text("How does \(link.from.word.localizedContent) meet \(link.to.word.localizedContent)?")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.75))
+                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.75))
                         .multilineTextAlignment(.center)
                     VStack(spacing: 10) {
                         ForEach(link.options, id: \.self) { action in
@@ -126,10 +126,10 @@ struct StoryMissionView: View {
     private func itemChip(_ pair: MemoryPair) -> some View {
         VStack(spacing: 4) {
             Text(pair.symbol).font(.system(size: 44))
-            Text(pair.word.localizedContent).font(.caption).foregroundStyle(.white)
+            Text(pair.word.localizedContent).font(.caption).foregroundStyle(.primary)
         }
         .padding(.vertical, 10).padding(.horizontal, 14)
-        .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+        .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
     }
 
     private func actionButton(_ action: String) -> some View {
@@ -140,7 +140,7 @@ struct StoryMissionView: View {
         } label: {
             GameTile(base: session.level.tileBase, cornerRadius: 14) {
                 Text(action.localizedContent)
-                    .foregroundStyle(.white).fontWeight(.medium)
+                    .foregroundStyle(.primary).fontWeight(.medium)
                     .frame(maxWidth: .infinity)
                     .padding()
             }
@@ -156,7 +156,7 @@ struct StoryMissionView: View {
 
             Text("Retell it — drag the items up, in order")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
 
             // Ordered slots filled so far.
@@ -165,16 +165,16 @@ struct StoryMissionView: View {
                     let filled = session.rebuilt.indices.contains(i)
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(.white.opacity(0.06))
+                            .fill(Color.primary.opacity(0.06))
                             .frame(width: 56, height: 56)
                         if filled {
                             Text(session.rebuilt[i].symbol).font(.system(size: 34))
                         } else {
-                            Text("\(i + 1)").font(.headline).foregroundStyle(.white.opacity(0.4))
+                            Text("\(i + 1)").font(.headline).foregroundStyle(Color.primary.opacity(0.4))
                         }
                     }
                     .overlay(RoundedRectangle(cornerRadius: 12)
-                        .stroke(i == session.nextPosition ? Brand.accent : .white.opacity(0.12),
+                        .stroke(i == session.nextPosition ? Brand.accent : Color.primary.opacity(0.12),
                                 lineWidth: i == session.nextPosition ? 2 : 1))
                 }
             }
@@ -220,8 +220,8 @@ struct StoryMissionView: View {
                 Label("Undo", systemImage: "arrow.uturn.backward")
                     .font(.subheadline.weight(.medium))
                     .frame(maxWidth: .infinity).padding(.vertical, 14)
-                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white.opacity(0.85))
+                    .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.primary.opacity(0.85))
             }
             .buttonStyle(.plain)
             .disabled(session.rebuilt.isEmpty)
@@ -233,9 +233,9 @@ struct StoryMissionView: View {
     private var feedbackPhase: some View {
         VStack(spacing: 16) {
             Text("Your story, in order")
-                .font(.title2.bold()).foregroundStyle(.white)
+                .font(.title2.bold()).foregroundStyle(.primary)
             Text("\(session.correctCount) of \(session.totalItems) in the right spot")
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
 
             // The chain the player built.
             ScrollView {
@@ -251,9 +251,9 @@ struct StoryMissionView: View {
                             Spacer()
                         }
                         .font(.subheadline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                         .padding(10)
-                        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                     }
                 }
             }
@@ -261,7 +261,7 @@ struct StoryMissionView: View {
             Card {
                 Label {
                     Text("A story you made yourself brings back the order — that's what makes long lists stick.")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.85))
+                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
                     Image(systemName: "book.pages.fill").foregroundStyle(Brand.accent)
                 }

@@ -46,7 +46,7 @@ struct NumberShapeMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -71,7 +71,7 @@ struct NumberShapeMissionView: View {
     private var legendStrip: some View {
         VStack(spacing: 6) {
             Text("The shape code")
-                .font(.caption).foregroundStyle(.white.opacity(0.6))
+                .font(.caption).foregroundStyle(Color.primary.opacity(0.6))
             FlowRow(spacing: 8) {
                 ForEach(session.legend, id: \.digit) { entry in
                     HStack(spacing: 3) {
@@ -81,7 +81,7 @@ struct NumberShapeMissionView: View {
                         Text(entry.shape).font(.body)
                     }
                     .padding(.horizontal, 7).padding(.vertical, 5)
-                    .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 8))
+                    .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 8))
                 }
             }
         }
@@ -93,7 +93,7 @@ struct NumberShapeMissionView: View {
         VStack(spacing: 16) {
             HStack {
                 Label("Picture the shapes", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.studySecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
@@ -109,10 +109,10 @@ struct NumberShapeMissionView: View {
                 ForEach(Array(session.digits.enumerated()), id: \.offset) { _, d in
                     VStack(spacing: 4) {
                         Text(session.shape(for: d)).font(.system(size: 46))
-                        Text("\(d)").font(.caption.monospacedDigit()).foregroundStyle(.white.opacity(0.5))
+                        Text("\(d)").font(.caption.monospacedDigit()).foregroundStyle(Color.primary.opacity(0.5))
                     }
                     .padding(.vertical, 12).padding(.horizontal, 10)
-                    .background(.white.opacity(0.07), in: RoundedRectangle(cornerRadius: 14))
+                    .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 14))
                 }
             }
             Spacer()
@@ -141,7 +141,7 @@ struct NumberShapeMissionView: View {
     private var recallPhase: some View {
         VStack(spacing: 16) {
             Text("Type the code back")
-                .font(.title3.weight(.semibold)).foregroundStyle(.white)
+                .font(.title3.weight(.semibold)).foregroundStyle(.primary)
 
             // Entry slots.
             HStack(spacing: 10) {
@@ -149,9 +149,9 @@ struct NumberShapeMissionView: View {
                     let typed = session.entered.indices.contains(i) ? session.entered[i] : nil
                     Text(typed.map(String.init) ?? "•")
                         .font(.system(size: 30, weight: .bold, design: .rounded).monospacedDigit())
-                        .foregroundStyle(typed == nil ? .white.opacity(0.25) : .white)
+                        .foregroundStyle(typed == nil ? Color.primary.opacity(0.25) : Color.primary)
                         .frame(width: 40, height: 52)
-                        .background(.white.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
                 }
             }
 
@@ -176,7 +176,7 @@ struct NumberShapeMissionView: View {
                 } label: {
                     Image(systemName: "delete.left.fill")
                         .font(.title2).frame(maxWidth: .infinity).padding(.vertical, 16)
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
                 .buttonStyle(.plain)
                 .disabled(session.entered.isEmpty)
@@ -194,7 +194,7 @@ struct NumberShapeMissionView: View {
                 VStack(spacing: 2) {
                     Text("\(digit)")
                         .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                     Text(session.shape(for: digit)).font(.caption)
                 }
                 .frame(maxWidth: .infinity).padding(.vertical, 12)
@@ -208,9 +208,9 @@ struct NumberShapeMissionView: View {
     private var feedbackPhase: some View {
         VStack(spacing: 16) {
             Text("How did the code hold?")
-                .font(.title2.bold()).foregroundStyle(.white)
+                .font(.title2.bold()).foregroundStyle(.primary)
             Text("\(session.correctCount) of \(session.total) digits correct")
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
 
             VStack(spacing: 10) {
                 comparisonRow("You typed", session.entered)
@@ -220,7 +220,7 @@ struct NumberShapeMissionView: View {
             Card {
                 Label {
                     Text("Turning digits into shapes gives your memory a picture to hold. A handy trick for short codes — not a magic guarantee.")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.85))
+                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
                     Image(systemName: "square.on.circle.fill").foregroundStyle(Brand.accent)
                 }
@@ -239,13 +239,13 @@ struct NumberShapeMissionView: View {
 
     private func comparisonRow(_ label: LocalizedStringKey, _ seq: [Int]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(label).font(.caption).foregroundStyle(.white.opacity(0.6))
+            Text(label).font(.caption).foregroundStyle(Color.primary.opacity(0.6))
             HStack(spacing: 8) {
                 ForEach(Array(seq.enumerated()), id: \.offset) { i, d in
                     let ok = session.digits.indices.contains(i) && session.digits[i] == d
                     VStack(spacing: 2) {
                         Text(session.shape(for: d)).font(.title3)
-                        Text("\(d)").font(.caption.monospacedDigit()).foregroundStyle(.white)
+                        Text("\(d)").font(.caption.monospacedDigit()).foregroundStyle(.primary)
                     }
                     .padding(.horizontal, 8).padding(.vertical, 6)
                     .background((ok ? Brand.success : Brand.danger).opacity(0.3),

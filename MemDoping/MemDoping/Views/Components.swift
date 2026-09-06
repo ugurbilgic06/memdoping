@@ -35,18 +35,19 @@ enum Brand {
         )
     }
 
-    /// A subtle top-lit fill for translucent surfaces (cards, chips, tiles).
+    /// A soft top-lit fill for card surfaces — a frosted white that reads as a
+    /// raised card on the light background.
     static var surfaceGloss: LinearGradient {
         LinearGradient(
-            colors: [.white.opacity(0.14), .white.opacity(0.05)],
+            colors: [.white.opacity(0.92), .white.opacity(0.78)],
             startPoint: .top, endPoint: .bottom
         )
     }
 
-    /// A soft top highlight stroke for the lit edge of a rounded surface.
+    /// A soft edge stroke for the lit rim of a rounded card on a light theme.
     static var edgeHighlight: LinearGradient {
         LinearGradient(
-            colors: [.white.opacity(0.35), .white.opacity(0.05)],
+            colors: [.white.opacity(0.9), ink.opacity(0.08)],
             startPoint: .top, endPoint: .bottom
         )
     }
@@ -81,12 +82,13 @@ struct BrandBackground: View {
 
     private func gradient(hue: Double) -> some View {
         ZStack {
+            // Light, airy wash — soft mint→sky that keeps dark text readable.
             LinearGradient(
-                colors: [Color(hue: hue, saturation: 0.45, brightness: 0.22),
-                         Color(hue: hue, saturation: 0.58, brightness: 0.50)],
+                colors: [Color(hue: hue, saturation: 0.16, brightness: 0.99),
+                         Color(hue: hue, saturation: 0.34, brightness: 0.90)],
                 startPoint: .top, endPoint: .bottom)
             RadialGradient(
-                colors: [Color(hue: hue, saturation: 0.85, brightness: 0.62).opacity(0.5), .clear],
+                colors: [Color(hue: hue, saturation: 0.30, brightness: 1.0).opacity(0.6), .clear],
                 center: .init(x: 0.5, y: 0.0), startRadius: 0, endRadius: 520)
             .blendMode(.screen)
         }
@@ -107,7 +109,7 @@ struct GlossyTile<Content: View>: View {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .strokeBorder(Brand.edgeHighlight, lineWidth: 1)
             )
-            .shadow(color: .black.opacity(0.28), radius: 8, x: 0, y: 5)
+            .shadow(color: Brand.ink.opacity(0.14), radius: 10, x: 0, y: 6)
     }
 }
 
@@ -143,7 +145,7 @@ struct StatChip: View {
     let title: LocalizedStringKey
     let value: String
     var systemImage: String
-    var tint: Color = .white
+    var tint: Color = Brand.primary
 
     var body: some View {
         GlossyTile(cornerRadius: 14) {
@@ -153,10 +155,10 @@ struct StatChip: View {
                     .foregroundStyle(tint)
                 Text(value)
                     .font(.headline.monospacedDigit())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                 Text(title)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(.primary.opacity(0.7))
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
@@ -196,11 +198,11 @@ extension GameLevel {
     /// Grouped into four colour tiers across the level range.
     var tileBase: Color {
         // A cheerful, bright palette cycled per level — cyan/teal/green/blue/
-        // pink/coral. Purple and amber are avoided on purpose; white text stays
-        // readable at this brightness.
+        // pink/coral. Purple and amber are avoided on purpose; kept light and
+        // saturated so dark text stays readable on the tile.
         let hues: [Double] = [0.50, 0.42, 0.55, 0.34, 0.93, 0.60, 0.02, 0.88]
         let hue = hues[(index - 1) % hues.count]
-        return Color(hue: hue, saturation: 0.78, brightness: 0.66)
+        return Color(hue: hue, saturation: 0.62, brightness: 0.86)
     }
 }
 
@@ -208,7 +210,7 @@ extension GameLevel {
 /// while staying transparent, fast, and tap-friendly for the many interactive
 /// pieces. Real SceneKit is reserved for hero/celebration moments.
 struct GameTile<Content: View>: View {
-    var base: Color = Color(hue: 0.72, saturation: 0.35, brightness: 0.30)
+    var base: Color = Color(hue: 0.52, saturation: 0.55, brightness: 0.84)
     var cornerRadius: CGFloat = 16
     var pressed: Bool = false
     @ViewBuilder var content: Content
@@ -236,8 +238,8 @@ struct GameTile<Content: View>: View {
                     .padding(1.5)
                     .allowsHitTesting(false)
             }
-            .shadow(color: .black.opacity(0.45), radius: pressed ? 3 : 10,
-                    x: 0, y: pressed ? 2 : 7)
+            .shadow(color: Brand.ink.opacity(0.22), radius: pressed ? 3 : 9,
+                    x: 0, y: pressed ? 2 : 6)
             .scaleEffect(pressed ? 0.97 : 1)
     }
 }
@@ -431,7 +433,7 @@ struct ProgressRing: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(.white.opacity(0.12), lineWidth: lineWidth)
+                .stroke(.primary.opacity(0.12), lineWidth: lineWidth)
             Circle()
                 .trim(from: 0, to: max(0.001, min(1, progress)))
                 .stroke(tint, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))

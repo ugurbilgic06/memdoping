@@ -46,7 +46,7 @@ struct ChunkingMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -74,7 +74,7 @@ struct ChunkingMissionView: View {
 
             Text("Tap between digits to break this number into small groups. Groups of \(session.suggestedChunkSize) are easiest to hold.")
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
                 .multilineTextAlignment(.center)
 
             Spacer()
@@ -107,7 +107,7 @@ struct ChunkingMissionView: View {
                         session.toggleBreak(at: index)
                     } label: {
                         Rectangle()
-                            .fill(session.breaks.contains(index) ? Brand.accent : Color.white.opacity(0.12))
+                            .fill(session.breaks.contains(index) ? Brand.accent : Color.primary.opacity(0.12))
                             .frame(width: session.breaks.contains(index) ? 4 : 2, height: 34)
                             .padding(.horizontal, 6)
                             .contentShape(Rectangle().inset(by: -8))
@@ -118,12 +118,12 @@ struct ChunkingMissionView: View {
                 }
                 Text("\(digit)")
                     .font(.system(size: 34, weight: .bold, design: .rounded).monospacedDigit())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
         }
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity)
-        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 18))
+        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 18))
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: session.breaks)
     }
 
@@ -133,7 +133,7 @@ struct ChunkingMissionView: View {
         VStack(spacing: 20) {
             HStack {
                 Label("Memorize", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.studySecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
@@ -151,7 +151,7 @@ struct ChunkingMissionView: View {
 
             Text("Say each group out loud as one number, not digit by digit.")
                 .font(.footnote)
-                .foregroundStyle(.white.opacity(0.75))
+                .foregroundStyle(Color.primary.opacity(0.75))
                 .multilineTextAlignment(.center)
 
             PrimaryButton(title: "I'm ready", systemImage: "checkmark") {
@@ -194,13 +194,13 @@ struct ChunkingMissionView: View {
                         let typed = session.entered.indices.contains(absolute) ? session.entered[absolute] : nil
                         Text(typed.map(String.init) ?? "•")
                             .font(.system(size: 30, weight: .bold, design: .rounded).monospacedDigit())
-                            .foregroundStyle(typed == nil ? .white.opacity(0.25) : .white)
+                            .foregroundStyle(typed == nil ? Color.primary.opacity(0.25) : Color.primary)
                             .frame(width: 26)
                     }
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 10)
-                .background(.white.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+                .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
             }
         }
         .frame(maxWidth: .infinity)
@@ -226,7 +226,7 @@ struct ChunkingMissionView: View {
                         .font(.title2)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
                 .buttonStyle(.plain)
                 .disabled(session.entered.isEmpty)
@@ -245,7 +245,7 @@ struct ChunkingMissionView: View {
                     .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 18)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
         }
         .buttonStyle(.plain)
@@ -257,9 +257,9 @@ struct ChunkingMissionView: View {
         VStack(spacing: 16) {
             Text("How did the groups hold?")
                 .font(.title2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             Text("\(session.correctChunks) of \(session.totalChunks) groups recalled")
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
 
             VStack(alignment: .leading, spacing: 10) {
                 comparisonRow("You typed", session.enteredChunks, against: session.chunks)
@@ -270,7 +270,7 @@ struct ChunkingMissionView: View {
                 Label {
                     Text("Whole groups count, not single digits — holding \"497\" as one piece is the skill.")
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.85))
+                        .foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
                     Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
                 }
@@ -278,7 +278,7 @@ struct ChunkingMissionView: View {
 
             Text("\(session.correctDigits) of \(session.digits.count) individual digits were right.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.6))
+                .foregroundStyle(Color.primary.opacity(0.6))
 
             PrimaryButton(title: "See results", systemImage: "arrow.right") {
                 let result = store.complete(
@@ -296,13 +296,13 @@ struct ChunkingMissionView: View {
 
     private func comparisonRow(_ label: LocalizedStringKey, _ groups: [[Int]], against truth: [[Int]]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(label).font(.caption).foregroundStyle(.white.opacity(0.6))
+            Text(label).font(.caption).foregroundStyle(Color.primary.opacity(0.6))
             HStack(spacing: 8) {
                 ForEach(Array(groups.enumerated()), id: \.offset) { index, group in
                     let isCorrect = truth.indices.contains(index) && truth[index] == group
                     Text(group.map(String.init).joined())
                         .font(.headline.monospacedDigit())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                         .padding(.horizontal, 10).padding(.vertical, 6)
                         .background(
                             (isCorrect ? Brand.success : Brand.danger).opacity(0.3),
@@ -334,7 +334,7 @@ struct ChunkingMissionView: View {
     private func header(_ title: LocalizedStringKey, systemImage: String) -> some View {
         HStack {
             Label(title, systemImage: systemImage)
-                .font(.headline).foregroundStyle(.white)
+                .font(.headline).foregroundStyle(.primary)
             Spacer()
         }
     }
@@ -346,10 +346,10 @@ struct ChunkingMissionView: View {
             ForEach(Array(groups.enumerated()), id: \.offset) { _, group in
                 Text(group.map(String.init).joined())
                     .font(.system(size: 34, weight: .bold, design: .rounded).monospacedDigit())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                     .padding(.horizontal, 12).padding(.vertical, 12)
                     .background(
-                        (highlight ? Brand.accent.opacity(0.3) : Color.white.opacity(0.08)),
+                        (highlight ? Brand.accent.opacity(0.3) : Color.primary.opacity(0.08)),
                         in: RoundedRectangle(cornerRadius: 14)
                     )
             }

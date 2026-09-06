@@ -42,7 +42,7 @@ struct Symbol3DTile: View {
 
     static func makeScene(symbol: String, tint: Color, burst: Bool = false) -> SCNScene {
         let scene = SCNScene()
-        scene.background.contents = cg(0.13, 0.10, 0.27)
+        scene.background.contents = cg(0.93, 0.96, 0.99)
 
         // Image-based lighting so the glossy tile has something to reflect.
         let env = environmentImage()

@@ -47,7 +47,7 @@ struct ElaborationMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -73,7 +73,7 @@ struct ElaborationMissionView: View {
         VStack(spacing: 18) {
             HStack {
                 Label("Ask why", systemImage: "questionmark.bubble.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.elaborateIndex + 1)/\(session.cards.count)")
                     .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accent)
@@ -87,10 +87,10 @@ struct ElaborationMissionView: View {
                     Symbol3DTile(symbol: card.fact.symbol, tint: session.level.tileBase, size: 116)
                     Text("\(card.fact.subject.localizedContent)…")
                         .font(.title3.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                         .multilineTextAlignment(.center)
                     Text("…because?")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.7))
+                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.7))
                 }
 
                 if card.chosen == nil {
@@ -125,7 +125,7 @@ struct ElaborationMissionView: View {
         } label: {
             GameTile(base: session.level.tileBase, cornerRadius: 14) {
                 HStack {
-                    Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
+                    Text(option.localizedContent).foregroundStyle(.primary).fontWeight(.medium)
                         .multilineTextAlignment(.leading)
                     Spacer(minLength: 8)
                 }
@@ -143,20 +143,20 @@ struct ElaborationMissionView: View {
                 Image(systemName: correct ? "checkmark.circle.fill" : "info.circle.fill")
                     .foregroundStyle(correct ? Brand.success : Brand.accent)
                 Text("\(card.fact.subject.localizedContent) because \(card.fact.because.localizedContent).")
-                    .font(.subheadline).foregroundStyle(.white)
+                    .font(.subheadline).foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
                 Spacer(minLength: 4)
             }
             if !correct {
                 Text("You picked another reason — the one above is the sound one.")
-                    .font(.caption).foregroundStyle(.white.opacity(0.65))
+                    .font(.caption).foregroundStyle(Color.primary.opacity(0.65))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(14)
         .frame(maxWidth: .infinity)
         .background(Brand.primary.opacity(0.22), in: RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(.white.opacity(0.15), lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.primary.opacity(0.15), lineWidth: 1))
     }
 
     // MARK: Recall — which reason went with which fact
@@ -166,14 +166,14 @@ struct ElaborationMissionView: View {
             ProgressView(value: session.recallProgress).tint(Brand.accent)
 
             Text("Why was it?")
-                .font(.title3.weight(.semibold)).foregroundStyle(.white)
+                .font(.title3.weight(.semibold)).foregroundStyle(.primary)
 
             if let q = session.currentQuestion {
                 VStack(spacing: 8) {
                     Symbol3DTile(symbol: q.fact.symbol, tint: session.level.tileBase, size: 116,
                                  celebrate: revealed && q.isCorrect)
                     Text(q.fact.subject.localizedContent)
-                        .font(.headline).foregroundStyle(.white)
+                        .font(.headline).foregroundStyle(.primary)
                         .multilineTextAlignment(.center)
                 }
 
@@ -216,13 +216,13 @@ struct ElaborationMissionView: View {
         } label: {
             GameTile(base: base, cornerRadius: 14) {
                 HStack {
-                    Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
+                    Text(option.localizedContent).foregroundStyle(.primary).fontWeight(.medium)
                         .multilineTextAlignment(.leading)
                     Spacer(minLength: 8)
                     if revealed && isCorrectAnswer {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.white)
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.primary)
                     } else if revealed && isChosen {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(.white)
+                        Image(systemName: "xmark.circle.fill").foregroundStyle(.primary)
                     }
                 }
                 .padding().frame(maxWidth: .infinity, alignment: .leading)
@@ -243,9 +243,9 @@ struct ElaborationMissionView: View {
     private var feedbackPhase: some View {
         VStack(spacing: 16) {
             Text("The reasons that stuck")
-                .font(.title2.bold()).foregroundStyle(.white)
+                .font(.title2.bold()).foregroundStyle(.primary)
             Text("\(session.correctCount) of \(session.totalQuestions) recalled")
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
 
             ScrollView {
                 VStack(spacing: 10) {
@@ -253,14 +253,14 @@ struct ElaborationMissionView: View {
                         HStack(spacing: 12) {
                             Text(q.fact.symbol).font(.title)
                             Text(q.fact.subject.localizedContent)
-                                .font(.subheadline).foregroundStyle(.white)
+                                .font(.subheadline).foregroundStyle(.primary)
                                 .multilineTextAlignment(.leading)
                             Spacer(minLength: 6)
                             Image(systemName: q.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(q.isCorrect ? Brand.success : Brand.danger)
                         }
                         .padding(12)
-                        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                     }
                 }
             }
@@ -268,7 +268,7 @@ struct ElaborationMissionView: View {
             Card {
                 Label {
                     Text("Asking \"why\" ties a fact to what you already know. It helps most on familiar topics — and less when the material is brand new.")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.85))
+                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
                     Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
                 }

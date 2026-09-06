@@ -43,7 +43,7 @@ struct ReviewMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase == .recall {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -59,11 +59,11 @@ struct ReviewMissionView: View {
                 .foregroundStyle(Brand.accent)
             Text("Still there?")
                 .font(.largeTitle.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
 
             Card {
                 Text("You learned these a while ago. Let's see what's stuck — no study first, just recall. A little rust is normal.")
-                    .foregroundStyle(.white.opacity(0.85))
+                    .foregroundStyle(Color.primary.opacity(0.85))
             }
 
             HStack(spacing: 12) {
@@ -81,12 +81,12 @@ struct ReviewMissionView: View {
     private func statTile(_ value: String, _ label: LocalizedStringKey, _ icon: String) -> some View {
         VStack(spacing: 4) {
             Image(systemName: icon).foregroundStyle(Brand.accent)
-            Text(value).font(.headline).foregroundStyle(.white)
-            Text(label).font(.caption2).foregroundStyle(.white.opacity(0.7))
+            Text(value).font(.headline).foregroundStyle(.primary)
+            Text(label).font(.caption2).foregroundStyle(Color.primary.opacity(0.7))
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
-        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: Recall
@@ -97,7 +97,7 @@ struct ReviewMissionView: View {
 
             Text("Do you still remember this one?")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
 
             if let item = session.currentItem {
@@ -137,15 +137,15 @@ struct ReviewMissionView: View {
                 Text(char)
                     .font(.system(size: 26, weight: .bold, design: .rounded))
                     .frame(width: 34, height: 44)
-                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
+                    .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(slotColor, lineWidth: 1.5))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
         }
     }
 
     private var slotColor: Color {
-        guard revealed, let out = session.lastOutcome else { return .white.opacity(0.15) }
+        guard revealed, let out = session.lastOutcome else { return Color.primary.opacity(0.15) }
         return out.remembered ? Brand.success : Brand.danger
     }
 
@@ -161,7 +161,7 @@ struct ReviewMissionView: View {
                         Text(String(tile.letter))
                             .font(.system(size: 24, weight: .bold, design: .rounded))
                             .frame(width: 46, height: 52)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.primary)
                     }
                     .opacity(tile.used ? 0.3 : 1)
                 }
@@ -180,8 +180,8 @@ struct ReviewMissionView: View {
                 Label("Delete", systemImage: "delete.left.fill")
                     .font(.subheadline.weight(.medium))
                     .frame(maxWidth: .infinity).padding(.vertical, 14)
-                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white.opacity(0.85))
+                    .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.primary.opacity(0.85))
             }
             .buttonStyle(.plain)
             .disabled(session.built.isEmpty)
@@ -195,7 +195,7 @@ struct ReviewMissionView: View {
                     .font(.subheadline.weight(.medium))
                     .frame(maxWidth: .infinity).padding(.vertical, 14)
                     .background(Brand.accent.opacity(0.25), in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
             .buttonStyle(.plain)
             .disabled(!session.canUseHint)
@@ -212,7 +212,7 @@ struct ReviewMissionView: View {
                     .foregroundStyle(out.remembered ? Brand.success : Brand.accent)
                 if !out.remembered {
                     Text("It was \(item.word.localizedContent).")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.8))
+                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
             .padding(.top, 4)
@@ -237,11 +237,11 @@ struct ReviewMissionView: View {
                 .foregroundStyle(Brand.accent)
             Text("Review done")
                 .font(.largeTitle.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
 
             Text("\(session.rememberedCount) of \(session.items.count) still remembered")
                 .font(.headline)
-                .foregroundStyle(.white.opacity(0.85))
+                .foregroundStyle(Color.primary.opacity(0.85))
 
             if let retention = store.retentionScore {
                 StatChip(title: "Retention", value: "\(retention)",
@@ -251,7 +251,7 @@ struct ReviewMissionView: View {
 
             Text("Refreshed items come back a little later next time. Nothing to keep up with — just drop by when they're due.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.6))
+                .foregroundStyle(Color.primary.opacity(0.6))
                 .multilineTextAlignment(.center)
 
             Spacer()

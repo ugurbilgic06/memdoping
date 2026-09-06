@@ -46,7 +46,7 @@ struct Hero3DView: View {
 
     static func makeScene() -> SCNScene {
         let scene = SCNScene()
-        scene.background.contents = cg(0.13, 0.22, 0.42)   // brighter, cheerful pod
+        scene.background.contents = cg(0.90, 0.95, 0.99)   // light, airy pod
 
         // Bright, glassy rounded cube — a happy colour, see-through so the brain
         // inside shows.

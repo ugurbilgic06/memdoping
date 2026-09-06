@@ -44,7 +44,7 @@ struct MissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -87,9 +87,9 @@ struct MissionView: View {
         VStack(spacing: 16) {
             Text("How did the links hold?")
                 .font(.title2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             Text("\(session.correctCount) of \(session.totalQuestions) recalled")
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
 
             ScrollView {
                 VStack(spacing: 10) {
@@ -99,7 +99,7 @@ struct MissionView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(q.prompt.word.localizedContent)
                                     .font(.headline)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(.primary)
                                 if !q.isCorrect {
                                     Text("You chose: \((q.chosen ?? "—").localizedContent)")
                                         .font(.caption)
@@ -111,7 +111,7 @@ struct MissionView: View {
                                 .foregroundStyle(q.isCorrect ? Brand.success : Brand.danger)
                         }
                         .padding(12)
-                        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                     }
                 }
             }
@@ -120,7 +120,7 @@ struct MissionView: View {
                 Label {
                     Text("Missed one? That's the technique working. Recalling — and correcting — is how the link gets stronger.")
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.85))
+                        .foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
                     Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
                 }
@@ -129,7 +129,7 @@ struct MissionView: View {
             if session.level.orientingDepth != nil, session.orientingTotal > 0 {
                 Text("You judged \(session.orientingCorrectCount) of \(session.orientingTotal) items correctly along the way.")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(Color.primary.opacity(0.6))
                     .multilineTextAlignment(.center)
             }
 
@@ -178,7 +178,7 @@ private struct OrientingLearnPhaseView: View {
         VStack(spacing: 20) {
             HStack {
                 Label("Look closely", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.orientingIndex + 1)/\(session.studyPairs.count)")
                     .font(.subheadline.monospacedDigit())
@@ -196,7 +196,7 @@ private struct OrientingLearnPhaseView: View {
                     Text(pair.symbol).font(.system(size: 88))
                     Text(pair.word.localizedContent)
                         .font(.largeTitle.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                 }
                 .id(pair.id)
                 .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
@@ -204,7 +204,7 @@ private struct OrientingLearnPhaseView: View {
                 Card {
                     Text(session.orientingQuestion)
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
@@ -218,7 +218,7 @@ private struct OrientingLearnPhaseView: View {
 
             Text("Your answer isn't graded — deciding is what helps you remember.")
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(Color.primary.opacity(0.5))
                 .multilineTextAlignment(.center)
         }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: session.orientingIndex)
@@ -236,12 +236,12 @@ private struct OrientingLearnPhaseView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Color.primary.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(.white.opacity(0.15), lineWidth: 1)
+                    .stroke(Color.primary.opacity(0.15), lineWidth: 1)
             )
-            .foregroundStyle(.white)
+            .foregroundStyle(.primary)
         }
         .buttonStyle(.plain)
     }
@@ -259,7 +259,7 @@ private struct LearnPhaseView: View {
         VStack(spacing: 16) {
             HStack {
                 Label("Memorize", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.learnSecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
@@ -279,7 +279,7 @@ private struct LearnPhaseView: View {
                                 Text(pair.symbol).font(.system(size: 46))
                                 Text(pair.word.localizedContent)
                                     .font(.headline)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(.primary)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 20)
@@ -291,7 +291,7 @@ private struct LearnPhaseView: View {
 
             Text(session.level.tip.localizedContent)
                 .font(.footnote)
-                .foregroundStyle(.white.opacity(0.75))
+                .foregroundStyle(Color.primary.opacity(0.75))
                 .multilineTextAlignment(.center)
 
             PrimaryButton(title: "I'm ready", systemImage: "checkmark") {
@@ -324,7 +324,7 @@ private struct RecallPhaseView: View {
 
             Text("Which word goes here?")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
 
             if let q = session.currentQuestion {
                 Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150,
@@ -373,12 +373,12 @@ private struct RecallPhaseView: View {
         } label: {
             GameTile(base: base, cornerRadius: 14) {
                 HStack {
-                    Text(option.localizedContent).foregroundStyle(.white).fontWeight(.medium)
+                    Text(option.localizedContent).foregroundStyle(.primary).fontWeight(.medium)
                     Spacer()
                     if revealed && isCorrectAnswer {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.white)
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.primary)
                     } else if revealed && isChosen {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(.white)
+                        Image(systemName: "xmark.circle.fill").foregroundStyle(.primary)
                     }
                 }
                 .padding()

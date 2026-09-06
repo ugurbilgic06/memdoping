@@ -50,7 +50,7 @@ struct RetrievalMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
         }
@@ -76,7 +76,7 @@ struct RetrievalMissionView: View {
         VStack(spacing: 16) {
             HStack {
                 Label("Memorize", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.white)
+                    .font(.headline).foregroundStyle(.primary)
                 Spacer()
                 Text("\(session.learnSecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
@@ -95,7 +95,7 @@ struct RetrievalMissionView: View {
                             VStack(spacing: 8) {
                                 Text(pair.symbol).font(.system(size: 46))
                                 Text(pair.word.localizedContent)
-                                    .font(.headline).foregroundStyle(.white)
+                                    .font(.headline).foregroundStyle(.primary)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 20)
@@ -107,7 +107,7 @@ struct RetrievalMissionView: View {
 
             Text("Try to recall each word yourself in a moment — even if it feels hard, that's what makes it stick.")
                 .font(.footnote)
-                .foregroundStyle(.white.opacity(0.75))
+                .foregroundStyle(Color.primary.opacity(0.75))
                 .multilineTextAlignment(.center)
 
             PrimaryButton(title: "I'm ready", systemImage: "checkmark") {
@@ -133,7 +133,7 @@ struct RetrievalMissionView: View {
 
             Text("Spell the word for this symbol")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
 
             if let pair = session.currentPair {
                 Text(pair.symbol)
@@ -174,18 +174,18 @@ struct RetrievalMissionView: View {
                 Text(char)
                     .font(.system(size: 26, weight: .bold, design: .rounded))
                     .frame(width: 34, height: 44)
-                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
+                    .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(revealColor(for: i), lineWidth: 1.5)
                     )
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
         }
     }
 
     private func revealColor(for index: Int) -> Color {
-        guard revealed, let last = session.lastRecall else { return .white.opacity(0.15) }
+        guard revealed, let last = session.lastRecall else { return Color.primary.opacity(0.15) }
         return last.correct ? Brand.success : Brand.danger
     }
 
@@ -196,7 +196,7 @@ struct RetrievalMissionView: View {
                     Text(String(tile.letter))
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .frame(width: 46, height: 52)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                 }
                 .opacity(tile.used ? 0.3 : 1)
                 .offset(dragTileId == tile.id ? dragOffset : .zero)
@@ -239,8 +239,8 @@ struct RetrievalMissionView: View {
                     .font(.subheadline.weight(.medium))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white.opacity(0.85))
+                    .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.primary.opacity(0.85))
             }
             .buttonStyle(.plain)
             .disabled(session.built.isEmpty)
@@ -255,7 +255,7 @@ struct RetrievalMissionView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(Brand.accent.opacity(0.25), in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
             .buttonStyle(.plain)
             .disabled(!session.canUseHint)
@@ -276,7 +276,7 @@ struct RetrievalMissionView: View {
                 if !last.correct {
                     Text("It was \(last.pair.word.localizedContent).")
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(Color.primary.opacity(0.8))
                 }
             }
             .padding(.top, 4)
@@ -296,9 +296,9 @@ struct RetrievalMissionView: View {
         VStack(spacing: 16) {
             Text("How did recall go?")
                 .font(.title2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             Text("\(session.correctCount) of \(session.totalQuestions) recalled · \(session.unaidedCount) with no hint")
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(Color.primary.opacity(0.8))
                 .multilineTextAlignment(.center)
 
             ScrollView {
@@ -307,7 +307,7 @@ struct RetrievalMissionView: View {
                         HStack(spacing: 12) {
                             Text(r.pair.symbol).font(.title)
                             Text(r.pair.word.localizedContent)
-                                .font(.headline).foregroundStyle(.white)
+                                .font(.headline).foregroundStyle(.primary)
                             Spacer()
                             if r.correct && !r.usedHint {
                                 Image(systemName: "star.fill").foregroundStyle(Brand.accent)
@@ -316,7 +316,7 @@ struct RetrievalMissionView: View {
                                 .foregroundStyle(r.correct ? Brand.success : Brand.danger)
                         }
                         .padding(12)
-                        .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                     }
                 }
             }
@@ -325,7 +325,7 @@ struct RetrievalMissionView: View {
                 Label {
                     Text("Testing yourself works harder than re-reading — especially the words that felt tough to pull up.")
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.85))
+                        .foregroundStyle(Color.primary.opacity(0.85))
                 } icon: {
                     Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accent)
                 }

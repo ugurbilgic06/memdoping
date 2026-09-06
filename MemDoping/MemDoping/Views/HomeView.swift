@@ -69,16 +69,16 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("MemDoping")
                         .font(.largeTitle.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                     Text("Memory Doping · Play, Learn, Remember")
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(Color.primary.opacity(0.7))
                 }
                 Spacer()
                 NavigationLink { ProfileView() } label: {
                     Image(systemName: "person.crop.circle")
                         .font(.title)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                 }
             }
         }
@@ -114,13 +114,13 @@ struct HomeView: View {
                         .foregroundStyle(store.isDailyMissionDone ? Brand.success : Brand.accent)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Daily mission")
-                            .font(.headline).foregroundStyle(.white)
+                            .font(.headline).foregroundStyle(.primary)
                         dailySubtitle
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(Color.primary.opacity(0.75))
                     }
                     Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
+                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
                 }
             }
         }
@@ -153,13 +153,13 @@ struct HomeView: View {
                             .foregroundStyle(Brand.accent)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("\(store.dueReviewCount) items due for review")
-                                .font(.headline).foregroundStyle(.white)
+                                .font(.headline).foregroundStyle(.primary)
                             Text("You learned these earlier — let's see if they stuck.")
                                 .font(.subheadline)
-                                .foregroundStyle(.white.opacity(0.75))
+                                .foregroundStyle(Color.primary.opacity(0.75))
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
+                        Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
                     }
                 }
             }
@@ -172,10 +172,10 @@ struct HomeView: View {
                         .foregroundStyle(Brand.success)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("All caught up on reviews")
-                            .font(.headline).foregroundStyle(.white)
+                            .font(.headline).foregroundStyle(.primary)
                         Text("Next review \(next.formatted(.relative(presentation: .named))).")
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(Color.primary.opacity(0.75))
                     }
                     Spacer()
                 }
@@ -202,14 +202,14 @@ struct HomeView: View {
                         .animation(reduceMotion ? nil : .easeInOut(duration: 0.7), value: store.ringProgress)
                         .overlay(
                             Text("\(store.ringLevel)")
-                                .font(.headline).foregroundStyle(.white)
+                                .font(.headline).foregroundStyle(.primary)
                         )
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Continue your training")
-                            .font(.headline).foregroundStyle(.white)
+                            .font(.headline).foregroundStyle(.primary)
                         Text("Level \(store.currentLevel.index): \(store.currentLevel.title.localizedContent)")
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(Color.primary.opacity(0.75))
                         Label(difficultyLabel, systemImage: "slider.horizontal.3")
                             .font(.caption2)
                             .foregroundStyle(Brand.accent)
@@ -229,7 +229,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Levels")
                 .font(.title3.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             ForEach(SampleLevels.all) { level in
                 levelRow(level)
             }
@@ -246,32 +246,32 @@ struct HomeView: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(unlocked ? Brand.gloss(level.tileBase) : Brand.gloss(.white.opacity(0.08)))
+                        .fill(unlocked ? Brand.gloss(level.tileBase) : Brand.gloss(Color.primary.opacity(0.08)))
                         .frame(width: 40, height: 40)
                         .overlay(Circle().strokeBorder(Brand.edgeHighlight, lineWidth: 1))
                         .shadow(color: unlocked ? level.tileBase.opacity(0.5) : .clear, radius: 5, y: 2)
                     Image(systemName: unlocked ? "\(level.index).circle.fill" : "lock.fill")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(level.title.localizedContent)
                         .font(.headline)
-                        .foregroundStyle(unlocked ? .white : .white.opacity(0.5))
+                        .foregroundStyle(unlocked ? Color.primary : Color.primary.opacity(0.5))
                     Text(level.technique.localizedContent)
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(Color.primary.opacity(0.6))
                 }
                 Spacer()
                 if let best {
                     Text("\(Int(best * 100))%")
                         .font(.subheadline.monospacedDigit())
-                        .foregroundStyle(best >= level.masteryPercent ? Brand.success : .white.opacity(0.7))
+                        .foregroundStyle(best >= level.masteryPercent ? Brand.success : Color.primary.opacity(0.7))
                 } else if unlocked {
-                    Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
+                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
                 }
             }
             .padding(14)
-            .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 16))
+            .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
         .disabled(!unlocked)
@@ -286,13 +286,13 @@ struct HomeView: View {
                     Text("🌙").font(.title)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Night Doping")
-                            .font(.headline).foregroundStyle(.white)
+                            .font(.headline).foregroundStyle(.primary)
                         Text("A calm, untimed wind-down — no score, no rush.")
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(Color.primary.opacity(0.75))
                     }
                     Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(.white.opacity(0.5))
+                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
                 }
             }
         }
@@ -304,7 +304,7 @@ struct HomeView: View {
     private var disclaimer: some View {
         Text("Regular use may support memory performance, focus, and recall. Results vary by person; there is no 100% improvement guarantee.")
             .font(.caption2)
-            .foregroundStyle(.white.opacity(0.5))
+            .foregroundStyle(Color.primary.opacity(0.5))
             .multilineTextAlignment(.center)
             .padding(.top, 8)
     }
