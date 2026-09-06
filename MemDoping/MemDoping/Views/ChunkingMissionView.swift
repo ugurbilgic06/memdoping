@@ -356,3 +356,8 @@ struct ChunkingMissionView: View {
         .frame(maxWidth: .infinity)
     }
 }
+
+#Preview("Chunking — group a number") {
+    ChunkingMissionView(level: SampleLevels.level(at: 2)!)
+        .environment(GameStore())
+}

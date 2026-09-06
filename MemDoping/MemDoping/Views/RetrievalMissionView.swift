@@ -339,3 +339,8 @@ struct RetrievalMissionView: View {
         )
     }
 }
+
+#Preview("Retrieval — letter tiles") {
+    RetrievalMissionView(level: SampleLevels.level(at: 5)!)
+        .environment(GameStore())
+}

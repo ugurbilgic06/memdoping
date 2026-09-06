@@ -278,3 +278,8 @@ struct LociMissionView: View {
         )
     }
 }
+
+#Preview("Loci — memory palace") {
+    LociMissionView(level: SampleLevels.level(at: 9)!)
+        .environment(GameStore())
+}

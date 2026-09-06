@@ -393,3 +393,26 @@ private struct RecallPhaseView: View {
         .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.55), value: revealed)
     }
 }
+
+// MARK: - Previews
+
+#Preview("Recall (multiple choice)") {
+    let session = MissionSession(level: SampleLevels.level(at: 3)!)
+    session.beginLearning()
+    session.beginRecall()
+    return ZStack {
+        BrandBackground()
+        RecallPhaseView(session: session).padding()
+    }
+    .environment(GameStore())
+}
+
+#Preview("Orienting (T01)") {
+    let session = MissionSession(level: SampleLevels.level(at: 1)!)
+    session.beginLearning()
+    return ZStack {
+        BrandBackground()
+        OrientingLearnPhaseView(session: session).padding()
+    }
+    .environment(GameStore())
+}
