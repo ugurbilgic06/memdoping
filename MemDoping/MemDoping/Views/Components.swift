@@ -246,7 +246,26 @@ struct ShakeEffect: GeometryEffect {
     }
 }
 
+/// A subtle, endless vertical bob to give idle tiles a little life. Phase-offset
+/// by `seed` so a grid of tiles drifts out of sync. Still under Reduce Motion.
+struct GentleFloat: ViewModifier {
+    let seed: Int
+    @State private var up = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .offset(y: (reduceMotion || !up) ? 0 : -4)
+            .animation(reduceMotion ? nil
+                       : .easeInOut(duration: 1.8 + Double(seed % 5) * 0.3).repeatForever(autoreverses: true),
+                       value: up)
+            .onAppear { up = true }
+    }
+}
+
 extension View {
+    func gentleFloat(_ seed: Int) -> some View { modifier(GentleFloat(seed: seed)) }
+
     /// A one-shot Y-axis flip when `active` becomes true — the tile "turns over"
     /// to reveal its result (mahjong-style). A full 360° keeps content upright.
     func flipReveal(_ active: Bool) -> some View {

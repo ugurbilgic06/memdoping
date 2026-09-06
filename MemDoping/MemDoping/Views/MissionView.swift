@@ -284,6 +284,7 @@ private struct LearnPhaseView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 20)
                         }
+                        .gentleFloat(abs(pair.id.hashValue))
                     }
                 }
             }

@@ -179,16 +179,25 @@ struct GameLevel: Identifiable, Hashable {
     /// A difficulty-scaled clone at a new index, keeping the mechanic and its
     /// wired content. Used to extend the curated levels into the 100-level
     /// ladder; counts are capped and sessions clamp to available content.
-    func scaled(toIndex newIndex: Int, step: Int) -> GameLevel {
+    func scaled(toIndex newIndex: Int, step: Int, theme newTheme: MemoryTheme? = nil) -> GameLevel {
         GameLevel(
             index: newIndex, title: title, technique: technique, tip: tip,
             itemCount: min(8, itemCount + step),
             questionCount: min(8, max(questionCount, questionCount + step / 2)),
             choiceCount: choiceCount == 0 ? 0 : min(5, choiceCount + step / 3),
             memorizeSeconds: memorizeSeconds == 0 ? 0 : max(6, memorizeSeconds - step),
-            theme: theme, mechanic: mechanic, orientingDepth: orientingDepth,
+            theme: newTheme ?? theme, mechanic: mechanic, orientingDepth: orientingDepth,
             route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck
         )
+    }
+
+    /// Mechanics whose gameplay reads from the single `theme`, so rotating it
+    /// adds image variety across the generated ladder.
+    var usesSingleTheme: Bool {
+        switch mechanic {
+        case .pairRecall, .scene, .retrieval, .story: return true
+        default: return false   // chunking/numberShape/loci/elaboration/interleaving
+        }
     }
 
     /// Returns a copy with adjusted gameplay parameters (for adaptive difficulty,
@@ -290,6 +299,41 @@ enum SampleContent {
         .init(emoji: "🎈", text: "is floating"),
         .init(emoji: "😱", text: "is screaming")
     ]
+
+    static let nature = MemoryTheme(
+        id: "nature",
+        title: "Nature",
+        deepQuestion: "Does it grow?",
+        pairs: [
+            .init(symbol: "🌳", word: "Tree", deepAnswer: true),
+            .init(symbol: "🌸", word: "Blossom", deepAnswer: true),
+            .init(symbol: "🍄", word: "Mushroom", deepAnswer: true),
+            .init(symbol: "🐌", word: "Snail", deepAnswer: false),
+            .init(symbol: "🦎", word: "Lizard", deepAnswer: false),
+            .init(symbol: "🌻", word: "Sunflower", deepAnswer: true),
+            .init(symbol: "🐞", word: "Ladybug", deepAnswer: false),
+            .init(symbol: "🍁", word: "Leaf", deepAnswer: true)
+        ]
+    )
+
+    static let sports = MemoryTheme(
+        id: "sports",
+        title: "Sports",
+        deepQuestion: "Is it played with a ball?",
+        pairs: [
+            .init(symbol: "⚽️", word: "Football", deepAnswer: true),
+            .init(symbol: "🏀", word: "Basketball", deepAnswer: true),
+            .init(symbol: "🎾", word: "Tennis", deepAnswer: true),
+            .init(symbol: "🏓", word: "Ping Pong", deepAnswer: true),
+            .init(symbol: "🥊", word: "Boxing", deepAnswer: false),
+            .init(symbol: "🏹", word: "Archery", deepAnswer: false),
+            .init(symbol: "🏊", word: "Swimming", deepAnswer: false),
+            .init(symbol: "⛳️", word: "Golf", deepAnswer: true)
+        ]
+    )
+
+    /// Themes rotated across the generated ladder for image variety.
+    static let themePool: [MemoryTheme] = [animals, food, space, travel, nature, sports]
 
     /// A soft, familiar deck for Night Doping — the calm, untimed mode (§4).
     static let nightCalm = MemoryTheme(
@@ -493,7 +537,11 @@ enum SampleLevels {
         while index <= 100 {
             let template = curated[(index - 1) % curated.count]
             let step = (index - 1) / curated.count        // 0,1,2… harder each cycle
-            levels.append(template.scaled(toIndex: index, step: step))
+            // Rotate the theme (for single-theme mechanics) so images vary.
+            let theme = template.usesSingleTheme
+                ? SampleContent.themePool[index % SampleContent.themePool.count]
+                : nil
+            levels.append(template.scaled(toIndex: index, step: step, theme: theme))
             index += 1
         }
         return levels
