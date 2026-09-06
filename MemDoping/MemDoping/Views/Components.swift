@@ -10,15 +10,15 @@ import SwiftUI
 
 /// MemDoping brand palette.
 enum Brand {
-    static let primary = Color(red: 0.49, green: 0.34, blue: 1.0)    // luminous violet
-    static let accent  = Color(red: 1.0,  green: 0.58, blue: 0.16)   // luminous orange
+    static let primary = Color(red: 0.20, green: 0.58, blue: 1.0)    // bright blue
+    static let accent  = Color(red: 1.0,  green: 0.62, blue: 0.20)   // warm orange
     static let success = Color(red: 0.20, green: 0.85, blue: 0.52)   // luminous green
-    static let danger  = Color(red: 1.0,  green: 0.34, blue: 0.46)   // luminous rose
+    static let danger  = Color(red: 1.0,  green: 0.36, blue: 0.48)   // luminous rose
 
     static var backgroundGradient: LinearGradient {
         LinearGradient(
-            colors: [Color(red: 0.08, green: 0.06, blue: 0.22),
-                     Color(red: 0.20, green: 0.13, blue: 0.42)],
+            colors: [Color(red: 0.05, green: 0.10, blue: 0.20),
+                     Color(red: 0.08, green: 0.28, blue: 0.42)],
             startPoint: .top, endPoint: .bottom
         )
     }
@@ -179,11 +179,12 @@ extension GameLevel {
     /// The tile motif evolves as you climb the ladder, so later levels feel new.
     /// Grouped into four colour tiers across the level range.
     var tileBase: Color {
-        // Rotate the hue across the wheel so every level has its own vivid
-        // colour (cycling ~every seven levels), while keeping saturation and
-        // brightness where white text stays readable.
-        let hue = (Double(index - 1) * 0.14).truncatingRemainder(dividingBy: 1.0)
-        return Color(hue: hue, saturation: 0.72, brightness: 0.64)
+        // A cheerful, bright palette cycled per level — cyan/teal/green/blue/
+        // pink/coral. Purple and amber are avoided on purpose; white text stays
+        // readable at this brightness.
+        let hues: [Double] = [0.50, 0.42, 0.55, 0.34, 0.93, 0.60, 0.02, 0.88]
+        let hue = hues[(index - 1) % hues.count]
+        return Color(hue: hue, saturation: 0.78, brightness: 0.66)
     }
 }
 
