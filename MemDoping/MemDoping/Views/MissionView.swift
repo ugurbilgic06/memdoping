@@ -44,7 +44,7 @@ struct MissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(Color.primary.opacity(0.8))
+                        .foregroundStyle(Brand.text.opacity(0.8))
                 }
             }
         }
@@ -87,9 +87,9 @@ struct MissionView: View {
         VStack(spacing: 16) {
             Text("How did the links hold?")
                 .font(.title2.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Brand.text)
             Text("\(session.correctCount) of \(session.totalQuestions) recalled")
-                .foregroundStyle(Color.primary.opacity(0.8))
+                .foregroundStyle(Brand.text.opacity(0.8))
 
             ScrollView {
                 VStack(spacing: 10) {
@@ -99,7 +99,7 @@ struct MissionView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(q.prompt.word.localizedContent)
                                     .font(.headline)
-                                    .foregroundStyle(.primary)
+                                    .foregroundStyle(Brand.text)
                                 if !q.isCorrect {
                                     Text("You chose: \((q.chosen ?? "—").localizedContent)")
                                         .font(.caption)
@@ -111,7 +111,7 @@ struct MissionView: View {
                                 .foregroundStyle(q.isCorrect ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
-                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Brand.text.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                         .dealIn(i)
                     }
                 }
@@ -121,7 +121,7 @@ struct MissionView: View {
                 Label {
                     Text("Missed one? That's the technique working. Recalling — and correcting — is how the link gets stronger.")
                         .font(.subheadline)
-                        .foregroundStyle(Color.primary.opacity(0.85))
+                        .foregroundStyle(Brand.text.opacity(0.85))
                 } icon: {
                     Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                 }
@@ -130,7 +130,7 @@ struct MissionView: View {
             if session.level.orientingDepth != nil, session.orientingTotal > 0 {
                 Text("You judged \(session.orientingCorrectCount) of \(session.orientingTotal) items correctly along the way.")
                     .font(.caption)
-                    .foregroundStyle(Color.primary.opacity(0.6))
+                    .foregroundStyle(Brand.text.opacity(0.6))
                     .multilineTextAlignment(.center)
             }
 
@@ -179,7 +179,7 @@ private struct OrientingLearnPhaseView: View {
         VStack(spacing: 20) {
             HStack {
                 Label("Look closely", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.primary)
+                    .font(.headline).foregroundStyle(Brand.text)
                 Spacer()
                 Text("\(session.orientingIndex + 1)/\(session.studyPairs.count)")
                     .font(.subheadline.monospacedDigit())
@@ -197,7 +197,7 @@ private struct OrientingLearnPhaseView: View {
                     Text(pair.symbol).font(.system(size: 88))
                     Text(pair.word.localizedContent)
                         .font(.largeTitle.bold())
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                 }
                 .id(pair.id)
                 .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
@@ -205,7 +205,7 @@ private struct OrientingLearnPhaseView: View {
                 Card {
                     Text(session.orientingQuestion)
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
@@ -219,7 +219,7 @@ private struct OrientingLearnPhaseView: View {
 
             Text("Your answer isn't graded — deciding is what helps you remember.")
                 .font(.caption2)
-                .foregroundStyle(Color.primary.opacity(0.5))
+                .foregroundStyle(Brand.text.opacity(0.5))
                 .multilineTextAlignment(.center)
         }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: session.orientingIndex)
@@ -237,12 +237,12 @@ private struct OrientingLearnPhaseView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(Color.primary.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(Brand.text.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(Color.primary.opacity(0.15), lineWidth: 1)
+                    .stroke(Brand.text.opacity(0.15), lineWidth: 1)
             )
-            .foregroundStyle(.primary)
+            .foregroundStyle(Brand.text)
         }
         .buttonStyle(.plain)
     }
@@ -260,7 +260,7 @@ private struct LearnPhaseView: View {
         VStack(spacing: 16) {
             HStack {
                 Label("Memorize", systemImage: "eye.fill")
-                    .font(.headline).foregroundStyle(.primary)
+                    .font(.headline).foregroundStyle(Brand.text)
                 Spacer()
                 Text("\(session.learnSecondsRemaining)s")
                     .font(.title3.monospacedDigit().bold())
@@ -279,7 +279,7 @@ private struct LearnPhaseView: View {
                             SymbolBadge(symbol: pair.symbol, seed: pair.id.hashValue, size: 92)
                             Text(pair.word.localizedContent)
                                 .font(.title3.weight(.semibold))
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(Brand.text)
                                 .multilineTextAlignment(.center)
                         }
                         .frame(maxWidth: .infinity)
@@ -297,7 +297,7 @@ private struct LearnPhaseView: View {
 
             Text(session.level.tip.localizedContent)
                 .font(.footnote)
-                .foregroundStyle(Color.primary.opacity(0.75))
+                .foregroundStyle(Brand.text.opacity(0.75))
                 .multilineTextAlignment(.center)
 
             PrimaryButton(title: "I'm ready", systemImage: "checkmark") {
@@ -330,7 +330,7 @@ private struct RecallPhaseView: View {
 
             Text("Which word goes here?")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(.primary)
+                .foregroundStyle(Brand.text)
 
             if let q = session.currentQuestion {
                 Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150,
@@ -379,12 +379,12 @@ private struct RecallPhaseView: View {
         } label: {
             GameTile(base: base, cornerRadius: 14) {
                 HStack {
-                    Text(option.localizedContent).foregroundStyle(.primary).fontWeight(.medium)
+                    Text(option.localizedContent).foregroundStyle(Brand.text).fontWeight(.medium)
                     Spacer()
                     if revealed && isCorrectAnswer {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.primary)
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(Brand.text)
                     } else if revealed && isChosen {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(.primary)
+                        Image(systemName: "xmark.circle.fill").foregroundStyle(Brand.text)
                     }
                 }
                 .padding()

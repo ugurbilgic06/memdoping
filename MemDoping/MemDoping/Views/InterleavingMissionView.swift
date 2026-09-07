@@ -46,7 +46,7 @@ struct InterleavingMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase == .play {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(Color.primary.opacity(0.8))
+                        .foregroundStyle(Brand.text.opacity(0.8))
                 }
             }
         }
@@ -79,7 +79,7 @@ struct InterleavingMissionView: View {
 
                 if session.step == .category {
                     Text("Which category?")
-                        .font(.title3.weight(.semibold)).foregroundStyle(.primary)
+                        .font(.title3.weight(.semibold)).foregroundStyle(Brand.text)
                     VStack(spacing: 12) {
                         ForEach(Array(q.categoryOptions.enumerated()), id: \.element.id) { i, theme in
                             categoryButton(theme).dealIn(i)
@@ -88,7 +88,7 @@ struct InterleavingMissionView: View {
                 } else {
                     chosenCategoryChip(q)
                     Text("Which word?")
-                        .font(.title3.weight(.semibold)).foregroundStyle(.primary)
+                        .font(.title3.weight(.semibold)).foregroundStyle(Brand.text)
                     VStack(spacing: 12) {
                         ForEach(Array(q.answerOptions.enumerated()), id: \.element) { i, option in
                             answerButton(option, question: q).dealIn(i)
@@ -122,7 +122,7 @@ struct InterleavingMissionView: View {
                 HStack(spacing: 12) {
                     Text(themeIcon(theme.id)).font(.title2)
                     Text(theme.title.localizedContent)
-                        .foregroundStyle(.primary).fontWeight(.semibold)
+                        .foregroundStyle(Brand.text).fontWeight(.semibold)
                     Spacer()
                 }
                 .padding()
@@ -145,9 +145,9 @@ struct InterleavingMissionView: View {
             }
         }
         .font(.subheadline)
-        .foregroundStyle(Color.primary.opacity(0.85))
+        .foregroundStyle(Brand.text.opacity(0.85))
         .padding(.horizontal, 12).padding(.vertical, 6)
-        .background(Color.primary.opacity(0.06), in: Capsule())
+        .background(Brand.text.opacity(0.06), in: Capsule())
     }
 
     private func answerButton(_ option: String, question q: InterleavingSession.Question) -> some View {
@@ -167,12 +167,12 @@ struct InterleavingMissionView: View {
         } label: {
             GameTile(base: base, cornerRadius: 14) {
                 HStack {
-                    Text(option.localizedContent).foregroundStyle(.primary).fontWeight(.medium)
+                    Text(option.localizedContent).foregroundStyle(Brand.text).fontWeight(.medium)
                     Spacer()
                     if revealed && isCorrectAnswer {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.primary)
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(Brand.text)
                     } else if revealed && isChosen {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(.primary)
+                        Image(systemName: "xmark.circle.fill").foregroundStyle(Brand.text)
                     }
                 }
                 .padding().frame(maxWidth: .infinity)
@@ -193,9 +193,9 @@ struct InterleavingMissionView: View {
     private var feedbackPhase: some View {
         VStack(spacing: 16) {
             Text("Through the mix")
-                .font(.title2.bold()).foregroundStyle(.primary)
+                .font(.title2.bold()).foregroundStyle(Brand.text)
             Text("\(session.correctCount) of \(session.totalQuestions) recalled")
-                .foregroundStyle(Color.primary.opacity(0.8))
+                .foregroundStyle(Brand.text.opacity(0.8))
 
             ScrollView {
                 VStack(spacing: 10) {
@@ -204,7 +204,7 @@ struct InterleavingMissionView: View {
                             Text(q.pair.symbol).font(.title)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(q.pair.word.localizedContent)
-                                    .font(.headline).foregroundStyle(.primary)
+                                    .font(.headline).foregroundStyle(Brand.text)
                                 if !q.categoryCorrect {
                                     Text("wrong category")
                                         .font(.caption).foregroundStyle(Brand.danger)
@@ -215,7 +215,7 @@ struct InterleavingMissionView: View {
                                 .foregroundStyle(q.answerCorrect ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
-                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Brand.text.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                         .dealIn(i)
                     }
                 }
@@ -226,7 +226,7 @@ struct InterleavingMissionView: View {
                     Text(session.categoryErrors == 0
                          ? "You kept the categories straight the whole way — that's the interleaving skill."
                          : "Mixed practice feels harder now but pays off later. Sorting the category first is the skill to watch.")
-                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
+                        .font(.subheadline).foregroundStyle(Brand.text.opacity(0.85))
                 } icon: {
                     Image(systemName: "arrow.triangle.branch").foregroundStyle(Brand.accentText)
                 }
@@ -279,7 +279,7 @@ struct InterleavingMissionView: View {
         case "food":    Brand.success
         case "space":   Brand.primary
         case "travel":  Color(red: 0.30, green: 0.62, blue: 0.90)
-        default:        Color.primary.opacity(0.5)
+        default:        Brand.text.opacity(0.5)
         }
     }
 

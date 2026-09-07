@@ -54,6 +54,48 @@ final class SoundPlayer {
         if !player.isPlaying { player.play() }
     }
 
+    /// A grand, rising swell for the intro gate — a triumphant ascending chord
+    /// that builds and shimmers.
+    func playIntro() {
+        startIfNeeded()
+        guard isRunning else { return }
+        player.scheduleBuffer(introBuffer(), at: nil, options: .interrupts)
+        if !player.isPlaying { player.play() }
+    }
+
+    private func introBuffer() -> AVAudioPCMBuffer {
+        let duration = 2.0
+        let frames = AVAudioFrameCount(duration * sampleRate)
+        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)!
+        buffer.frameLength = frames
+        let channel = buffer.floatChannelData![0]
+
+        // An ascending major arpeggio that sustains and stacks into a chord.
+        let notes: [(start: Double, freq: Double)] = [
+            (0.00, 261.63), (0.14, 329.63), (0.28, 392.00), (0.42, 523.25),
+            (0.56, 659.25), (0.70, 783.99), (0.86, 1046.50)
+        ]
+        for i in 0..<Int(frames) {
+            let t = Double(i) / sampleRate
+            let swell = min(1.0, t / 1.0)                          // rises in
+            let tail = t > 1.3 ? max(0.0, 1.0 - (t - 1.3) / 0.7) : 1.0  // fades out
+            var s = 0.0
+            for (start, f) in notes where t >= start {
+                let l = t - start
+                let env = exp(-l * 1.2)                            // long sustain
+                s += env * (sin(2 * .pi * f * l) + 0.3 * sin(2 * .pi * 2 * f * l))
+            }
+            s /= 4.0
+            // A bright shimmer near the peak.
+            if t > 0.8 {
+                let sh = max(0.0, 1.0 - (t - 0.8) / 1.0)
+                s += 0.04 * sh * sin(2 * .pi * 2637 * t)
+            }
+            channel[i] = Float(s * swell * tail) * 0.5
+        }
+        return buffer
+    }
+
     private func startIfNeeded() {
         guard !isRunning else { return }
         do {

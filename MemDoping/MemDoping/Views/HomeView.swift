@@ -70,16 +70,16 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("MemDoping")
                         .font(.largeTitle.bold())
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                     Text("Memory Doping · Play, Learn, Remember")
                         .font(.subheadline)
-                        .foregroundStyle(Color.primary.opacity(0.7))
+                        .foregroundStyle(Brand.text.opacity(0.7))
                 }
                 Spacer()
                 NavigationLink { ProfileView() } label: {
                     Image(systemName: "person.crop.circle")
                         .font(.title)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                 }
             }
         }
@@ -115,13 +115,13 @@ struct HomeView: View {
                         .foregroundStyle(store.isDailyMissionDone ? Brand.successText : Brand.accent)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Daily mission")
-                            .font(.headline).foregroundStyle(.primary)
+                            .font(.headline).foregroundStyle(Brand.text)
                         dailySubtitle
                             .font(.subheadline)
-                            .foregroundStyle(Color.primary.opacity(0.75))
+                            .foregroundStyle(Brand.text.opacity(0.75))
                     }
                     Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
+                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
                 }
             }
         }
@@ -154,13 +154,13 @@ struct HomeView: View {
                             .foregroundStyle(Brand.accentText)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("\(store.dueReviewCount) items due for review")
-                                .font(.headline).foregroundStyle(.primary)
+                                .font(.headline).foregroundStyle(Brand.text)
                             Text("You learned these earlier — let's see if they stuck.")
                                 .font(.subheadline)
-                                .foregroundStyle(Color.primary.opacity(0.75))
+                                .foregroundStyle(Brand.text.opacity(0.75))
                         }
                         Spacer()
-                        Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
+                        Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
                     }
                 }
             }
@@ -173,10 +173,10 @@ struct HomeView: View {
                         .foregroundStyle(Brand.successText)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("All caught up on reviews")
-                            .font(.headline).foregroundStyle(.primary)
+                            .font(.headline).foregroundStyle(Brand.text)
                         Text("Next review \(next.formatted(.relative(presentation: .named))).")
                             .font(.subheadline)
-                            .foregroundStyle(Color.primary.opacity(0.75))
+                            .foregroundStyle(Brand.text.opacity(0.75))
                     }
                     Spacer()
                 }
@@ -203,14 +203,14 @@ struct HomeView: View {
                         .animation(reduceMotion ? nil : .easeInOut(duration: 0.7), value: store.ringProgress)
                         .overlay(
                             Text("\(store.ringLevel)")
-                                .font(.headline).foregroundStyle(.primary)
+                                .font(.headline).foregroundStyle(Brand.text)
                         )
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Continue your training")
-                            .font(.headline).foregroundStyle(.primary)
+                            .font(.headline).foregroundStyle(Brand.text)
                         Text("Level \(store.currentLevel.index): \(store.currentLevel.title.localizedContent)")
                             .font(.subheadline)
-                            .foregroundStyle(Color.primary.opacity(0.75))
+                            .foregroundStyle(Brand.text.opacity(0.75))
                         Label(difficultyLabel, systemImage: "slider.horizontal.3")
                             .font(.caption2)
                             .foregroundStyle(Brand.accentText)
@@ -251,7 +251,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Levels")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Brand.text)
             ForEach(Array(chapters.enumerated()), id: \.offset) { i, chapter in
                 chapterSection(i, chapter)
             }
@@ -285,14 +285,14 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(chapter.title)
                             .font(.headline)
-                            .foregroundStyle(chapterLocked ? Color.primary.opacity(0.5) : .primary)
+                            .foregroundStyle(chapterLocked ? Brand.text.opacity(0.5) : Brand.text)
                         Text(verbatim: "\(chapter.range.lowerBound)–\(chapter.range.upperBound)")
                             .font(.caption.monospacedDigit())
-                            .foregroundStyle(Color.primary.opacity(0.55))
+                            .foregroundStyle(Brand.text.opacity(0.55))
                     }
                     Spacer()
                     if chapterLocked {
-                        Image(systemName: "lock.fill").foregroundStyle(Color.primary.opacity(0.4))
+                        Image(systemName: "lock.fill").foregroundStyle(Brand.text.opacity(0.4))
                     } else {
                         Text("\(unlocked)/\(levels.count)")
                             .font(.subheadline.monospacedDigit().weight(.semibold))
@@ -300,7 +300,7 @@ struct HomeView: View {
                     }
                     Image(systemName: "chevron.down")
                         .font(.footnote.weight(.bold))
-                        .foregroundStyle(Color.primary.opacity(0.5))
+                        .foregroundStyle(Brand.text.opacity(0.5))
                         .rotationEffect(.degrees(isOpen ? 0 : -90))
                 }
                 .padding(14)
@@ -330,32 +330,32 @@ struct HomeView: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(unlocked ? Brand.gloss(level.tileBase) : Brand.gloss(Color.primary.opacity(0.08)))
+                        .fill(unlocked ? Brand.gloss(level.tileBase) : Brand.gloss(Brand.text.opacity(0.08)))
                         .frame(width: 40, height: 40)
                         .overlay(Circle().strokeBorder(Brand.edgeHighlight, lineWidth: 1))
                         .shadow(color: unlocked ? level.tileBase.opacity(0.5) : .clear, radius: 5, y: 2)
                     Image(systemName: unlocked ? "\(level.index).circle.fill" : "lock.fill")
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(level.title.localizedContent)
                         .font(.headline)
-                        .foregroundStyle(unlocked ? Color.primary : Color.primary.opacity(0.5))
+                        .foregroundStyle(unlocked ? Brand.text : Brand.text.opacity(0.5))
                     Text(level.technique.localizedContent)
                         .font(.caption)
-                        .foregroundStyle(Color.primary.opacity(0.6))
+                        .foregroundStyle(Brand.text.opacity(0.6))
                 }
                 Spacer()
                 if let best {
                     Text("\(Int(best * 100))%")
                         .font(.subheadline.monospacedDigit().weight(.semibold))
-                        .foregroundStyle(best >= level.masteryPercent ? Brand.successText : Color.primary.opacity(0.7))
+                        .foregroundStyle(best >= level.masteryPercent ? Brand.successText : Brand.text.opacity(0.7))
                 } else if unlocked {
-                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
+                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
                 }
             }
             .padding(14)
-            .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 16))
+            .background(Brand.text.opacity(0.06), in: RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
         .disabled(!unlocked)
@@ -370,13 +370,13 @@ struct HomeView: View {
                     Text("🌙").font(.title)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Night Doping")
-                            .font(.headline).foregroundStyle(.primary)
+                            .font(.headline).foregroundStyle(Brand.text)
                         Text("A calm, untimed wind-down — no score, no rush.")
                             .font(.subheadline)
-                            .foregroundStyle(Color.primary.opacity(0.75))
+                            .foregroundStyle(Brand.text.opacity(0.75))
                     }
                     Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
+                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
                 }
             }
         }
@@ -388,7 +388,7 @@ struct HomeView: View {
     private var disclaimer: some View {
         Text("Regular use may support memory performance, focus, and recall. Results vary by person; there is no 100% improvement guarantee.")
             .font(.caption2)
-            .foregroundStyle(Color.primary.opacity(0.5))
+            .foregroundStyle(Brand.text.opacity(0.5))
             .multilineTextAlignment(.center)
             .padding(.top, 8)
     }

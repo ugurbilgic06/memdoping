@@ -18,6 +18,11 @@ enum Brand {
     /// Dark ink used on light fills (e.g. the primary button).
     static let ink = Color(red: 0.18, green: 0.16, blue: 0.08)
 
+    /// The body-text colour across the app — a deep espresso instead of pure
+    /// black, so text reads as a warm, intentional contrast to the light
+    /// cream/moss backgrounds rather than harsh black.
+    static let text = Color(red: 0.19, green: 0.13, blue: 0.07)
+
     /// A deep moss for accent *text* on the light theme — the `accent` green is
     /// used for fills/tints, but as text on a light surface a deeper tone reads
     /// better, so coloured labels use this instead.
@@ -226,10 +231,10 @@ struct StatChip: View {
                     .foregroundStyle(tint)
                 Text(value)
                     .font(.headline.monospacedDigit())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Brand.text)
                 Text(title)
                     .font(.caption2)
-                    .foregroundStyle(.primary.opacity(0.7))
+                    .foregroundStyle(Brand.text.opacity(0.7))
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
@@ -659,7 +664,7 @@ struct ProgressRing: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(.primary.opacity(0.12), lineWidth: lineWidth)
+                .stroke(Brand.text.opacity(0.12), lineWidth: lineWidth)
             Circle()
                 .trim(from: 0, to: max(0.001, min(1, progress)))
                 .stroke(tint, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))

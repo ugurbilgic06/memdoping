@@ -51,7 +51,7 @@ struct SceneMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(Color.primary.opacity(0.8))
+                        .foregroundStyle(Brand.text.opacity(0.8))
                 }
             }
         }
@@ -77,7 +77,7 @@ struct SceneMissionView: View {
         VStack(spacing: 18) {
             HStack {
                 Label("Build the scene", systemImage: "sparkles")
-                    .font(.headline).foregroundStyle(.primary)
+                    .font(.headline).foregroundStyle(Brand.text)
                 Spacer()
                 Text("\(session.buildIndex + 1)/\(session.studyPairs.count)")
                     .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accentText)
@@ -98,12 +98,12 @@ struct SceneMissionView: View {
                     }
                 }
                 Text(card.pair.word.localizedContent)
-                    .font(.largeTitle.bold()).foregroundStyle(.primary)
+                    .font(.largeTitle.bold()).foregroundStyle(Brand.text)
                     .id(card.id)
 
                 if let chosen = card.chosen {
                     Text("\(card.pair.word.localizedContent) \(chosen.text.localizedContent)")
-                        .font(.title3.weight(.semibold)).foregroundStyle(.primary)
+                        .font(.title3.weight(.semibold)).foregroundStyle(Brand.text)
                         .multilineTextAlignment(.center)
                         .padding(.vertical, 14).padding(.horizontal, 18)
                         .frame(maxWidth: .infinity)
@@ -120,7 +120,7 @@ struct SceneMissionView: View {
                     }
                 } else {
                     Text("Drag a twist up onto the \(card.pair.word.localizedContent):")
-                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.75))
+                        .font(.subheadline).foregroundStyle(Brand.text.opacity(0.75))
                         .multilineTextAlignment(.center)
                     VStack(spacing: 10) {
                         ForEach(Array(card.options.enumerated()), id: \.element.id) { i, modifier in
@@ -140,9 +140,9 @@ struct SceneMissionView: View {
             HStack(spacing: 12) {
                 Text(modifier.emoji).font(.title2)
                 Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
-                    .foregroundStyle(.primary).fontWeight(.medium)
+                    .foregroundStyle(Brand.text).fontWeight(.medium)
                 Spacer()
-                Image(systemName: "hand.draw").foregroundStyle(Color.primary.opacity(0.5))
+                Image(systemName: "hand.draw").foregroundStyle(Brand.text.opacity(0.5))
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -183,7 +183,7 @@ struct SceneMissionView: View {
             ProgressView(value: session.recallProgress).tint(Brand.accent)
 
             Text("Which word goes here?")
-                .font(.title3.weight(.semibold)).foregroundStyle(.primary)
+                .font(.title3.weight(.semibold)).foregroundStyle(Brand.text)
 
             if let q = session.currentQuestion {
                 Symbol3DTile(symbol: q.prompt.symbol, tint: session.level.tileBase, size: 150,
@@ -229,12 +229,12 @@ struct SceneMissionView: View {
         } label: {
             GameTile(base: base, cornerRadius: 14) {
                 HStack {
-                    Text(option.localizedContent).foregroundStyle(.primary).fontWeight(.medium)
+                    Text(option.localizedContent).foregroundStyle(Brand.text).fontWeight(.medium)
                     Spacer()
                     if revealed && isCorrectAnswer {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.primary)
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(Brand.text)
                     } else if revealed && isChosen {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(.primary)
+                        Image(systemName: "xmark.circle.fill").foregroundStyle(Brand.text)
                     }
                 }
                 .padding().frame(maxWidth: .infinity)
@@ -255,9 +255,9 @@ struct SceneMissionView: View {
     private var feedbackPhase: some View {
         VStack(spacing: 16) {
             Text("Did your scenes hold?")
-                .font(.title2.bold()).foregroundStyle(.primary)
+                .font(.title2.bold()).foregroundStyle(Brand.text)
             Text("\(session.correctCount) of \(session.totalQuestions) recalled")
-                .foregroundStyle(Color.primary.opacity(0.8))
+                .foregroundStyle(Brand.text.opacity(0.8))
 
             ScrollView {
                 VStack(spacing: 10) {
@@ -265,13 +265,13 @@ struct SceneMissionView: View {
                         HStack(spacing: 12) {
                             Text(q.prompt.symbol).font(.title)
                             Text(q.prompt.word.localizedContent)
-                                .font(.headline).foregroundStyle(.primary)
+                                .font(.headline).foregroundStyle(Brand.text)
                             Spacer()
                             Image(systemName: q.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(q.isCorrect ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
-                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Brand.text.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                         .dealIn(i)
                     }
                 }
@@ -280,7 +280,7 @@ struct SceneMissionView: View {
             Card {
                 Label {
                     Text("Building your own image helps — but it's not magic. It works better for some people and some material. When it clicks, lean in.")
-                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
+                        .font(.subheadline).foregroundStyle(Brand.text.opacity(0.85))
                 } icon: {
                     Image(systemName: "sparkles").foregroundStyle(Brand.accentText)
                 }

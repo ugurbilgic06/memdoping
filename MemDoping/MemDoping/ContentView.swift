@@ -25,7 +25,7 @@ struct ContentView: View {
 
             // Impressive "gate of intelligence" intro before the first screen.
             if showSplash {
-                SplashView { showSplash = false }
+                SplashView(playSound: store.soundEnabled) { showSplash = false }
                     .transition(.opacity)
                     .zIndex(1)
             }

@@ -24,7 +24,7 @@ struct OnboardingView: View {
                     Spacer()
                     if page < lastPage {
                         Button("Skip") { store.completeOnboarding() }
-                            .foregroundStyle(Color.primary.opacity(0.7))
+                            .foregroundStyle(Brand.text.opacity(0.7))
                     }
                 }
                 .padding(.horizontal)
@@ -92,17 +92,17 @@ struct OnboardingView: View {
             VStack(spacing: 8) {
                 Text("Who's playing?")
                     .font(.largeTitle.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Brand.text)
                 Text("We'll set a comfortable starting difficulty — you can change it any time in your profile.")
                     .font(.subheadline)
-                    .foregroundStyle(Color.primary.opacity(0.75))
+                    .foregroundStyle(Brand.text.opacity(0.75))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 28)
             }
             VStack(spacing: 12) {
-                ageChoice(.child, "Child", "🧒", "Gentle pace, more time", seed: 10).dealIn(0)
-                ageChoice(.teen, "Teen", "🧑‍🎓", "Balanced", seed: 3).dealIn(1)
-                ageChoice(.adult, "Adult", "🧑‍💼", "A little more challenge", seed: 4).dealIn(2)
+                ageChoice(.child, "Child", "🧸", "Gentle pace, more time", seed: 10).dealIn(0)
+                ageChoice(.teen, "Teen", "🎧", "Balanced", seed: 3).dealIn(1)
+                ageChoice(.adult, "Adult", "☕", "A little more challenge", seed: 4).dealIn(2)
             }
             .padding(.horizontal, 24)
             Spacer()
@@ -119,11 +119,11 @@ struct OnboardingView: View {
             HStack(spacing: 14) {
                 SymbolBadge(symbol: emoji, seed: seed, size: 56)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title).font(.headline).foregroundStyle(.primary)
-                    Text(subtitle).font(.caption).foregroundStyle(Color.primary.opacity(0.75))
+                    Text(title).font(.headline).foregroundStyle(Brand.text)
+                    Text(subtitle).font(.caption).foregroundStyle(Brand.text.opacity(0.75))
                 }
                 Spacer()
-                Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.6))
+                Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.6))
             }
             .padding()
             .background(Color.white.opacity(0.6),
@@ -152,20 +152,20 @@ struct OnboardingView: View {
                 HStack(spacing: 14) {
                     Image(systemName: step.0)
                         .font(.title2)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                         .frame(width: 44, height: 44)
                         .background(Brand.gloss(Brand.accent), in: Circle())
                         .overlay(Circle().strokeBorder(Brand.edgeHighlight, lineWidth: 1))
                         .shadow(color: Brand.accent.opacity(0.4), radius: 6, y: 3)
                     Text(step.1)
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                     Spacer()
                 }
                 if i < steps.count - 1 {
                     Image(systemName: "arrow.down")
                         .font(.caption)
-                        .foregroundStyle(Color.primary.opacity(0.35))
+                        .foregroundStyle(Brand.text.opacity(0.35))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 14)
                 }
@@ -204,12 +204,12 @@ struct OnboardingView: View {
                     .foregroundStyle(Brand.accentText)
                 Text(title)
                     .font(.largeTitle.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Brand.text)
                     .multilineTextAlignment(.center)
             }
             Text(body)
                 .font(.body)
-                .foregroundStyle(Color.primary.opacity(0.8))
+                .foregroundStyle(Brand.text.opacity(0.8))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
             Spacer()
@@ -220,7 +220,7 @@ struct OnboardingView: View {
         HStack(spacing: 8) {
             ForEach(0...lastPage, id: \.self) { i in
                 Circle()
-                    .fill(i == page ? Brand.accentText : Color.primary.opacity(0.25))
+                    .fill(i == page ? Brand.accentText : Brand.text.opacity(0.25))
                     .frame(width: i == page ? 9 : 8, height: i == page ? 9 : 8)
             }
         }

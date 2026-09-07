@@ -54,7 +54,7 @@ struct LociMissionView: View {
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
-                        .foregroundStyle(Color.primary.opacity(0.8))
+                        .foregroundStyle(Brand.text.opacity(0.8))
                 }
             }
         }
@@ -80,7 +80,7 @@ struct LociMissionView: View {
         VStack(spacing: 14) {
             HStack {
                 Label("Leave it here", systemImage: "figure.walk")
-                    .font(.headline).foregroundStyle(.primary)
+                    .font(.headline).foregroundStyle(Brand.text)
                 Spacer()
                 Text("\(session.placeIndex + 1)/\(session.totalStops)")
                     .font(.subheadline.monospacedDigit()).foregroundStyle(Brand.accentText)
@@ -90,7 +90,7 @@ struct LociMissionView: View {
 
             if let p = session.currentPlacement {
                 Text("Drag the \(p.item.word.localizedContent) onto the \(p.stop.name.localizedContent) — really see them together.")
-                    .font(.subheadline).foregroundStyle(Color.primary.opacity(0.8))
+                    .font(.subheadline).foregroundStyle(Brand.text.opacity(0.8))
                     .multilineTextAlignment(.center)
 
                 // The stage: the location up top (with a target ring), and the
@@ -98,7 +98,7 @@ struct LociMissionView: View {
                 ZStack {
                     // Target ring at the location.
                     Circle()
-                        .strokeBorder(isItemOnSpot ? Brand.accent : Color.primary.opacity(0.18),
+                        .strokeBorder(isItemOnSpot ? Brand.accent : Brand.text.opacity(0.18),
                                       style: StrokeStyle(lineWidth: 2, dash: [7]))
                         .frame(width: 150, height: 150)
                         .offset(LociMissionView.locationOffset)
@@ -106,13 +106,13 @@ struct LociMissionView: View {
                     VStack(spacing: 6) {
                         Text(p.stop.icon).font(.system(size: 104))
                         Text(p.stop.name.localizedContent)
-                            .font(.headline).foregroundStyle(Color.primary.opacity(0.85))
+                            .font(.headline).foregroundStyle(Brand.text.opacity(0.85))
                     }
                     .offset(LociMissionView.locationOffset)
 
                     // The dock the item starts in.
                     Circle()
-                        .fill(Color.primary.opacity(0.05))
+                        .fill(Brand.text.opacity(0.05))
                         .frame(width: 88, height: 88)
                         .offset(LociMissionView.itemStart)
 
@@ -168,13 +168,13 @@ struct LociMissionView: View {
             ProgressView(value: session.recallProgress).tint(Brand.accent)
 
             Text("What did you leave here?")
-                .font(.title3.weight(.semibold)).foregroundStyle(.primary)
+                .font(.title3.weight(.semibold)).foregroundStyle(Brand.text)
 
             if let stop = session.currentStop {
                 VStack(spacing: 6) {
                     Text(stop.icon).font(.system(size: 64))
                     Text(stop.name.localizedContent)
-                        .font(.headline).foregroundStyle(Color.primary.opacity(0.9))
+                        .font(.headline).foregroundStyle(Brand.text.opacity(0.9))
                 }
 
                 itemTray
@@ -244,7 +244,7 @@ struct LociMissionView: View {
                     .foregroundStyle(pick.correct ? Brand.successText : Brand.danger)
                 if !pick.correct {
                     Text("You left the \(pick.placement.item.word.localizedContent) here.")
-                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.8))
+                        .font(.subheadline).foregroundStyle(Brand.text.opacity(0.8))
                 }
             }
         }
@@ -262,9 +262,9 @@ struct LociMissionView: View {
     private var feedbackPhase: some View {
         VStack(spacing: 16) {
             Text("Your walk back")
-                .font(.title2.bold()).foregroundStyle(.primary)
+                .font(.title2.bold()).foregroundStyle(Brand.text)
             Text("\(session.correctCount) of \(session.totalStops) stops recalled in order")
-                .foregroundStyle(Color.primary.opacity(0.8))
+                .foregroundStyle(Brand.text.opacity(0.8))
 
             ScrollView {
                 VStack(spacing: 10) {
@@ -272,14 +272,14 @@ struct LociMissionView: View {
                         HStack(spacing: 12) {
                             Text(pick.placement.stop.icon).font(.title2)
                             Text(pick.placement.stop.name.localizedContent)
-                                .font(.subheadline).foregroundStyle(Color.primary.opacity(0.8))
+                                .font(.subheadline).foregroundStyle(Brand.text.opacity(0.8))
                             Spacer()
                             Text(pick.placement.item.symbol).font(.title3)
                             Image(systemName: pick.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .foregroundStyle(pick.correct ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
-                        .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Brand.text.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                         .dealIn(i)
                     }
                 }
@@ -288,7 +288,7 @@ struct LociMissionView: View {
             Card {
                 Label {
                     Text("You just used a 2,000-year-old technique. It's not a talent — champions score no higher on IQ; they just walk a palace like you did.")
-                        .font(.subheadline).foregroundStyle(Color.primary.opacity(0.85))
+                        .font(.subheadline).foregroundStyle(Brand.text.opacity(0.85))
                 } icon: {
                     Image(systemName: "building.columns.fill").foregroundStyle(Brand.accentText)
                 }

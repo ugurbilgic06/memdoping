@@ -49,17 +49,17 @@ struct MissionIntro: View {
                 .foregroundStyle(Brand.accentText)
             Text(level.title.localizedContent)
                 .font(.largeTitle.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Brand.text)
 
             Card {
                 VStack(alignment: .leading, spacing: 10) {
                     Label(level.technique.localizedContent, systemImage: "brain.head.profile")
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Brand.text)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(level.techniqueExplanation)
                         .font(.subheadline)
-                        .foregroundStyle(Color.primary.opacity(0.85))
+                        .foregroundStyle(Brand.text.opacity(0.85))
                         .fixedSize(horizontal: false, vertical: true)
 
                     // The scientific reason — richer detail for teens/adults;
@@ -68,7 +68,7 @@ struct MissionIntro: View {
                         Label {
                             Text(level.techniqueScience)
                                 .font(.caption)
-                                .foregroundStyle(Color.primary.opacity(0.7))
+                                .foregroundStyle(Brand.text.opacity(0.7))
                         } icon: {
                             Image(systemName: "flask.fill").foregroundStyle(Brand.primary)
                         }
@@ -79,7 +79,7 @@ struct MissionIntro: View {
                     Label {
                         Text(level.tip.localizedContent)
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Brand.text)
                     } icon: {
                         Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
                     }
@@ -92,19 +92,19 @@ struct MissionIntro: View {
                 ForEach(stats) { stat in
                     VStack(spacing: 4) {
                         Image(systemName: stat.icon).foregroundStyle(Brand.accentText)
-                        Text(stat.value).font(.headline).foregroundStyle(.primary)
-                        Text(stat.label).font(.caption2).foregroundStyle(Color.primary.opacity(0.7))
+                        Text(stat.value).font(.headline).foregroundStyle(Brand.text)
+                        Text(stat.label).font(.caption2).foregroundStyle(Brand.text.opacity(0.7))
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
-                    .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+                    .background(Brand.text.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                     .accessibilityElement(children: .combine)
                 }
             }
 
             Text("Sample content — a prototype mission, not final curriculum.")
                 .font(.caption2)
-                .foregroundStyle(Color.primary.opacity(0.5))
+                .foregroundStyle(Brand.text.opacity(0.5))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 8)
@@ -142,7 +142,7 @@ struct MissionSummary: View {
                 } else {
                     Image(systemName: "arrow.counterclockwise.circle.fill")
                         .font(.system(size: 72))
-                        .foregroundStyle(Color.primary.opacity(0.8))
+                        .foregroundStyle(Brand.text.opacity(0.8))
                         .scaleEffect(celebrationScale)
                 }
             }
@@ -150,7 +150,7 @@ struct MissionSummary: View {
 
             Text(passedMastery ? "Level cleared!" : "Good effort")
                 .font(.largeTitle.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Brand.text)
                 .scaleEffect(passedMastery ? titleScale : 1)
 
             if let outcome {
@@ -181,7 +181,7 @@ struct MissionSummary: View {
                     if outcome.memoryScore == nil {
                         Text("Play \(GameStore.minSessionsForScore) missions to reveal your Memory Score.")
                             .font(.caption)
-                            .foregroundStyle(Color.primary.opacity(0.6))
+                            .foregroundStyle(Brand.text.opacity(0.6))
                             .multilineTextAlignment(.center)
                     }
                 }
@@ -192,7 +192,7 @@ struct MissionSummary: View {
             VStack(spacing: 10) {
                 PrimaryButton(title: "Play again", systemImage: "arrow.counterclockwise", action: onRetry)
                 Button("Back to home", action: onExit)
-                    .foregroundStyle(Color.primary.opacity(0.85))
+                    .foregroundStyle(Brand.text.opacity(0.85))
                     .padding(.vertical, 8)
             }
         }
@@ -220,7 +220,7 @@ struct MissionSummary: View {
     private func badge(_ text: LocalizedStringKey, _ icon: String, _ tint: Color) -> some View {
         Label(text, systemImage: icon)
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.primary)
+            .foregroundStyle(Brand.text)
             .padding(.horizontal, 14).padding(.vertical, 8)
             .background(tint.opacity(0.25), in: Capsule())
             .overlay(Capsule().stroke(tint, lineWidth: 1))
