@@ -426,8 +426,82 @@ enum SampleContent {
         ]
     )
 
+    static let vehicles = MemoryTheme(
+        id: "vehicles",
+        title: "Vehicles",
+        deepQuestion: "Does it have wheels?",
+        pairs: [
+            .init(symbol: "🚗", word: "Car", deepAnswer: true),
+            .init(symbol: "🚲", word: "Bicycle", deepAnswer: true),
+            .init(symbol: "🚌", word: "Bus", deepAnswer: true),
+            .init(symbol: "🏍️", word: "Motorcycle", deepAnswer: true),
+            .init(symbol: "🚚", word: "Truck", deepAnswer: true),
+            .init(symbol: "🚜", word: "Tractor", deepAnswer: true),
+            .init(symbol: "🛹", word: "Skateboard", deepAnswer: true),
+            .init(symbol: "🚁", word: "Helicopter", deepAnswer: false),
+            .init(symbol: "⛵", word: "Sailboat", deepAnswer: false),
+            .init(symbol: "🛶", word: "Canoe", deepAnswer: false)
+        ]
+    )
+
+    static let music = MemoryTheme(
+        id: "music",
+        title: "Music",
+        deepQuestion: "Do you blow into it?",
+        pairs: [
+            .init(symbol: "🎸", word: "Guitar", deepAnswer: false),
+            .init(symbol: "🎹", word: "Piano", deepAnswer: false),
+            .init(symbol: "🥁", word: "Drum", deepAnswer: false),
+            .init(symbol: "🎻", word: "Violin", deepAnswer: false),
+            .init(symbol: "🪕", word: "Banjo", deepAnswer: false),
+            .init(symbol: "🎤", word: "Microphone", deepAnswer: false),
+            .init(symbol: "🔔", word: "Bell", deepAnswer: false),
+            .init(symbol: "🎺", word: "Trumpet", deepAnswer: true),
+            .init(symbol: "🎷", word: "Saxophone", deepAnswer: true),
+            .init(symbol: "🪈", word: "Flute", deepAnswer: true)
+        ]
+    )
+
+    static let ocean = MemoryTheme(
+        id: "ocean",
+        title: "Ocean",
+        deepQuestion: "Does it live in the sea?",
+        pairs: [
+            .init(symbol: "🐟", word: "Fish", deepAnswer: true),
+            .init(symbol: "🐋", word: "Whale", deepAnswer: true),
+            .init(symbol: "🦀", word: "Crab", deepAnswer: true),
+            .init(symbol: "🦈", word: "Shark", deepAnswer: true),
+            .init(symbol: "🦑", word: "Squid", deepAnswer: true),
+            .init(symbol: "🪼", word: "Jellyfish", deepAnswer: true),
+            .init(symbol: "🐡", word: "Blowfish", deepAnswer: true),
+            .init(symbol: "🐚", word: "Seashell", deepAnswer: true),
+            .init(symbol: "⚓", word: "Anchor", deepAnswer: false),
+            .init(symbol: "🏖️", word: "Beach", deepAnswer: false)
+        ]
+    )
+
+    static let clothes = MemoryTheme(
+        id: "clothes",
+        title: "Clothes",
+        deepQuestion: "Do you wear it on your feet?",
+        pairs: [
+            .init(symbol: "👟", word: "Shoe", deepAnswer: true),
+            .init(symbol: "🥾", word: "Boot", deepAnswer: true),
+            .init(symbol: "🧦", word: "Sock", deepAnswer: true),
+            .init(symbol: "🩴", word: "Sandal", deepAnswer: true),
+            .init(symbol: "🎩", word: "Hat", deepAnswer: false),
+            .init(symbol: "👕", word: "Shirt", deepAnswer: false),
+            .init(symbol: "👗", word: "Dress", deepAnswer: false),
+            .init(symbol: "🧤", word: "Gloves", deepAnswer: false),
+            .init(symbol: "🧣", word: "Scarf", deepAnswer: false),
+            .init(symbol: "🧢", word: "Cap", deepAnswer: false)
+        ]
+    )
+
     /// Themes rotated across the generated ladder for image variety.
-    static let themePool: [MemoryTheme] = [animals, food, space, travel, nature, sports]
+    static let themePool: [MemoryTheme] = [
+        animals, food, space, travel, nature, sports, vehicles, music, ocean, clothes
+    ]
 
     /// A soft, familiar deck for Night Doping — the calm, untimed mode (§4).
     static let nightCalm = MemoryTheme(
