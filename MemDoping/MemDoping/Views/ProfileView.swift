@@ -103,11 +103,23 @@ struct ProfileView: View {
         }
     }
 
+    private func languageButton(_ title: LocalizedStringKey, _ code: String?) -> some View {
+        let selected = store.languageCode == code
+        return Button { store.languageCode = code } label: {
+            Text(title)
+                .font(.caption.weight(.medium))
+                .frame(maxWidth: .infinity).padding(.vertical, 8)
+                .background(selected ? Brand.accent : Brand.text.opacity(0.08), in: Capsule())
+                .foregroundStyle(Brand.text)
+        }
+        .buttonStyle(.plain)
+    }
+
     private var difficultyText: String {
         switch store.difficultyState {
-        case .eased:    String(localized: "Eased")
-        case .standard: String(localized: "Standard")
-        case .ramped:   String(localized: "Ramped")
+        case .eased:    String(localized: "Eased", bundle: AppLocale.bundle, locale: AppLocale.locale)
+        case .standard: String(localized: "Standard", bundle: AppLocale.bundle, locale: AppLocale.locale)
+        case .ramped:   String(localized: "Ramped", bundle: AppLocale.bundle, locale: AppLocale.locale)
         }
     }
 
@@ -120,6 +132,14 @@ struct ProfileView: View {
                 Toggle("Music", isOn: $store.musicEnabled)
                 Toggle("Sound", isOn: $store.soundEnabled)
                 Toggle("Haptics", isOn: $store.hapticsEnabled)
+
+                Divider().overlay(Brand.text.opacity(0.15))
+                Text("Language").font(.subheadline.weight(.semibold)).foregroundStyle(Brand.text)
+                HStack(spacing: 8) {
+                    languageButton("System", nil)
+                    languageButton("Türkçe", "tr")
+                    languageButton("English", "en")
+                }
 
                 Divider().overlay(Brand.text.opacity(0.15))
                 Text("Audience").font(.subheadline.weight(.semibold)).foregroundStyle(Brand.text)

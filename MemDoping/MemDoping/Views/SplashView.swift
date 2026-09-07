@@ -18,10 +18,13 @@ struct SplashView: View {
     @State private var emblemScale: CGFloat = 0.4
     @State private var glow = false
     @State private var wordmarkIn = false
+    @State private var wordScale: CGFloat = 0.22
+    @State private var wordBlur: CGFloat = 12
     @State private var fadeOut = false
 
-    /// Temple ornament motifs — like entering a serene temple gate.
-    private let doorGlyphs = ["🪷","☸️","🏮","🕉️","🛕","✦","❁","🔶"]
+    /// Motifs that fit the project — numbers, letters and learning symbols
+    /// gilded onto the gate.
+    private let doorGlyphs = ["📚","💡","✨","🧩","🎯","🔢","🔤","➕","⭐️","🎓","∑","🖋️"]
     private let gold = Color(red: 1.0, green: 0.82, blue: 0.36)
 
     var body: some View {
@@ -37,8 +40,8 @@ struct SplashView: View {
                         .shadow(color: gold.opacity(glow ? 0.95 : 0.4),
                                 radius: glow ? 34 : 12)
                     VStack(spacing: 4) {
-                        Text(".Pixselsius")
-                            .font(.system(size: 36, weight: .heavy, design: .rounded))
+                        Text("Pixelsius")
+                            .font(.system(size: 38, weight: .heavy, design: .rounded))
                             .foregroundStyle(.white)
                             .shadow(color: gold.opacity(0.7), radius: 10)
                         Text("presents")
@@ -46,8 +49,10 @@ struct SplashView: View {
                             .tracking(3)
                             .foregroundStyle(.white.opacity(0.6))
                     }
+                    // Rushes in from the depths — back to front.
+                    .scaleEffect(wordScale)
+                    .blur(radius: wordBlur)
                     .opacity(wordmarkIn ? 1 : 0)
-                    .offset(y: wordmarkIn ? 0 : 14)
                 }
 
                 // The gate — two motif-covered doors that slide apart.
@@ -139,13 +144,17 @@ struct SplashView: View {
 
         guard !reduceMotion else {
             emblemScale = 1; wordmarkIn = true; doorsOpen = true; glow = true
+            wordScale = 1; wordBlur = 0
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) { onDone() }
             return
         }
         withAnimation(.spring(response: 0.6, dampingFraction: 0.6)) { emblemScale = 1 }
         withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) { glow = true }
         withAnimation(.easeInOut(duration: 0.9).delay(0.6)) { doorsOpen = true }
-        withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(1.1)) { wordmarkIn = true }
+        // The wordmark rushes forward from the depths as the gate parts.
+        withAnimation(.spring(response: 0.7, dampingFraction: 0.72).delay(1.1)) {
+            wordmarkIn = true; wordScale = 1; wordBlur = 0
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.8) {
             withAnimation(.easeOut(duration: 0.5)) { fadeOut = true }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { onDone() }

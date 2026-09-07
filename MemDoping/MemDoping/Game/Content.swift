@@ -15,9 +15,29 @@ import Foundation
 /// theme words) against Localizable.xcstrings for display. Kept separate from
 /// the stored String itself so gameplay matching (e.g. answer == prompt.word)
 /// stays keyed on one canonical value regardless of display language.
+/// Holds the app's chosen language so both UI strings and content resolve to it,
+/// letting the player switch language in-app (nil = follow the system).
+enum AppLocale {
+    static private(set) var bundle: Bundle = .main
+    static private(set) var locale: Locale = .autoupdatingCurrent
+
+    static func apply(_ code: String?) {
+        if let code,
+           let path = Bundle.main.path(forResource: code, ofType: "lproj"),
+           let b = Bundle(path: path) {
+            bundle = b
+            locale = Locale(identifier: code)
+        } else {
+            bundle = .main
+            locale = .autoupdatingCurrent
+        }
+    }
+}
+
 extension String {
     var localizedContent: String {
-        String(localized: String.LocalizationValue(self))
+        String(localized: String.LocalizationValue(self),
+               bundle: AppLocale.bundle, locale: AppLocale.locale)
     }
 }
 

@@ -83,6 +83,17 @@ final class GameStore {
     var hapticsEnabled: Bool = true { didSet { save() } }
     var musicEnabled: Bool = true { didSet { save(); MusicPlayer.shared.setEnabled(musicEnabled) } }
 
+    /// Chosen UI/content language ("tr", "en"); nil follows the system.
+    var languageCode: String? = nil { didSet { AppLocale.apply(languageCode); save() } }
+
+    /// Night Doping progresses through a gentle ladder of 20 calm sessions.
+    static let nightLevels = 20
+    var nightLevel: Int = 1 { didSet { save() } }
+    /// Advance Night Doping after a finished wind-down (wraps at the end).
+    func advanceNight() {
+        nightLevel = nightLevel >= GameStore.nightLevels ? 1 : nightLevel + 1
+    }
+
     /// Whether the player has seen the first-run welcome.
     private(set) var hasOnboarded: Bool = false
 
@@ -314,6 +325,8 @@ final class GameStore {
         var hasOnboarded: Bool?
         var adaptiveOffset: Int?
         var ageBand: AgeBand?
+        var languageCode: String?
+        var nightLevel: Int?
     }
 
     private func save() {
@@ -330,7 +343,9 @@ final class GameStore {
             retentionHistory: retentionHistory,
             hasOnboarded: hasOnboarded,
             adaptiveOffset: adaptiveOffset,
-            ageBand: ageBand
+            ageBand: ageBand,
+            languageCode: languageCode,
+            nightLevel: nightLevel
         )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: defaultsKey)
@@ -354,6 +369,8 @@ final class GameStore {
         hasOnboarded = snapshot.hasOnboarded ?? false
         adaptiveOffset = snapshot.adaptiveOffset ?? 0
         ageBand = snapshot.ageBand
+        nightLevel = snapshot.nightLevel ?? 1
+        languageCode = snapshot.languageCode   // didSet applies AppLocale
     }
 
     // MARK: - Adaptive difficulty application

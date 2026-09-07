@@ -74,8 +74,14 @@ struct NightDopingView: View {
 
     // MARK: Setup
 
+    /// Night Doping rotates through calm themes as its 20-level ladder.
+    private var nightTheme: MemoryTheme {
+        let themes = [SampleContent.nightCalm] + SampleContent.themePool
+        return themes[(store.nightLevel - 1) % themes.count]
+    }
+
     private func setup() {
-        pairs = Array(SampleContent.nightCalm.pairs.shuffled().prefix(4))
+        pairs = Array(nightTheme.pairs.shuffled().prefix(4))
         questions = pairs.shuffled()
         loadOptions()
         if !reduceMotion { withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) { breathe = true } }
@@ -84,7 +90,7 @@ struct NightDopingView: View {
     private func loadOptions() {
         guard questions.indices.contains(index) else { return }
         let correct = questions[index].word
-        let others = SampleContent.nightCalm.pairs.map(\.word).filter { $0 != correct }.shuffled()
+        let others = nightTheme.pairs.map(\.word).filter { $0 != correct }.shuffled()
         options = (Array(others.prefix(2)) + [correct]).shuffled()
         chosen = nil
     }
@@ -101,6 +107,9 @@ struct NightDopingView: View {
             Text("Night Doping")
                 .font(.largeTitle.bold())
                 .foregroundStyle(NightPalette.soft)
+            Text(verbatim: "\(String(localized: "Night", bundle: AppLocale.bundle, locale: AppLocale.locale)) \(store.nightLevel) / \(GameStore.nightLevels)")
+                .font(.subheadline.weight(.semibold).monospacedDigit())
+                .foregroundStyle(NightPalette.glow)
             Text("A few quiet minutes — no timer, no score. Just a gentle wind-down. When you're tired, stop; sleep matters more than any streak.")
                 .font(.body)
                 .foregroundStyle(NightPalette.soft.opacity(0.75))
@@ -154,8 +163,9 @@ struct NightDopingView: View {
                 .foregroundStyle(NightPalette.soft)
 
             if questions.indices.contains(index) {
-                // A calm 3D symbol you can nudge with a finger.
-                Symbol3DTile(symbol: questions[index].symbol, tint: NightPalette.glow, size: 150)
+                // A calm, slowly-turning 3D symbol you can nudge with a finger.
+                Symbol3DTile(symbol: questions[index].symbol, tint: NightPalette.glow,
+                             size: 150, spinDuration: 30)
 
                 VStack(spacing: 12) {
                     ForEach(options, id: \.self) { option in
@@ -223,7 +233,10 @@ struct NightDopingView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
             Spacer()
-            calmButton("Good night", systemImage: "moon.zzz.fill") { dismiss() }
+            calmButton("Good night", systemImage: "moon.zzz.fill") {
+                store.advanceNight()
+                dismiss()
+            }
         }
     }
 

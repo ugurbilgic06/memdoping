@@ -21,6 +21,8 @@ struct ContentView: View {
                 }
             }
             .environment(\.cartoonLevel, cartoonLevel)
+            .environment(\.locale, AppLocale.locale)
+            .id(store.languageCode ?? "system")   // rebuild content on language change
             .animation(.easeInOut, value: store.hasOnboarded)
 
             // Impressive "gate of intelligence" intro before the first screen.

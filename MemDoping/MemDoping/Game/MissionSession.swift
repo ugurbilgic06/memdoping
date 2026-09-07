@@ -63,8 +63,10 @@ final class MissionSession {
     /// text; deep asks about the thing itself and comes from the theme.
     var orientingQuestion: String {
         switch level.orientingDepth {
-        case .shallow: String(localized: "Is this word longer than 5 letters?")
-        case .medium:  String(localized: "Does this word end in a vowel?")
+        case .shallow: String(localized: "Is this word longer than 5 letters?",
+                              bundle: AppLocale.bundle, locale: AppLocale.locale)
+        case .medium:  String(localized: "Does this word end in a vowel?",
+                              bundle: AppLocale.bundle, locale: AppLocale.locale)
         case .deep:    level.theme.deepQuestion.localizedContent
         case .none:    ""
         }

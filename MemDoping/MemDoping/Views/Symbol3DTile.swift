@@ -22,9 +22,12 @@ struct Symbol3DTile: View {
     var size: CGFloat = 168
     /// When true, the tile emits a 3D spark burst (e.g. on a correct answer).
     var celebrate: Bool = false
+    /// Seconds for one full spin — larger is calmer (Night Doping uses a slow one).
+    var spinDuration: Double = 13
 
     var body: some View {
-        TransparentSceneView(scene: Symbol3DTile.makeScene(symbol: symbol, tint: tint, burst: celebrate))
+        TransparentSceneView(scene: Symbol3DTile.makeScene(symbol: symbol, tint: tint,
+                                                           burst: celebrate, spinDuration: spinDuration))
             .frame(width: size, height: size)
             .id("\(symbol)-\(celebrate)")   // rebuild on prompt change or celebration
             .shadow(color: tint.opacity(0.45), radius: 12, y: 8)
@@ -33,7 +36,8 @@ struct Symbol3DTile: View {
 
     // MARK: - Scene
 
-    static func makeScene(symbol: String, tint: Color, burst: Bool = false) -> SCNScene {
+    static func makeScene(symbol: String, tint: Color, burst: Bool = false,
+                          spinDuration: Double = 13) -> SCNScene {
         let scene = SCNScene()
         // No background — the view is transparent, so the app's own backdrop
         // shows through instead of a white box.
@@ -99,7 +103,7 @@ struct Symbol3DTile: View {
             cube.runAction(pop)
         }
         // Endless calm spin so the character turns without being dizzying…
-        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 13)),
+        cube.runAction(.repeatForever(.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: spinDuration)),
                        forKey: "spin")
         // …and a gentle float up and down, like a living character.
         let up = SCNAction.moveBy(x: 0, y: 0.11, z: 0, duration: 1.7)

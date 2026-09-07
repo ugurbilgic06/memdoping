@@ -25,7 +25,7 @@ struct InterleavingMissionView: View {
 
     var body: some View {
         ZStack {
-            BrandBackground(seed: session.level.index)
+            BrandBackground(seed: session.level.index, quiet: true)
 
             Group {
                 switch session.phase {

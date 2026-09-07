@@ -78,6 +78,9 @@ enum Brand {
 struct BrandBackground: View {
     /// A different soft palette per game (usually the level index).
     var seed: Int = 0
+    /// On answer/question screens the motifs are dimmed so they don't compete
+    /// with the tiles.
+    var quiet: Bool = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private static func rgb(_ r: Double, _ g: Double, _ b: Double) -> Color {
@@ -110,7 +113,7 @@ struct BrandBackground: View {
     private static let motifs: [Motif] = {
         let glyphs = ["🧠","📚","✨","🌿","🍃","🎵","🐚","⭐️","💡","🧩","🍎","🚀",
                       "🎯","🦉","🔢","🔤","🐢","🎨","1","3","7","A","B","➕"]
-        return (0..<24).map { _ in
+        return (0..<15).map { _ in
             let g = glyphs.randomElement()!
             return Motif(glyph: g,
                          x: CGFloat.random(in: 0.03...0.97),
@@ -159,11 +162,13 @@ struct BrandBackground: View {
                 let travel = (t * 10 * m.speed + m.phase * span).truncatingRemainder(dividingBy: span)
                 let y = geo.size.height + 55 - travel
                 let x = m.x * geo.size.width + CGFloat(sin(t * 0.25 * m.speed + m.sway)) * 16
+                let emojiOpacity = quiet ? 0.10 : 0.20
+                let glyphOpacity = quiet ? 0.06 : 0.10
                 Text(m.glyph)
                     .font(.system(size: m.size, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color(red: 0.28, green: 0.30, blue: 0.16))
-                    .opacity(m.isEmoji ? 0.38 : 0.16)
-                    .shadow(color: .black.opacity(m.isEmoji ? 0.22 : 0.05), radius: 3, y: 2)
+                    .opacity(m.isEmoji ? emojiOpacity : glyphOpacity)
+                    .shadow(color: .black.opacity(m.isEmoji && !quiet ? 0.22 : 0.05), radius: 3, y: 2)
                     .rotationEffect(.degrees(sin(t * 0.2 * m.speed + m.sway) * 7))
                     .position(x: x, y: y)
             }
