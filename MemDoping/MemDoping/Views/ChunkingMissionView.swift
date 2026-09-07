@@ -106,9 +106,11 @@ struct ChunkingMissionView: View {
                         if store.hapticsEnabled { HapticsPlayer.shared.tap() }
                         session.toggleBreak(at: index)
                     } label: {
-                        Rectangle()
-                            .fill(session.breaks.contains(index) ? Brand.accent : Color.primary.opacity(0.12))
-                            .frame(width: session.breaks.contains(index) ? 4 : 2, height: 34)
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(session.breaks.contains(index) ? Brand.mark : Color.primary.opacity(0.15))
+                            .frame(width: session.breaks.contains(index) ? 6 : 2, height: 38)
+                            .shadow(color: session.breaks.contains(index) ? Brand.mark.opacity(0.5) : .clear,
+                                    radius: 4)
                             .padding(.horizontal, 6)
                             .contentShape(Rectangle().inset(by: -8))
                     }

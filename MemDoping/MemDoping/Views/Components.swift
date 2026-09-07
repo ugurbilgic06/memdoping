@@ -27,6 +27,10 @@ enum Brand {
     /// as text on a light surface it's nearly invisible, so use this.
     static let successText = Color(red: 0.06, green: 0.50, blue: 0.34)
 
+    /// A vivid magenta that contrasts strongly with the teal/turquoise accents —
+    /// used to make things stand out clearly (e.g. chunk dividers).
+    static let mark = Color(red: 0.93, green: 0.16, blue: 0.55)
+
     static var backgroundGradient: LinearGradient {
         LinearGradient(
             colors: [Color(red: 0.05, green: 0.10, blue: 0.20),
