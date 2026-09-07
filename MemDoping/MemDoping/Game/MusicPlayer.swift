@@ -64,8 +64,6 @@ final class MusicPlayer {
             (1.6, 0), (3.5, 2), (5.3, 1), (7.1, 3), (8.9, 2),
             (10.7, 4), (12.5, 3), (14.3, 5), (16.0, 4), (17.4, 1)
         ]
-        // A warm, quiet drone (C3 + G3), near whole-cycle counts over the loop.
-        let drone: [Double] = [130.80, 196.05]
         let fade = 1.6   // seconds of fade at each edge → seamless loop
 
         for i in 0..<Int(frames) {
@@ -76,21 +74,19 @@ final class MusicPlayer {
             if t < fade { g = pow(sin(.pi * t / (2 * fade)), 2) }
             else if t > duration - fade { g = pow(sin(.pi * (duration - t) / (2 * fade)), 2) }
 
-            // Warm drone with a slow breath.
-            let breath = 0.75 + 0.25 * sin(2 * .pi * t / duration)
+            // Only soft bell chimes over quiet — no background drone/hum. Each
+            // note plucks and rings out (singing-bowl timbre), the way calm
+            // Chinese relaxation music breathes with space between the notes.
             var s = 0.0
-            for f in drone { s += 0.06 * breath * sin(2 * .pi * f * t) }
-
-            // Soft bell chimes that pluck and decay (singing-bowl timbre).
             for (start, idx) in melody where t >= start {
                 let l = t - start
-                let env = exp(-l * 2.1)
+                let env = exp(-l * 1.9)
                 if env > 0.001 {
                     let f = penta[idx]
                     let bell = sin(2 * .pi * f * l)
                         + 0.35 * sin(2 * .pi * 2 * f * l)
                         + 0.12 * sin(2 * .pi * 3 * f * l)
-                    s += 0.085 * env * bell
+                    s += 0.09 * env * bell
                 }
             }
 

@@ -217,7 +217,7 @@ struct LociMissionView: View {
                     .flipReveal(isRight && revealed && !reduceMotion)
                     .modifier(ShakeEffect(animatableData:
                         (revealed && isChosen && !isRight && !reduceMotion) ? 1 : 0))
-                    .overlay { if isRight && revealed && !reduceMotion { SparkBurst(color: .white) } }
+                    .overlay { if isRight && revealed && !reduceMotion { ConfettiBurst() } }
                 }
                 .buttonStyle(TileButtonStyle())
                 .disabled(revealed || used)
@@ -253,7 +253,7 @@ struct LociMissionView: View {
     private func showReveal() {
         guard !revealed, let pick = session.lastPick else { return }
         revealed = true
-        if store.soundEnabled { SoundPlayer.shared.play(pick.correct ? .pop : .incorrect) }
+        if store.soundEnabled { SoundPlayer.shared.play(pick.correct ? .correct : .incorrect) }
         if store.hapticsEnabled { HapticsPlayer.shared.notify(success: pick.correct) }
     }
 

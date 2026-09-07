@@ -162,7 +162,7 @@ struct InterleavingMissionView: View {
             guard !revealed else { return }
             session.pickAnswer(option)
             revealed = true
-            if store.soundEnabled { SoundPlayer.shared.play(isCorrectAnswer ? .pop : .incorrect) }
+            if store.soundEnabled { SoundPlayer.shared.play(isCorrectAnswer ? .correct : .incorrect) }
             if store.hapticsEnabled { HapticsPlayer.shared.notify(success: isCorrectAnswer) }
         } label: {
             GameTile(base: base, cornerRadius: 14) {
@@ -181,7 +181,7 @@ struct InterleavingMissionView: View {
             .flipReveal(revealed && isChosen && isCorrectAnswer && !reduceMotion)
             .modifier(ShakeEffect(animatableData:
                 (revealed && isChosen && !isCorrectAnswer && !reduceMotion) ? 1 : 0))
-            .overlay { if revealed && isCorrectAnswer && !reduceMotion { SparkBurst(color: .white) } }
+            .overlay { if revealed && isCorrectAnswer && !reduceMotion { ConfettiBurst() } }
         }
         .buttonStyle(TileButtonStyle())
         .disabled(revealed)

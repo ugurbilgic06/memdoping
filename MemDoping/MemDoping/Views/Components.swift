@@ -483,6 +483,60 @@ struct SparkBurst: View {
     }
 }
 
+/// A compact, one-shot confetti pop — colourful pieces spray out and drift down.
+/// Anchored to a tile (e.g. a correct answer) as an overlay.
+struct ConfettiBurst: View {
+    var count: Int = 20
+    @State private var go = false
+
+    private struct Piece: Identifiable {
+        let id = UUID()
+        let angle: Double
+        let dist: CGFloat
+        let color: Color
+        let size: CGFloat
+        let rot: Double
+        let isCircle: Bool
+    }
+
+    private let pieces: [Piece]
+
+    init(count: Int = 20) {
+        self.count = count
+        let colors: [Color] = [Brand.accent, Brand.success, Brand.primary,
+                               Brand.danger, Color(red: 1.0, green: 0.8, blue: 0.3)]
+        pieces = (0..<count).map { i in
+            Piece(angle: Double(i) / Double(count) * 2 * .pi + Double.random(in: -0.25...0.25),
+                  dist: CGFloat.random(in: 46...96),
+                  color: colors.randomElement()!,
+                  size: CGFloat.random(in: 6...11),
+                  rot: Double.random(in: 160...720),
+                  isCircle: Bool.random())
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            ForEach(pieces) { p in
+                Group {
+                    if p.isCircle {
+                        Circle().fill(p.color).frame(width: p.size, height: p.size)
+                    } else {
+                        Rectangle().fill(p.color).frame(width: p.size, height: p.size * 0.5)
+                    }
+                }
+                .rotationEffect(.degrees(go ? p.rot : 0))
+                .offset(x: go ? cos(p.angle) * p.dist : 0,
+                        y: go ? sin(p.angle) * p.dist + 34 : 0)   // drift down a little
+                .opacity(go ? 0 : 1)
+            }
+        }
+        .onAppear { withAnimation(.easeOut(duration: 0.85)) { go = true } }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
 /// A left-to-right layout that wraps to the next line when it runs out of
 /// width — used for the scrambled letter tray, whose tile count varies by word.
 struct FlowRow: Layout {

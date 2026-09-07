@@ -66,12 +66,14 @@ final class SoundPlayer {
 
     private func buffer(for effect: Effect) -> AVAudioPCMBuffer {
         switch effect {
-        case .tap:       return tone(frequencies: [880], noteDuration: 0.05, gain: 0.15)
-        case .correct:   return tone(frequencies: [660, 990], noteDuration: 0.11, gain: 0.2)
-        case .incorrect: return tone(frequencies: [220], noteDuration: 0.18, gain: 0.2, shape: .square)
-        case .levelUp:   return tone(frequencies: [523, 659, 784], noteDuration: 0.13, gain: 0.22)
-        case .pop:       return tone(frequencies: [990, 1480], noteDuration: 0.045, gain: 0.2)
-        case .sparkle:   return tone(frequencies: [1320, 1760, 2100], noteDuration: 0.06, gain: 0.16)
+        case .tap:       return tone(frequencies: [880], noteDuration: 0.05, gain: 0.14)
+        // A bright, happy rising major arpeggio — a clearly positive "well done".
+        case .correct:   return tone(frequencies: [523, 659, 784, 1046], noteDuration: 0.085, gain: 0.2)
+        // A soft, gentle two-note dip — never a harsh buzzer.
+        case .incorrect: return tone(frequencies: [392, 294], noteDuration: 0.12, gain: 0.14)
+        case .levelUp:   return tone(frequencies: [523, 659, 784, 1046], noteDuration: 0.12, gain: 0.22)
+        case .pop:       return tone(frequencies: [784], noteDuration: 0.05, gain: 0.14)
+        case .sparkle:   return tone(frequencies: [1320, 1760, 2100], noteDuration: 0.06, gain: 0.15)
         }
     }
 
