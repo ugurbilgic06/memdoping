@@ -182,7 +182,7 @@ struct OnboardingView: View {
                 .frame(width: 200, height: 200)
             Image(systemName: "building.columns.fill")
                 .font(.system(size: 72))
-                .foregroundStyle(Brand.gloss(Brand.success))
+                .foregroundStyle(Brand.gloss(Brand.successText))
                 .shadow(color: Brand.success.opacity(0.5), radius: 16)
         }
     }

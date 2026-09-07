@@ -241,7 +241,7 @@ struct LociMissionView: View {
                 Label(pick.correct ? "That's the one!" : "Not there",
                       systemImage: pick.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                     .font(.headline)
-                    .foregroundStyle(pick.correct ? Brand.success : Brand.danger)
+                    .foregroundStyle(pick.correct ? Brand.successText : Brand.danger)
                 if !pick.correct {
                     Text("You left the \(pick.placement.item.word.localizedContent) here.")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.8))
@@ -276,7 +276,7 @@ struct LociMissionView: View {
                             Spacer()
                             Text(pick.placement.item.symbol).font(.title3)
                             Image(systemName: pick.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(pick.correct ? Brand.success : Brand.danger)
+                                .foregroundStyle(pick.correct ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))

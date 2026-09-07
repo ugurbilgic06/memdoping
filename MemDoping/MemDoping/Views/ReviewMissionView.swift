@@ -209,7 +209,7 @@ struct ReviewMissionView: View {
                 Label(out.remembered ? "Still there!" : "It slipped — now refreshed",
                       systemImage: out.remembered ? "checkmark.circle.fill" : "arrow.clockwise.circle.fill")
                     .font(.headline)
-                    .foregroundStyle(out.remembered ? Brand.success : Brand.accent)
+                    .foregroundStyle(out.remembered ? Brand.successText : Brand.accent)
                 if !out.remembered {
                     Text("It was \(item.word.localizedContent).")
                         .font(.subheadline).foregroundStyle(Color.primary.opacity(0.8))

@@ -23,6 +23,10 @@ enum Brand {
     /// little contrast, so coloured labels use this instead.
     static let accentText = Color(red: 0.03, green: 0.45, blue: 0.43)
 
+    /// A deep green for *text* — the light `success` green is for fills/tints;
+    /// as text on a light surface it's nearly invisible, so use this.
+    static let successText = Color(red: 0.06, green: 0.50, blue: 0.34)
+
     static var backgroundGradient: LinearGradient {
         LinearGradient(
             colors: [Color(red: 0.05, green: 0.10, blue: 0.20),

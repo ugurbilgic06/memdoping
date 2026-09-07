@@ -141,7 +141,7 @@ struct ElaborationMissionView: View {
         return VStack(spacing: 6) {
             HStack(spacing: 8) {
                 Image(systemName: correct ? "checkmark.circle.fill" : "info.circle.fill")
-                    .foregroundStyle(correct ? Brand.success : Brand.accent)
+                    .foregroundStyle(correct ? Brand.successText : Brand.accent)
                 Text("\(card.fact.subject.localizedContent) because \(card.fact.because.localizedContent).")
                     .font(.subheadline).foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
@@ -257,7 +257,7 @@ struct ElaborationMissionView: View {
                                 .multilineTextAlignment(.leading)
                             Spacer(minLength: 6)
                             Image(systemName: q.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(q.isCorrect ? Brand.success : Brand.danger)
+                                .foregroundStyle(q.isCorrect ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))

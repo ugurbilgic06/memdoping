@@ -277,7 +277,7 @@ struct RetrievalMissionView: View {
                     systemImage: last.correct ? "checkmark.circle.fill" : "xmark.circle.fill"
                 )
                 .font(.headline)
-                .foregroundStyle(last.correct ? Brand.success : Brand.danger)
+                .foregroundStyle(last.correct ? Brand.successText : Brand.danger)
 
                 if !last.correct {
                     Text("It was \(last.pair.word.localizedContent).")
@@ -319,7 +319,7 @@ struct RetrievalMissionView: View {
                                 Image(systemName: "star.fill").foregroundStyle(Brand.accentText)
                             }
                             Image(systemName: r.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(r.correct ? Brand.success : Brand.danger)
+                                .foregroundStyle(r.correct ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))

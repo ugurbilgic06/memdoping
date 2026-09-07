@@ -111,7 +111,7 @@ struct HomeView: View {
                 HStack(spacing: 14) {
                     Image(systemName: store.isDailyMissionDone ? "checkmark.seal.fill" : "sun.max.fill")
                         .font(.title)
-                        .foregroundStyle(store.isDailyMissionDone ? Brand.success : Brand.accent)
+                        .foregroundStyle(store.isDailyMissionDone ? Brand.successText : Brand.accent)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Daily mission")
                             .font(.headline).foregroundStyle(.primary)
@@ -169,7 +169,7 @@ struct HomeView: View {
                 HStack(spacing: 14) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title)
-                        .foregroundStyle(Brand.success)
+                        .foregroundStyle(Brand.successText)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("All caught up on reviews")
                             .font(.headline).foregroundStyle(.primary)
@@ -264,8 +264,8 @@ struct HomeView: View {
                 Spacer()
                 if let best {
                     Text("\(Int(best * 100))%")
-                        .font(.subheadline.monospacedDigit())
-                        .foregroundStyle(best >= level.masteryPercent ? Brand.success : Color.primary.opacity(0.7))
+                        .font(.subheadline.monospacedDigit().weight(.semibold))
+                        .foregroundStyle(best >= level.masteryPercent ? Brand.successText : Color.primary.opacity(0.7))
                 } else if unlocked {
                     Image(systemName: "chevron.right").foregroundStyle(Color.primary.opacity(0.5))
                 }

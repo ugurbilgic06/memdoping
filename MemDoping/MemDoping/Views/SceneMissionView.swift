@@ -268,7 +268,7 @@ struct SceneMissionView: View {
                                 .font(.headline).foregroundStyle(.primary)
                             Spacer()
                             Image(systemName: q.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(q.isCorrect ? Brand.success : Brand.danger)
+                                .foregroundStyle(q.isCorrect ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))

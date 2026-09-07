@@ -212,7 +212,7 @@ struct InterleavingMissionView: View {
                             }
                             Spacer()
                             Image(systemName: q.answerCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(q.answerCorrect ? Brand.success : Brand.danger)
+                                .foregroundStyle(q.answerCorrect ? Brand.successText : Brand.danger)
                         }
                         .padding(12)
                         .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
