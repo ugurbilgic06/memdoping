@@ -71,25 +71,49 @@ enum Brand {
 /// upward — patterned, not a flat single colour, and gently alive. Still and
 /// readable under Reduce Motion.
 struct BrandBackground: View {
-    var tint: Color? = nil
+    /// A different soft palette per game (usually the level index).
+    var seed: Int = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private static func rgb(_ r: Double, _ g: Double, _ b: Double) -> Color {
+        Color(red: r, green: g, blue: b)
+    }
+
+    /// Light, natural gradients — a different one each game so the backdrop
+    /// colour changes as you play. All kept soft so dark text stays readable.
+    private static let palettes: [[Color]] = [
+        [rgb(0.99, 0.98, 0.91), rgb(0.90, 0.93, 0.78), rgb(0.80, 0.85, 0.66)], // cream → moss
+        [rgb(1.00, 0.94, 0.86), rgb(1.00, 0.88, 0.77), rgb(0.97, 0.80, 0.66)], // peach → apricot
+        [rgb(1.00, 0.99, 0.86), rgb(0.93, 0.95, 0.72), rgb(0.82, 0.88, 0.58)], // butter → lime
+        [rgb(0.90, 0.98, 0.93), rgb(0.79, 0.93, 0.85), rgb(0.69, 0.86, 0.75)], // mint → sage
+        [rgb(1.00, 0.93, 0.93), rgb(0.99, 0.86, 0.86), rgb(0.95, 0.78, 0.80)], // blush rose
+        [rgb(0.90, 0.96, 0.99), rgb(0.81, 0.92, 0.98), rgb(0.72, 0.87, 0.96)], // soft sky
+        [rgb(0.96, 0.93, 0.99), rgb(0.90, 0.86, 0.98), rgb(0.83, 0.79, 0.95)], // lilac
+        [rgb(0.99, 0.96, 0.87), rgb(0.92, 0.90, 0.71), rgb(0.80, 0.82, 0.57)]  // sand → olive
+    ]
+    private var palette: [Color] {
+        let n = Self.palettes.count
+        return Self.palettes[((seed % n) + n) % n]
+    }
 
     private struct Motif {
         let glyph: String; let x: CGFloat; let size: CGFloat
-        let phase: Double; let speed: Double; let sway: Double
+        let phase: Double; let speed: Double; let sway: Double; let isEmoji: Bool
     }
 
-    /// Generated once so motifs don't jump between redraws.
+    /// Generated once so motifs don't jump between redraws. Mostly emojis.
     private static let motifs: [Motif] = {
-        let glyphs = ["1","2","3","5","7","9","A","B","C","E","K","M","R",
-                      "🧠","📚","✨","🌿","🍃","➕","∑","🔢","🔤","🎵","🐚"]
-        return (0..<30).map { _ in
-            Motif(glyph: glyphs.randomElement()!,
-                  x: CGFloat.random(in: 0.02...0.98),
-                  size: CGFloat.random(in: 15...42),
-                  phase: Double.random(in: 0...1),
-                  speed: Double.random(in: 0.5...1.3),
-                  sway: Double.random(in: 0...(.pi * 2)))
+        let glyphs = ["🧠","📚","✨","🌿","🍃","🎵","🐚","⭐️","💡","🧩","🍎","🚀",
+                      "🎯","🦉","🔢","🔤","🐢","🎨","1","3","7","A","B","➕"]
+        return (0..<24).map { _ in
+            let g = glyphs.randomElement()!
+            return Motif(glyph: g,
+                         x: CGFloat.random(in: 0.03...0.97),
+                         size: CGFloat.random(in: 26...62),
+                         phase: Double.random(in: 0...1),
+                         speed: Double.random(in: 0.5...1.3),
+                         sway: Double.random(in: 0...(.pi * 2)),
+                         isEmoji: !(g.first?.isASCII ?? true))
         }
     }()
 
@@ -110,34 +134,32 @@ struct BrandBackground: View {
         .accessibilityHidden(true)
     }
 
-    /// The warm base wash — cream at the top settling into soft moss.
+    /// The soft base wash for this game's palette.
     private var base: some View {
         ZStack {
-            LinearGradient(
-                colors: [Color(red: 0.99, green: 0.98, blue: 0.91),   // cream
-                         Color(red: 0.90, green: 0.93, blue: 0.78),   // pale yellow-green
-                         Color(red: 0.80, green: 0.85, blue: 0.66)],  // light moss
-                startPoint: .top, endPoint: .bottom)
+            LinearGradient(colors: palette, startPoint: .top, endPoint: .bottom)
             RadialGradient(
-                colors: [Color(red: 1.0, green: 0.98, blue: 0.80).opacity(0.7), .clear],
+                colors: [Color(red: 1.0, green: 0.99, blue: 0.86).opacity(0.55), .clear],
                 center: .init(x: 0.5, y: 0.02), startRadius: 0, endRadius: 520)
             .blendMode(.screen)
         }
     }
 
     private func motifLayer(geo: GeometryProxy, t: Double) -> some View {
-        let span = geo.size.height + 90
+        let span = geo.size.height + 110
         return ZStack {
             ForEach(0..<Self.motifs.count, id: \.self) { i in
                 let m = Self.motifs[i]
-                // Drift slowly upward and wrap; a little horizontal sway.
-                let travel = (t * 9 * m.speed + m.phase * span).truncatingRemainder(dividingBy: span)
-                let y = geo.size.height + 40 - travel
-                let x = m.x * geo.size.width + CGFloat(sin(t * 0.25 * m.speed + m.sway)) * 12
+                // Drift slowly upward and wrap; a little horizontal sway + tilt.
+                let travel = (t * 10 * m.speed + m.phase * span).truncatingRemainder(dividingBy: span)
+                let y = geo.size.height + 55 - travel
+                let x = m.x * geo.size.width + CGFloat(sin(t * 0.25 * m.speed + m.sway)) * 16
                 Text(m.glyph)
                     .font(.system(size: m.size, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color(red: 0.34, green: 0.42, blue: 0.20))
-                    .opacity(0.12)
+                    .foregroundStyle(Color(red: 0.28, green: 0.30, blue: 0.16))
+                    .opacity(m.isEmoji ? 0.38 : 0.16)
+                    .shadow(color: .black.opacity(m.isEmoji ? 0.22 : 0.05), radius: 3, y: 2)
+                    .rotationEffect(.degrees(sin(t * 0.2 * m.speed + m.sway) * 7))
                     .position(x: x, y: y)
             }
         }

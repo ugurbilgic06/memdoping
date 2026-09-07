@@ -9,17 +9,27 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(GameStore.self) private var store
+    @State private var showSplash = true
 
     var body: some View {
-        Group {
-            if store.hasOnboarded {
-                HomeView()
-            } else {
-                OnboardingView()
+        ZStack {
+            Group {
+                if store.hasOnboarded {
+                    HomeView()
+                } else {
+                    OnboardingView()
+                }
+            }
+            .environment(\.cartoonLevel, cartoonLevel)
+            .animation(.easeInOut, value: store.hasOnboarded)
+
+            // Impressive "gate of intelligence" intro before the first screen.
+            if showSplash {
+                SplashView { showSplash = false }
+                    .transition(.opacity)
+                    .zIndex(1)
             }
         }
-        .environment(\.cartoonLevel, cartoonLevel)
-        .animation(.easeInOut, value: store.hasOnboarded)
     }
 
     /// Younger players get a more cartoonish symbol treatment.

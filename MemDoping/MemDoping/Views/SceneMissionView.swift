@@ -29,7 +29,7 @@ struct SceneMissionView: View {
 
     var body: some View {
         ZStack {
-            BrandBackground(tint: session.level.tileBase)
+            BrandBackground(seed: session.level.index)
 
             Group {
                 switch session.phase {
