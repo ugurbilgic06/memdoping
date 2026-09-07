@@ -287,7 +287,13 @@ enum SampleContent {
             .init(symbol: "🐙", word: "Octopus", deepAnswer: false),
             .init(symbol: "🦒", word: "Giraffe", deepAnswer: false),
             .init(symbol: "🐧", word: "Penguin", deepAnswer: false),
-            .init(symbol: "🦋", word: "Butterfly", deepAnswer: true)
+            .init(symbol: "🦋", word: "Butterfly", deepAnswer: true),
+            .init(symbol: "🦁", word: "Lion", deepAnswer: false),
+            .init(symbol: "🐬", word: "Dolphin", deepAnswer: false),
+            .init(symbol: "🦅", word: "Eagle", deepAnswer: true),
+            .init(symbol: "🐘", word: "Elephant", deepAnswer: false),
+            .init(symbol: "🦇", word: "Bat", deepAnswer: true),
+            .init(symbol: "🐸", word: "Frog", deepAnswer: false)
         ]
     )
 
@@ -303,7 +309,13 @@ enum SampleContent {
             .init(symbol: "🧀", word: "Cheese", deepAnswer: false),
             .init(symbol: "🍯", word: "Honey", deepAnswer: true),
             .init(symbol: "🥨", word: "Pretzel", deepAnswer: false),
-            .init(symbol: "🍉", word: "Melon", deepAnswer: true)
+            .init(symbol: "🍉", word: "Melon", deepAnswer: true),
+            .init(symbol: "🍓", word: "Strawberry", deepAnswer: true),
+            .init(symbol: "🍕", word: "Pizza", deepAnswer: false),
+            .init(symbol: "🍫", word: "Chocolate", deepAnswer: true),
+            .init(symbol: "🥦", word: "Broccoli", deepAnswer: false),
+            .init(symbol: "🍌", word: "Banana", deepAnswer: true),
+            .init(symbol: "🍞", word: "Bread", deepAnswer: false)
         ]
     )
 
@@ -319,7 +331,13 @@ enum SampleContent {
             .init(symbol: "🛰️", word: "Satellite", deepAnswer: false),
             .init(symbol: "🌟", word: "Star", deepAnswer: true),
             .init(symbol: "👩‍🚀", word: "Astronaut", deepAnswer: false),
-            .init(symbol: "🌌", word: "Galaxy", deepAnswer: true)
+            .init(symbol: "🌌", word: "Galaxy", deepAnswer: true),
+            .init(symbol: "☀️", word: "Sun", deepAnswer: true),
+            .init(symbol: "🌠", word: "Meteor", deepAnswer: false),
+            .init(symbol: "🔭", word: "Telescope", deepAnswer: false),
+            .init(symbol: "👽", word: "Alien", deepAnswer: false),
+            .init(symbol: "🪨", word: "Asteroid", deepAnswer: false),
+            .init(symbol: "🌑", word: "New Moon", deepAnswer: false)
         ]
     )
 
@@ -335,7 +353,13 @@ enum SampleContent {
             .init(symbol: "🎫", word: "Ticket", deepAnswer: true),
             .init(symbol: "🧭", word: "Compass", deepAnswer: true),
             .init(symbol: "⛺️", word: "Tent", deepAnswer: false),
-            .init(symbol: "🏔️", word: "Mountain", deepAnswer: false)
+            .init(symbol: "🏔️", word: "Mountain", deepAnswer: false),
+            .init(symbol: "✈️", word: "Airplane", deepAnswer: false),
+            .init(symbol: "📷", word: "Camera", deepAnswer: true),
+            .init(symbol: "🛂", word: "Passport", deepAnswer: true),
+            .init(symbol: "🕶️", word: "Sunglasses", deepAnswer: true),
+            .init(symbol: "🛳️", word: "Ship", deepAnswer: false),
+            .init(symbol: "🏨", word: "Hotel", deepAnswer: false)
         ]
     )
 
@@ -370,7 +394,13 @@ enum SampleContent {
             .init(symbol: "🦎", word: "Lizard", deepAnswer: false),
             .init(symbol: "🌻", word: "Sunflower", deepAnswer: true),
             .init(symbol: "🐞", word: "Ladybug", deepAnswer: false),
-            .init(symbol: "🍁", word: "Leaf", deepAnswer: true)
+            .init(symbol: "🍁", word: "Leaf", deepAnswer: true),
+            .init(symbol: "🌵", word: "Cactus", deepAnswer: true),
+            .init(symbol: "🌴", word: "Palm", deepAnswer: true),
+            .init(symbol: "🌊", word: "Wave", deepAnswer: false),
+            .init(symbol: "🌿", word: "Herb", deepAnswer: true),
+            .init(symbol: "❄️", word: "Snowflake", deepAnswer: false),
+            .init(symbol: "☁️", word: "Cloud", deepAnswer: false)
         ]
     )
 
@@ -386,7 +416,13 @@ enum SampleContent {
             .init(symbol: "🥊", word: "Boxing", deepAnswer: false),
             .init(symbol: "🏹", word: "Archery", deepAnswer: false),
             .init(symbol: "🏊", word: "Swimming", deepAnswer: false),
-            .init(symbol: "⛳️", word: "Golf", deepAnswer: true)
+            .init(symbol: "⛳️", word: "Golf", deepAnswer: true),
+            .init(symbol: "🏐", word: "Volleyball", deepAnswer: true),
+            .init(symbol: "🏈", word: "Rugby", deepAnswer: true),
+            .init(symbol: "⛷️", word: "Skiing", deepAnswer: false),
+            .init(symbol: "🚴", word: "Cycling", deepAnswer: false),
+            .init(symbol: "🏒", word: "Hockey", deepAnswer: false),
+            .init(symbol: "🎳", word: "Bowling", deepAnswer: true)
         ]
     )
 

@@ -449,6 +449,28 @@
         }
       }
     },
+    "Airplane": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uçak"
+          }
+        }
+      }
+    },
+    "Alien": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzaylı"
+          }
+        }
+      }
+    },
     "All caught up on reviews": {
       "localizations": {
         "tr": {
@@ -565,6 +587,17 @@
         }
       }
     },
+    "Asteroid": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asteroit"
+          }
+        }
+      }
+    },
     "Astronaut": {
       "localizations": {
         "en": {
@@ -664,6 +697,17 @@
         }
       }
     },
+    "Banana": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muz"
+          }
+        }
+      }
+    },
     "Based on dual coding (Paivio): a word plus an image gives memory two routes to it. A modest, conditional effect.": {
       "extractionState": "manual",
       "localizations": {
@@ -682,6 +726,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Basketbol"
+          }
+        }
+      }
+    },
+    "Bat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yarasa"
           }
         }
       }
@@ -769,6 +824,17 @@
         }
       }
     },
+    "Bowling": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bovling"
+          }
+        }
+      }
+    },
     "Boxing": {
       "extractionState": "manual",
       "localizations": {
@@ -776,6 +842,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Boks"
+          }
+        }
+      }
+    },
+    "Bread": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekmek"
+          }
+        }
+      }
+    },
+    "Broccoli": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brokoli"
           }
         }
       }
@@ -831,6 +919,17 @@
         }
       }
     },
+    "Cactus": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaktüs"
+          }
+        }
+      }
+    },
     "Camels cross deserts": {
       "extractionState": "manual",
       "localizations": {
@@ -838,6 +937,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Develer çölleri geçer"
+          }
+        }
+      }
+    },
+    "Camera": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera"
           }
         }
       }
@@ -956,6 +1066,17 @@
         }
       }
     },
+    "Chocolate": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çikolata"
+          }
+        }
+      }
+    },
     "Chunking": {
       "localizations": {
         "en": {
@@ -968,6 +1089,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Öbekleme"
+          }
+        }
+      }
+    },
+    "Cloud": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulut"
           }
         }
       }
@@ -1059,6 +1191,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koltuk"
+          }
+        }
+      }
+    },
+    "Cycling": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bisiklet"
           }
         }
       }
@@ -1173,6 +1316,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu kelime sesli harfle mi bitiyor?"
+          }
+        }
+      }
+    },
+    "Dolphin": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yunus"
           }
         }
       }
@@ -1294,6 +1448,17 @@
         }
       }
     },
+    "Eagle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kartal"
+          }
+        }
+      }
+    },
     "Eased": {
       "comment": "A label describing the ease of the game.",
       "isCommentAutoGenerated": true,
@@ -1336,6 +1501,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Elaboratif sorgulama: 'neden' diye sormak olguları bildiklerine bağlar. Tanıdık içerikte en iyi çalışan, orta düzey bir fayda."
+          }
+        }
+      }
+    },
+    "Elephant": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fil"
           }
         }
       }
@@ -1457,6 +1633,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tilki"
+          }
+        }
+      }
+    },
+    "Frog": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurbağa"
           }
         }
       }
@@ -1607,6 +1794,17 @@
         }
       }
     },
+    "Herb": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ot"
+          }
+        }
+      }
+    },
     "Hint": {
       "comment": "A button that reveals a letter from the letter tray.",
       "isCommentAutoGenerated": true,
@@ -1615,6 +1813,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "İpucu"
+          }
+        }
+      }
+    },
+    "Hockey": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hokey"
           }
         }
       }
@@ -1648,6 +1857,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bal"
+          }
+        }
+      }
+    },
+    "Hotel": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otel"
           }
         }
       }
@@ -2069,6 +2289,17 @@
         }
       }
     },
+    "Lion": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aslan"
+          }
+        }
+      }
+    },
     "Lizard": {
       "extractionState": "manual",
       "localizations": {
@@ -2293,6 +2524,17 @@
         }
       }
     },
+    "Meteor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meteor"
+          }
+        }
+      }
+    },
     "Method of Loci": {
       "extractionState": "manual",
       "localizations": {
@@ -2460,6 +2702,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Doğa"
+          }
+        }
+      }
+    },
+    "New Moon": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni Ay"
           }
         }
       }
@@ -2734,6 +2987,28 @@
         }
       }
     },
+    "Palm": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palmiye"
+          }
+        }
+      }
+    },
+    "Passport": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasaport"
+          }
+        }
+      }
+    },
     "Penguin": {
       "localizations": {
         "en": {
@@ -2843,6 +3118,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Masa Tenisi"
+          }
+        }
+      }
+    },
+    "Pizza": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pizza"
           }
         }
       }
@@ -3306,6 +3592,17 @@
         }
       }
     },
+    "Rugby": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ragbi"
+          }
+        }
+      }
+    },
     "Sample content — a prototype mission, not final curriculum.": {
       "localizations": {
         "en": {
@@ -3420,6 +3717,17 @@
         }
       }
     },
+    "Ship": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemi"
+          }
+        }
+      }
+    },
     "Shower": {
       "extractionState": "manual",
       "localizations": {
@@ -3427,6 +3735,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Duş"
+          }
+        }
+      }
+    },
+    "Skiing": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayak"
           }
         }
       }
@@ -3450,6 +3769,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Salyangoz"
+          }
+        }
+      }
+    },
+    "Snowflake": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kar Tanesi"
           }
         }
       }
@@ -3650,6 +3980,17 @@
         }
       }
     },
+    "Strawberry": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çilek"
+          }
+        }
+      }
+    },
     "Stuck on a word? Tap Hint for the next letter — it's free. Finishing it yourself still counts.": {
       "extractionState": "manual",
       "localizations": {
@@ -3688,6 +4029,17 @@
         }
       }
     },
+    "Sun": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güneş"
+          }
+        }
+      }
+    },
     "Sunflower": {
       "extractionState": "manual",
       "localizations": {
@@ -3695,6 +4047,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ayçiçeği"
+          }
+        }
+      }
+    },
+    "Sunglasses": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güneş Gözlüğü"
           }
         }
       }
@@ -3783,6 +4146,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Genç"
+          }
+        }
+      }
+    },
+    "Telescope": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teleskop"
           }
         }
       }
@@ -4155,6 +4529,17 @@
         }
       }
     },
+    "Volleyball": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voleybol"
+          }
+        }
+      }
+    },
     "Walk your home and leave each item at a spot — picture it vividly there. This isn't a talent; it's a strategy anyone can learn.": {
       "extractionState": "manual",
       "localizations": {
@@ -4179,6 +4564,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Isınma"
+          }
+        }
+      }
+    },
+    "Wave": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalga"
           }
         }
       }
