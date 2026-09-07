@@ -465,10 +465,6 @@ struct DoorReveal: ViewModifier {
                     startPoint: .leading, endPoint: .trailing))
                 .frame(width: 10)
         }
-        .overlay(alignment: seamOnRight ? .trailing : .leading) {
-            Text("🧠").font(.system(size: 40))
-                .offset(x: seamOnRight ? 20 : -20)
-        }
     }
 }
 
