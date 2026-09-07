@@ -30,12 +30,21 @@ final class MusicPlayer {
         #endif
     }
 
-    func start() {
-        guard !started else { return }
+    private(set) var isNight = false
+
+    /// The daytime spa loop.
+    func start() { startMode(night: false) }
+    /// A slower, lower, sleepier loop for Night Doping.
+    func startNight() { startMode(night: true) }
+
+    private func startMode(night: Bool) {
+        if started && isNight == night { return }   // already in this mode
         do { try engine.start() } catch { return }
-        player.scheduleBuffer(padBuffer(), at: nil, options: .loops)
+        player.stop()
+        player.scheduleBuffer(night ? nightBuffer() : padBuffer(), at: nil, options: .loops)
         player.play()
         started = true
+        isNight = night
     }
 
     func stop() {
@@ -87,6 +96,52 @@ final class MusicPlayer {
                         + 0.35 * sin(2 * .pi * 2 * f * l)
                         + 0.12 * sin(2 * .pi * 3 * f * l)
                     s += 0.09 * env * bell
+                }
+            }
+
+            channel[i] = Float(s * g)
+        }
+        return buffer
+    }
+
+    /// A ~30 s sleep loop for Night Doping: a soft, low, warm drone that breathes
+    /// slowly, with a few deep, long-ringing bells far apart — lower, quieter and
+    /// slower than the day loop, to help wind down.
+    private func nightBuffer() -> AVAudioPCMBuffer {
+        let duration = 30.0
+        let frames = AVAudioFrameCount(duration * sampleRate)
+        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames)!
+        buffer.frameLength = frames
+        let channel = buffer.floatChannelData![0]
+
+        // A low, warm drone (A2 + E3) for a calm, grounding hum.
+        let drone: [Double] = [110.0, 164.81]
+        // A minor pentatonic in a low octave (A3 C4 D4 E4 G4) — soft and restful.
+        let penta: [Double] = [220.0, 261.63, 293.66, 329.63, 392.00]
+        // Very sparse, slow notes with long silences between them.
+        let melody: [(Double, Int)] = [(4, 0), (11, 2), (17, 1), (23, 3), (27, 0)]
+        let fade = 3.0
+
+        for i in 0..<Int(frames) {
+            let t = Double(i) / sampleRate
+
+            var g = 1.0
+            if t < fade { g = pow(sin(.pi * t / (2 * fade)), 2) }
+            else if t > duration - fade { g = pow(sin(.pi * (duration - t) / (2 * fade)), 2) }
+
+            // Soft breathing drone.
+            let breath = 0.7 + 0.3 * sin(2 * .pi * t / duration)
+            var s = 0.0
+            for f in drone { s += 0.045 * breath * sin(2 * .pi * f * t) }
+
+            // Deep bells that ring out for a long time.
+            for (start, idx) in melody where t >= start {
+                let l = t - start
+                let env = exp(-l * 0.85)
+                if env > 0.001 {
+                    let f = penta[idx]
+                    let bell = sin(2 * .pi * f * l) + 0.3 * sin(2 * .pi * 2 * f * l)
+                    s += 0.06 * env * bell
                 }
             }
 

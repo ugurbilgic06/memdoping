@@ -60,7 +60,13 @@ struct NightDopingView: View {
                 }
             }
         }
-        .onAppear(perform: setup)
+        .onAppear {
+            setup()
+            if store.musicEnabled { MusicPlayer.shared.startNight() }   // sleepier loop
+        }
+        .onDisappear {
+            if store.musicEnabled { MusicPlayer.shared.start() }        // back to day loop
+        }
         // This screen is intentionally dark; keep the app's forced light scheme
         // from turning nav/system elements dark-on-dark here.
         .preferredColorScheme(.dark)
@@ -148,9 +154,8 @@ struct NightDopingView: View {
                 .foregroundStyle(NightPalette.soft)
 
             if questions.indices.contains(index) {
-                Text(questions[index].symbol)
-                    .font(.system(size: 84))
-                    .shadow(color: NightPalette.glow.opacity(0.4), radius: 18)
+                // A calm 3D symbol you can nudge with a finger.
+                Symbol3DTile(symbol: questions[index].symbol, tint: NightPalette.glow, size: 150)
 
                 VStack(spacing: 12) {
                     ForEach(options, id: \.self) { option in

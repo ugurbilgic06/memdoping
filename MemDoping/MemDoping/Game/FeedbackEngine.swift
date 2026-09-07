@@ -66,14 +66,15 @@ final class SoundPlayer {
 
     private func buffer(for effect: Effect) -> AVAudioPCMBuffer {
         switch effect {
-        case .tap:       return tone(frequencies: [880], noteDuration: 0.05, gain: 0.14)
-        // A bright, happy rising major arpeggio — a clearly positive "well done".
-        case .correct:   return tone(frequencies: [523, 659, 784, 1046], noteDuration: 0.085, gain: 0.2)
-        // A soft, gentle two-note dip — never a harsh buzzer.
-        case .incorrect: return tone(frequencies: [392, 294], noteDuration: 0.12, gain: 0.14)
-        case .levelUp:   return tone(frequencies: [523, 659, 784, 1046], noteDuration: 0.12, gain: 0.22)
-        case .pop:       return tone(frequencies: [784], noteDuration: 0.05, gain: 0.14)
-        case .sparkle:   return tone(frequencies: [1320, 1760, 2100], noteDuration: 0.06, gain: 0.15)
+        // All sounds are soft sine tones with long fades — gentle, never a blip.
+        case .tap:       return tone(frequencies: [587], noteDuration: 0.06, gain: 0.09)
+        // A soft, warm rising arpeggio — a gentle, positive "well done".
+        case .correct:   return tone(frequencies: [523, 659, 784], noteDuration: 0.1, gain: 0.16)
+        // A mellow, low two-note settle — reassuring, not a buzzer.
+        case .incorrect: return tone(frequencies: [349, 294], noteDuration: 0.16, gain: 0.1)
+        case .levelUp:   return tone(frequencies: [523, 659, 784, 1046], noteDuration: 0.13, gain: 0.18)
+        case .pop:       return tone(frequencies: [659], noteDuration: 0.06, gain: 0.09)
+        case .sparkle:   return tone(frequencies: [988, 1319, 1568], noteDuration: 0.07, gain: 0.11)
         }
     }
 
@@ -88,7 +89,7 @@ final class SoundPlayer {
         let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: totalFrames)!
         buffer.frameLength = totalFrames
         let channel = buffer.floatChannelData![0]
-        let fadeFrames = max(1.0, Double(framesPerNote) * 0.1)
+        let fadeFrames = max(1.0, Double(framesPerNote) * 0.28)   // longer fades = softer
 
         var offset = 0
         for frequency in frequencies {
