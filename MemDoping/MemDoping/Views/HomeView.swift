@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var activeLevel: GameLevel?
     @State private var showReview = false
     @State private var showNight = false
+    @State private var expandedChapters: Set<Int> = []
 
     var body: some View {
         NavigationStack {
@@ -225,13 +226,96 @@ struct HomeView: View {
 
     // MARK: Level ladder
 
+    /// Ten themed chapters of ten levels each, so the ladder reads as chapters
+    /// with headings + emoji instead of one long list.
+    private struct Chapter {
+        let title: LocalizedStringKey
+        let emoji: String
+        let range: ClosedRange<Int>
+    }
+
+    private let chapters: [Chapter] = [
+        .init(title: "Warm-up",      emoji: "🌱", range: 1...10),
+        .init(title: "Explorer",     emoji: "🧭", range: 11...20),
+        .init(title: "Focus",        emoji: "🎯", range: 21...30),
+        .init(title: "Momentum",     emoji: "🚀", range: 31...40),
+        .init(title: "Sharp",        emoji: "⚡️", range: 41...50),
+        .init(title: "Deep Dive",    emoji: "🌊", range: 51...60),
+        .init(title: "Master Steps", emoji: "🧠", range: 61...70),
+        .init(title: "Challenge",    emoji: "🔥", range: 71...80),
+        .init(title: "Expert",       emoji: "💎", range: 81...90),
+        .init(title: "Legend",       emoji: "👑", range: 91...100)
+    ]
+
     private var levelLadder: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Levels")
                 .font(.title3.bold())
                 .foregroundStyle(.primary)
-            ForEach(SampleLevels.all) { level in
-                levelRow(level)
+            ForEach(Array(chapters.enumerated()), id: \.offset) { i, chapter in
+                chapterSection(i, chapter)
+            }
+        }
+        .onAppear {
+            // Open the chapter that holds the current level by default.
+            if expandedChapters.isEmpty,
+               let i = chapters.firstIndex(where: { $0.range.contains(store.currentLevel.index) }) {
+                expandedChapters.insert(i)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func chapterSection(_ index: Int, _ chapter: Chapter) -> some View {
+        let levels = SampleLevels.all.filter { chapter.range.contains($0.index) }
+        let unlocked = levels.filter { $0.index <= store.highestUnlockedLevel }.count
+        let chapterLocked = chapter.range.lowerBound > store.highestUnlockedLevel
+        let isOpen = expandedChapters.contains(index)
+
+        VStack(spacing: 8) {
+            Button {
+                if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+                withAnimation(.easeInOut(duration: 0.22)) {
+                    if isOpen { expandedChapters.remove(index) } else { expandedChapters.insert(index) }
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    Text(chapter.emoji).font(.title)
+                        .opacity(chapterLocked ? 0.5 : 1)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(chapter.title)
+                            .font(.headline)
+                            .foregroundStyle(chapterLocked ? Color.primary.opacity(0.5) : .primary)
+                        Text(verbatim: "\(chapter.range.lowerBound)–\(chapter.range.upperBound)")
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(Color.primary.opacity(0.55))
+                    }
+                    Spacer()
+                    if chapterLocked {
+                        Image(systemName: "lock.fill").foregroundStyle(Color.primary.opacity(0.4))
+                    } else {
+                        Text("\(unlocked)/\(levels.count)")
+                            .font(.subheadline.monospacedDigit().weight(.semibold))
+                            .foregroundStyle(unlocked == levels.count ? Brand.successText : Brand.accentText)
+                    }
+                    Image(systemName: "chevron.down")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(Color.primary.opacity(0.5))
+                        .rotationEffect(.degrees(isOpen ? 0 : -90))
+                }
+                .padding(14)
+                .background(Color.white.opacity(0.55),
+                            in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+
+            if isOpen {
+                ForEach(levels) { level in
+                    levelRow(level)
+                }
+                .padding(.leading, 6)
             }
         }
     }
