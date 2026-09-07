@@ -10,18 +10,18 @@ import SwiftUI
 
 /// MemDoping brand palette.
 enum Brand {
-    static let primary = Color(red: 0.30, green: 0.62, blue: 1.0)    // calm blue
-    static let accent  = Color(red: 0.10, green: 0.74, blue: 0.70)   // vivid turquoise (visible on light)
-    static let success = Color(red: 0.28, green: 0.84, blue: 0.60)   // soft green
-    static let danger  = Color(red: 1.0,  green: 0.45, blue: 0.55)   // soft rose
+    static let primary = Color(red: 0.55, green: 0.45, blue: 0.28)   // warm brown
+    static let accent  = Color(red: 0.46, green: 0.60, blue: 0.30)   // moss green (visible on cream)
+    static let success = Color(red: 0.42, green: 0.72, blue: 0.40)   // fresh leaf green
+    static let danger  = Color(red: 0.90, green: 0.42, blue: 0.42)   // soft terracotta rose
 
-    /// Dark ink used on light/aqua fills (e.g. the primary button).
-    static let ink = Color(red: 0.04, green: 0.16, blue: 0.18)
+    /// Dark ink used on light fills (e.g. the primary button).
+    static let ink = Color(red: 0.18, green: 0.16, blue: 0.08)
 
-    /// A deep teal for accent *text* on the light theme — the light `accent`
-    /// aqua is used for fills/tints, but as text on a light surface it has too
-    /// little contrast, so coloured labels use this instead.
-    static let accentText = Color(red: 0.03, green: 0.45, blue: 0.43)
+    /// A deep moss for accent *text* on the light theme — the `accent` green is
+    /// used for fills/tints, but as text on a light surface a deeper tone reads
+    /// better, so coloured labels use this instead.
+    static let accentText = Color(red: 0.26, green: 0.38, blue: 0.14)
 
     /// A deep green for *text* — the light `success` green is for fills/tints;
     /// as text on a light surface it's nearly invisible, so use this.
@@ -66,27 +66,43 @@ enum Brand {
     }
 }
 
-/// Full-screen brand background that slowly, endlessly cycles hue so the colour
-/// is always shifting. A `tint` (the level's motif colour) offsets the starting
-/// hue, so different levels begin on different colours. Still and readable under
-/// Reduce Motion.
+/// Full-screen brand background: a warm cream→moss wash with a calm, endlessly
+/// drifting layer of memory motifs (numbers, letters, little symbols) floating
+/// upward — patterned, not a flat single colour, and gently alive. Still and
+/// readable under Reduce Motion.
 struct BrandBackground: View {
     var tint: Color? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    private struct Motif {
+        let glyph: String; let x: CGFloat; let size: CGFloat
+        let phase: Double; let speed: Double; let sway: Double
+    }
+
+    /// Generated once so motifs don't jump between redraws.
+    private static let motifs: [Motif] = {
+        let glyphs = ["1","2","3","5","7","9","A","B","C","E","K","M","R",
+                      "🧠","📚","✨","🌿","🍃","➕","∑","🔢","🔤","🎵","🐚"]
+        return (0..<30).map { _ in
+            Motif(glyph: glyphs.randomElement()!,
+                  x: CGFloat.random(in: 0.02...0.98),
+                  size: CGFloat.random(in: 15...42),
+                  phase: Double.random(in: 0...1),
+                  speed: Double.random(in: 0.5...1.3),
+                  sway: Double.random(in: 0...(.pi * 2)))
+        }
+    }()
+
     var body: some View {
-        Group {
-            if reduceMotion {
-                gradient(hue: 0.60)
-            } else {
-                TimelineView(.animation) { timeline in
-                    let t = timeline.date.timeIntervalSinceReferenceDate
-                    // Ping-pong through a cool teal→sky→blue band. Staying cool
-                    // (and never green) keeps the airy backdrop clearly distinct
-                    // from the warm/green content tiles in front of it.
-                    let cycle = (t * 0.03).truncatingRemainder(dividingBy: 2.0)
-                    let tri = cycle < 1 ? cycle : 2 - cycle
-                    gradient(hue: 0.52 + tri * 0.14)
+        ZStack {
+            base
+            GeometryReader { geo in
+                if reduceMotion {
+                    motifLayer(geo: geo, t: 0)
+                } else {
+                    TimelineView(.animation) { timeline in
+                        motifLayer(geo: geo, t: timeline.date.timeIntervalSinceReferenceDate)
+                    }
                 }
             }
         }
@@ -94,17 +110,36 @@ struct BrandBackground: View {
         .accessibilityHidden(true)
     }
 
-    private func gradient(hue: Double) -> some View {
+    /// The warm base wash — cream at the top settling into soft moss.
+    private var base: some View {
         ZStack {
-            // Light, airy wash — soft mint→sky that keeps dark text readable.
             LinearGradient(
-                colors: [Color(hue: hue, saturation: 0.16, brightness: 0.99),
-                         Color(hue: hue, saturation: 0.34, brightness: 0.90)],
+                colors: [Color(red: 0.99, green: 0.98, blue: 0.91),   // cream
+                         Color(red: 0.90, green: 0.93, blue: 0.78),   // pale yellow-green
+                         Color(red: 0.80, green: 0.85, blue: 0.66)],  // light moss
                 startPoint: .top, endPoint: .bottom)
             RadialGradient(
-                colors: [Color(hue: hue, saturation: 0.30, brightness: 1.0).opacity(0.6), .clear],
-                center: .init(x: 0.5, y: 0.0), startRadius: 0, endRadius: 520)
+                colors: [Color(red: 1.0, green: 0.98, blue: 0.80).opacity(0.7), .clear],
+                center: .init(x: 0.5, y: 0.02), startRadius: 0, endRadius: 520)
             .blendMode(.screen)
+        }
+    }
+
+    private func motifLayer(geo: GeometryProxy, t: Double) -> some View {
+        let span = geo.size.height + 90
+        return ZStack {
+            ForEach(0..<Self.motifs.count, id: \.self) { i in
+                let m = Self.motifs[i]
+                // Drift slowly upward and wrap; a little horizontal sway.
+                let travel = (t * 9 * m.speed + m.phase * span).truncatingRemainder(dividingBy: span)
+                let y = geo.size.height + 40 - travel
+                let x = m.x * geo.size.width + CGFloat(sin(t * 0.25 * m.speed + m.sway)) * 12
+                Text(m.glyph)
+                    .font(.system(size: m.size, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color(red: 0.34, green: 0.42, blue: 0.20))
+                    .opacity(0.12)
+                    .position(x: x, y: y)
+            }
         }
     }
 }
