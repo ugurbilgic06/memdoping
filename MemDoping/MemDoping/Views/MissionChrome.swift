@@ -51,19 +51,28 @@ struct MissionIntro: View {
                 .font(.largeTitle.bold())
                 .foregroundStyle(Brand.text)
 
-            Card {
+            // Show, don't tell: a short animated micro-tutorial instead of a
+            // wall of text (V2 §1.3). The technique name is its caption.
+            MechanicDemo(mechanic: level.mechanic, tint: level.tileBase,
+                         caption: level.technique)
+
+            // The single takeaway sentence.
+            Label {
+                Text(level.tip.localizedContent)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(Brand.text)
+            } icon: {
+                Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+
+            // The long explanation is opt-in, collapsed by default.
+            DisclosureGroup {
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(level.technique.localizedContent, systemImage: "brain.head.profile")
-                        .font(.headline)
-                        .foregroundStyle(Brand.text)
-                        .fixedSize(horizontal: false, vertical: true)
                     Text(level.techniqueExplanation)
                         .font(.subheadline)
                         .foregroundStyle(Brand.text.opacity(0.85))
                         .fixedSize(horizontal: false, vertical: true)
-
-                    // The scientific reason — richer detail for teens/adults;
-                    // skipped for the child band, where it isn't needed.
                     if store.ageBand != .child {
                         Label {
                             Text(level.techniqueScience)
@@ -73,20 +82,15 @@ struct MissionIntro: View {
                             Image(systemName: "flask.fill").foregroundStyle(Brand.primary)
                         }
                         .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 2)
                     }
-
-                    Label {
-                        Text(level.tip.localizedContent)
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(Brand.text)
-                    } icon: {
-                        Image(systemName: "lightbulb.fill").foregroundStyle(Brand.accentText)
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 2)
                 }
+                .padding(.top, 6)
+            } label: {
+                Label("How it works", systemImage: "brain.head.profile")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Brand.text)
             }
+            .tint(Brand.accentText)
 
             HStack(spacing: 12) {
                 ForEach(stats) { stat in
