@@ -15,25 +15,37 @@ struct HomeView: View {
     @State private var showReview = false
     @State private var showNight = false
     @State private var expandedChapters: Set<Int> = []
+    @State private var showAudience = false
+
+    private func bandLabel(_ band: GameStore.AgeBand) -> LocalizedStringKey {
+        switch band {
+        case .child: "Child"
+        case .teen:  "Teen"
+        case .adult: "Adult"
+        }
+    }
 
     var body: some View {
         NavigationStack {
             ZStack {
                 BrandBackground()
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        VStack(spacing: 20) {
-                            header(proxy).dealIn(0)
-                            statsRow.dealIn(1)
-                            dailyMissionCard.dealIn(2)
-                            reviewCard.dealIn(3)
-                            continueCard.dealIn(4)
-                            levelLadder.dealIn(5).id("levels")
-                            nightCard.dealIn(6)
-                            disclaimer.dealIn(7)
-                        }
-                        .padding()
+                ScrollView {
+                    VStack(spacing: 20) {
+                        header.dealIn(0)
+                        statsRow.dealIn(1)
+                        dailyMissionCard.dealIn(2)
+                        reviewCard.dealIn(3)
+                        continueCard.dealIn(4)
+                        levelLadder.dealIn(5)
+                        nightCard.dealIn(6)
+                        disclaimer.dealIn(7)
                     }
+                    .padding()
+                }
+            }
+            .confirmationDialog("Who's playing?", isPresented: $showAudience, titleVisibility: .visible) {
+                ForEach(GameStore.AgeBand.allCases, id: \.self) { band in
+                    Button(bandLabel(band)) { store.setAgeBand(band) }
                 }
             }
             .navigationDestination(item: $activeLevel) { level in
@@ -68,18 +80,19 @@ struct HomeView: View {
 
     // MARK: Header
 
-    private func header(_ proxy: ScrollViewProxy) -> some View {
+    private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 10) {
-                // Tapping the cube jumps to the level list — a quick "change level".
+                // Tapping the cube opens the audience picker — a quick way to
+                // switch Child / Teen / Adult.
                 Button {
                     if store.hapticsEnabled { HapticsPlayer.shared.tap() }
-                    withAnimation(.easeInOut) { proxy.scrollTo("levels", anchor: .top) }
+                    showAudience = true
                 } label: {
                     Hero3DView(size: 58, interactive: false)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Go to levels")
+                .accessibilityLabel("Change audience")
                 VStack(alignment: .leading, spacing: 2) {
                     Text("MemDoping")
                         .font(.largeTitle.bold())
