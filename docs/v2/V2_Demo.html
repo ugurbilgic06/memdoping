@@ -190,6 +190,114 @@ button.ghost{background:rgba(255,255,255,.18);color:#fff;box-shadow:none;
   *{animation:none!important;transition:none!important}
   .amb{display:none}
 }
+
+/* ══════════ MİKRO ANLATIM SAHNESİ ══════════ */
+.demo{position:relative;height:196px;border-radius:16px;overflow:hidden;margin-bottom:11px;
+  background:rgba(0,0,0,.16);perspective:800px}
+.demo *{position:absolute}
+.demo .cap{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;font-size:13px;
+  color:#fff;background:rgba(0,0,0,.34);opacity:0;animation:capIn .5s 1.9s forwards}
+@keyframes capIn{to{opacity:1}}
+.replay{position:absolute;top:7px;right:8px;z-index:5;font-size:11px;padding:4px 9px;
+  border-radius:99px;border:0;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.85);color:#1a1208}
+
+/* ortak parçalar */
+.d-card{padding:7px 11px;border-radius:10px;font-size:12.5px;font-weight:650;color:#1a1208;
+  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--dc,#fff);
+  box-shadow:0 4px 0 -1px color-mix(in srgb,var(--dc,#fff) 55%,#000);white-space:nowrap}
+.d-slot{width:34px;height:34px;border-radius:9px;border:2px dashed rgba(255,255,255,.45);
+  display:grid;place-items:center;font-size:16px}
+.d-bucket{width:52px;height:44px;border-radius:11px;display:grid;place-items:center;
+  font-size:15px;font-weight:800;color:#1a1208;
+  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--dc,#fff)}
+.d-hand{font-size:22px;z-index:4;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4));opacity:0}
+.d-line{height:3px;border-radius:9px;background:var(--c3);transform-origin:left center;
+  transform:scaleX(0)}
+.d-lbl{font-size:10.5px;font-weight:800;color:#1a1208;background:var(--c3);
+  padding:2px 7px;border-radius:99px;opacity:0}
+
+/* 1 · AYIR */
+@keyframes dFall{0%{top:-40px;opacity:0}18%{top:26px;opacity:1}
+  58%{top:26px;left:50%;transform:translateX(-50%) scale(1)}
+  78%,100%{top:110px;left:29%;transform:translateX(-50%) scale(.82)}}
+@keyframes dPop{0%,62%{transform:scale(1)}72%{transform:scale(1.22)}
+  82%,100%{transform:scale(1.06);background:var(--c5)}}
+@keyframes dTap{0%,55%{opacity:0;transform:translateY(12px)}
+  66%{opacity:1;transform:translateY(0)}76%{opacity:1;transform:translateY(-5px)}
+  90%,100%{opacity:0}}
+
+/* 2 · SIRA */
+@keyframes dFly{0%{opacity:0;transform:translate(0,54px) scale(.8)}
+  22%{opacity:1}55%,100%{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes dLand{0%,44%{opacity:.25;border-style:dashed}
+  56%,100%{opacity:1;border-style:solid;border-color:transparent;background:var(--c5)}}
+
+/* 3 · YARGI */
+@keyframes dCrack{0%,55%{transform:rotate(0);filter:none}
+  70%{transform:rotate(-2deg)}85%,100%{transform:rotate(1.5deg);filter:saturate(.4)}}
+@keyframes dMark{0%,40%{opacity:0;transform:scale(.5)}
+  55%,100%{opacity:1;transform:scale(1)}}
+
+/* 4 · ÖBEK */
+@keyframes dSplit{0%,30%{letter-spacing:.06em;word-spacing:0}
+  62%,100%{letter-spacing:.06em;word-spacing:22px}}
+
+/* 5 · BAĞ */
+@keyframes dDraw{0%,30%{transform:scaleX(0)}62%,100%{transform:scaleX(1)}}
+@keyframes dIn{0%{opacity:0;transform:translateX(52px) scale(.7)}
+  34%,100%{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes dLblIn{0%,60%{opacity:0;transform:translateY(7px)}
+  75%,100%{opacity:1;transform:translateY(0)}}
+
+/* 6 · KANIT */
+@keyframes dReject{0%,58%{opacity:1;transform:translateX(0)}
+  68%{transform:translateX(-7px)}76%{transform:translateX(7px)}
+  88%,100%{opacity:.3;filter:grayscale(1);transform:translateX(0)}}
+
+/* 7 · HARF */
+@keyframes dLetter{0%{opacity:0;transform:translate(var(--fx),44px) scale(.6)}
+  40%,100%{opacity:1;transform:translate(0,0) scale(1)}}
+
+/* ══════ telefon ══════ */
+@media (max-width:520px){
+  body{font-size:16px}
+  .wrap{padding:2px 10px 26px}
+  h1{font-size:17px} .sub{font-size:11.5px;margin-bottom:11px}
+  .paths{gap:6px}
+  .path{min-width:0;flex:1 1 0;padding:9px 8px;border-radius:13px}
+  .path b{font-size:12.5px} .path span{font-size:9.5px;line-height:1.25;display:block}
+  .lv{font-size:11px;padding:7px 11px}
+  .bar{padding:8px 11px;gap:6px;font-size:11px}
+  .bar b{font-size:12.5px}
+  .steps{width:100%;margin-left:0;margin-top:3px}
+  .step{font-size:8.5px;padding:2px 5px}
+  .story{font-size:12px;padding:8px 11px}
+  .screen{padding:15px 13px;min-height:0}
+  .big{font-size:19px} .mid{font-size:15px}
+  .card{padding:13px;font-size:15px;border-radius:13px}
+  /* dokunma hedefleri büyüsün */
+  .tile{padding:15px 14px;font-size:15.5px;border-radius:13px;min-height:54px}
+  .opts.row .tile{flex:1 1 100%}
+  .bucket{min-width:0;flex:1 1 30%;padding:13px 5px;min-height:62px}
+  .bucket b{font-size:16px} .bucket span{font-size:9px}
+  .slot{width:44px;height:44px;font-size:19px}
+  .obj{width:88px;height:88px;margin:2px auto 10px}
+  .obj u{font-size:35px;border-radius:18px}
+  .obj u:nth-child(1){transform:translateZ(27px)}
+  .obj u:nth-child(2){transform:rotateY(90deg) translateZ(27px)}
+  .obj u:nth-child(3){transform:rotateY(180deg) translateZ(27px)}
+  .obj u:nth-child(4){transform:rotateY(270deg) translateZ(27px)}
+  button.go{padding:14px 20px;font-size:15px;min-height:52px}
+  .foot{gap:8px} .tick{font-size:10.5px}
+  .fix{font-size:13.5px;padding:13px}
+  .note{font-size:11px}
+  .amb i{opacity:.14}
+}
+/* çentik ve alt çubuk */
+@supports(padding:env(safe-area-inset-bottom)){
+  .wrap{padding-bottom:calc(26px + env(safe-area-inset-bottom))}
+}
 </style>
 </head>
 <body>
@@ -374,18 +482,114 @@ function hook(L,S){
   setTimeout(()=>{ if(step===0) go(1); }, tempo(3600));
 }
 
+/* ══════ mikro anlatım: her mekanik için 3–4 sn gösterim ══════ */
+function scene(L){
+  const c=i=>pick(i), cap=t=>`<div class="cap">${t}</div>`;
+  const hand=(l,t)=>`<span class="d-hand" style="left:${l};top:${t};
+      animation:dTap 3.4s .1s both">👆</span>`;
+
+  if(L.kind==="triage"){
+    const ks=["P","C","R"];
+    return `
+      <div class="d-card" style="--dc:${c(0)};left:50%;top:-40px;transform:translateX(-50%);
+        animation:dFall 3.4s .2s forwards">Önce suyu kaynat…</div>
+      ${ks.map((k,i)=>`<div class="d-bucket" style="--dc:${c(i)};left:${14+i*30}%;top:112px;
+        ${i===0?'animation:dPop 3.4s .2s forwards':''}">${k}</div>`).join('')}
+      ${hand('18%','104px')}
+      ${cap("Türünü seç — kutu açılır.")}`;
+  }
+  if(L.kind==="order"){
+    const st=L.steps.slice(0,4);
+    return `
+      ${st.map((s,i)=>`<div class="d-slot" style="left:${12+i*21}%;top:52px;
+        animation:dLand 3.4s ${.25+i*.42}s both"></div>`).join('')}
+      ${st.map((s,i)=>`<span style="left:${12+i*21}%;top:52px;width:34px;height:34px;
+        display:grid;place-items:center;font-size:17px;
+        animation:dFly 3.4s ${.25+i*.42}s both">${s.e}</span>`).join('')}
+      ${hand('14%','104px')}
+      ${cap("Bir kez izle — sonra sırayı sen kur.")}`;
+  }
+  if(L.kind==="judge"){
+    return `
+      <div class="d-card" style="--dc:${c(1)};left:9%;top:22px;white-space:normal;max-width:82%;
+        animation:dCrack 3.4s .2s forwards">Akım, borudaki su gibidir</div>
+      <div class="d-card" style="--dc:${c(4)};left:9%;top:84px;font-size:11.5px">
+        Dar boru direnir ✓</div>
+      <span style="left:64%;top:84px;font-size:19px;animation:dMark 3.4s .3s both">✅</span>
+      <div class="d-card" style="--dc:${c(0)};left:9%;top:126px;font-size:11.5px">
+        Akım dökülür ✗</div>
+      <span style="left:64%;top:126px;font-size:19px;animation:dMark 3.4s 1.5s both">⚡️</span>
+      ${cap("Nerede tutuyor, nerede kırılıyor?")}`;
+  }
+  if(L.kind==="chunk"){
+    return `
+      <div style="left:0;right:0;top:58px;text-align:center;font-size:27px;font-weight:800;
+        color:#fff;animation:dSplit 3.4s .3s forwards">427 905 318</div>
+      ${[0,1,2].map(i=>`<span style="left:${20+i*22}%;top:104px;font-size:11px;font-weight:800;
+        color:#1a1208;background:${c(i)};padding:2px 8px;border-radius:99px;
+        animation:dMark 3.4s ${1.2+i*.28}s both">tek parça</span>`).join('')}
+      ${cap("Dokuz hane değil — üç grup.")}`;
+  }
+  if(L.kind==="relate"){
+    return `
+      <span style="left:12%;top:62px;font-size:33px">${L.centerIcon}</span>
+      <div class="d-line" style="left:27%;top:80px;width:40%;animation:dDraw 3.4s .3s both"></div>
+      <span class="d-lbl" style="left:37%;top:88px;animation:dLblIn 3.4s .3s both">artırır</span>
+      <div class="d-card" style="--dc:${c(2)};left:70%;top:64px;
+        animation:dIn 3.4s .3s both">🔁 Pratik</div>
+      ${cap("Bağla — ve bağın adını koy.")}`;
+  }
+  if(L.kind==="evidence"){
+    return `
+      <div class="d-card" style="--dc:${c(4)};left:9%;top:20px;white-space:normal;max-width:80%;
+        font-size:11.5px">📊 %40 daha fazla hatırladı</div>
+      <div class="d-line" style="left:22%;top:62px;width:30%;transform:rotate(26deg);
+        animation:dDraw 3.4s .4s both"></div>
+      <div class="d-card" style="--dc:${c(2)};left:9%;top:104px;font-size:11.5px">
+        Kalıcılığı artırır ✓</div>
+      <div class="d-card" style="--dc:${c(0)};left:9%;top:146px;font-size:11.5px;
+        animation:dReject 3.4s .3s forwards">Anlamayı da artırır</div>
+      ${cap("Kanıt neyi destekliyor — neyi desteklemiyor?")}`;
+  }
+  if(L.kind==="recallword"){
+    const w="SATÜRN";
+    return `
+      ${[...w].map((ch,i)=>`<div class="d-slot" style="left:${11+i*13}%;top:66px;
+        animation:dLand 3.4s ${.2+i*.32}s both"></div>`).join('')}
+      ${[...w].map((ch,i)=>`<span style="left:${11+i*13}%;top:66px;width:34px;height:34px;
+        display:grid;place-items:center;font-weight:800;color:#1a1208;
+        --fx:${(i%2?1:-1)*(30+i*9)}px;animation:dLetter 3.4s ${.2+i*.32}s both">${ch}</span>`).join('')}
+      ${cap("Şık yok — kendin çıkaracaksın.")}`;
+  }
+  return cap(L.tut);
+}
+
 function tut(L,S){
-  S.innerHTML=`<p class="lead">Mikro anlatım · tek cümle</p>
-    <p class="big">${L.tut}</p>
-    <div class="card">${L.goal?('🎯 '+L.goal):'Gösterim burada oynar — 3–5 sn, metin değil hareket.'}</div>
+  const draw=()=>`<div class="demo" id="dm">
+      <button class="replay" id="rp">↻ tekrar</button>${scene(L)}</div>`;
+  S.innerHTML=`<p class="lead">Mikro anlatım · 3–4 sn · gösterim</p>
+    ${draw()}
     <div class="foot"><button class="go" id="n">Anladım</button>
       <button class="go ghost" id="d">Nasıl çalışır? ▾</button>
       <span class="tick">uzun metin burada gizli</span></div>`;
+  bindReplay(L,S);
   $('n').onclick=()=>{ idx=0; combo=0; go(2); };
   $('d').onclick=()=>{ $('d').insertAdjacentHTML('afterend',
     `<div class="fix" style="flex-basis:100%"><b>Arkasındaki araştırma</b>
      Projede bu alan hakemli atıflar taşır. PACER düzeni belirler, güvenilirliği literatür taşır.</div>`);
     $('d').disabled=true; };
+}
+
+function bindReplay(L,S){
+  const b=$('rp'); if(!b) return;
+  b.onclick=()=>{
+    const old=$('dm');
+    const fresh=document.createElement('div');
+    fresh.className='demo'; fresh.id='dm';
+    fresh.innerHTML=`<button class="replay" id="rp">↻ tekrar</button>${scene(L)}`;
+    old.replaceWith(fresh);
+    bindReplay(L,S);
+  };
 }
 
 function play(L,S){
