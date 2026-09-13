@@ -2,34 +2,34 @@
 //  V2Worlds.swift
 //  MemDoping
 //
-//  The V2 "worlds" model (from docs/v2/V2_Demo.html): three age worlds, each
-//  with three PACER-typed scenes, wrapped in the six-phase flow with a story
-//  arc. This is a separate V2 entry — it does NOT touch the 100-level ladder.
-//  Scenes reuse the existing 12 mechanics where one fits; the new PACER-only
-//  ones (triage / evidence) are marked and land later.
+//  The V2 "worlds" model: three age worlds, each with three scenes, wrapped in
+//  the six-phase flow with a story arc. A separate V2 entry — it does NOT touch
+//  the 100-level ladder.
+//
+//  Every scene plays one of the app's existing mechanics. Each of those has real
+//  research behind it (see GameLevel.techniqueScience), so the worlds are a
+//  presentation layer, not a new claim.
 //
 
 import SwiftUI
 
-/// The six-phase mission flow the V2 spec targets.
+/// The six-phase mission flow the V2 spec targets (§4).
 enum V2Phase: String, CaseIterable {
     case hook = "Kanca", tutorial = "Anlatım", play = "Oyun"
     case challenge = "Tempo", recall = "Geri Çağır", reward = "Ödül"
 }
 
-/// One PACER type (for the router / caption).
-enum PacerType: String { case P, A, C, E, R, triage }
-
 struct V2Scene: Identifiable {
     let id = UUID()
-    let title: String
-    let tech: String
-    let pacer: PacerType
-    /// The existing mechanic that plays this scene, if any (nil = PACER-only,
-    /// not yet built as a playable mechanic).
-    let mechanic: LevelMechanic?
-    let hook: String
-    let obj: String   // emoji object
+    let title: LocalizedStringKey
+    /// The technique's own name — shown to the player.
+    let tech: LocalizedStringKey
+    /// The mechanic that plays this scene.
+    let mechanic: LevelMechanic
+    /// Which ladder level supplies the content and difficulty for this scene.
+    let sourceLevel: Int
+    let hook: LocalizedStringKey
+    let obj: String   // emoji object shown in the hook
 }
 
 struct V2World: Identifiable {
@@ -38,55 +38,58 @@ struct V2World: Identifiable {
     let hint: LocalizedStringKey
     let band: GameStore.AgeBand
     let sky: [Color]
-    let arc: [String]       // one story line per scene
+    /// One story line per scene.
+    let arc: [LocalizedStringKey]
     let scenes: [V2Scene]
 }
 
 enum V2Content {
-    private static func rgb(_ r: Double, _ g: Double, _ b: Double) -> Color { Color(red: r, green: g, blue: b) }
+    private static func rgb(_ r: Double, _ g: Double, _ b: Double) -> Color {
+        Color(red: r, green: g, blue: b)
+    }
 
     static let worlds: [V2World] = [
         V2World(
-            id: "child", label: "Child", hint: "Orman Okulu · yavaş · büyük", band: .child,
-            sky: [rgb(0.17, 0.71, 0.66), rgb(0.22, 0.77, 0.44), rgb(1.0, 0.77, 0.24)],
-            arc: ["🦊 Tilki Efe kış hazırlığını unutmuş. Yardım eder misin?",
-                  "🌰 Tohumları bulduk. Şimdi doğru sırayla ekmeliyiz.",
-                  "🏠 Ambarı doldurduk. Nereye ne koyduğunu hatırlıyor musun?"],
+            id: "child", label: "Child", hint: "Forest School · slow · big", band: .child,
+            sky: [rgb(0.99, 0.47, 0.54), rgb(1.0, 0.71, 0.36), rgb(1.0, 0.85, 0.54)],
+            arc: ["Fox Efe filled the barn but forgot what went where.",
+                  "Let's build a picture to remember — the odder the better.",
+                  "Looking isn't enough. You have to decide something."],
             scenes: [
-                V2Scene(title: "Ayır", tech: "PACER — sınıflandırma", pacer: .triage, mechanic: nil,
-                        hook: "Efe'nin notları karışmış!", obj: "📦"),
-                V2Scene(title: "Adım Adım", tech: "PACER P — Uygula", pacer: .P, mechanic: .procedure,
-                        hook: "Tohumu ekebilir misin?", obj: "🌱"),
-                V2Scene(title: "Ambar", tech: "Method of Loci", pacer: .R, mechanic: .loci,
-                        hook: "Ambarı gez, nereye ne koyduğunu hatırla.", obj: "🏠")
+                V2Scene(title: "The Barn", tech: "Method of Loci", mechanic: .loci,
+                        sourceLevel: 9, hook: "Walk the barn, remember what went where.", obj: "🏠"),
+                V2Scene(title: "Make a Scene", tech: "Association & Imagery", mechanic: .scene,
+                        sourceLevel: 3, hook: "The odd one sticks.", obj: "🎨"),
+                V2Scene(title: "Look Closer", tech: "Attention & Encoding", mechanic: .pairRecall,
+                        sourceLevel: 1, hook: "Just looking isn't enough.", obj: "👀")
             ]),
         V2World(
-            id: "teen", label: "Teen", hint: "Sinyal · hızlı · combo", band: .teen,
-            sky: [rgb(0.17, 0.11, 0.35), rgb(0.43, 0.16, 0.85), rgb(0.05, 0.65, 0.91)],
-            arc: ["📡 Kesik kesik sinyaller geliyor. Türlerine ayır, yoksa kaybolur.",
-                  "⚡️ Gelen mesaj bir benzetme. Nerede yalan söylüyor?",
-                  "🔐 Son blok dokuz haneli. Grupla, yoksa tutamazsın."],
+            id: "teen", label: "Teen", hint: "Signal · fast · combo", band: .teen,
+            sky: [rgb(0.00, 0.06, 0.29), rgb(0.01, 0.13, 0.48), rgb(0.02, 0.32, 0.76)],
+            arc: ["A nine-digit code is coming. Group it or lose it.",
+                  "Decoded — but there's no list. You produce it yourself.",
+                  "Two channels are mixed. Which is which?"],
             scenes: [
-                V2Scene(title: "Ayır — hızlı tur", tech: "PACER — sınıflandırma", pacer: .triage, mechanic: nil,
-                        hook: "5 kanal. Süre işliyor. Seri yap.", obj: "📡"),
-                V2Scene(title: "Nerede Kırılıyor", tech: "PACER A — Sorgula", pacer: .A, mechanic: .analogy,
-                        hook: "Gelen mesaj: “Akım, borudaki su gibidir.”", obj: "⚡️"),
-                V2Scene(title: "Grupla", tech: "Chunking", pacer: .R, mechanic: .chunking,
-                        hook: "Son blok: 9 hane, 15 saniye.", obj: "🔐")
+                V2Scene(title: "Group It", tech: "Chunking", mechanic: .chunking,
+                        sourceLevel: 2, hook: "Nine digits. Fifteen seconds.", obj: "🔐"),
+                V2Scene(title: "Say It Yourself", tech: "Retrieval Practice", mechanic: .retrieval,
+                        sourceLevel: 5, hook: "No options. You produce it.", obj: "🔓"),
+                V2Scene(title: "Mix It Up", tech: "Interleaving", mechanic: .interleaving,
+                        sourceLevel: 7, hook: "Two channels are mixed.", obj: "🌀")
             ]),
         V2World(
-            id: "adult", label: "Adult", hint: "Arşiv · sade · stratejik", band: .adult,
-            sky: [rgb(0.07, 0.16, 0.18), rgb(0.12, 0.31, 0.29), rgb(0.71, 0.51, 0.24)],
-            arc: ["📚 Arşiv dağılmış. Önce neyin neyle bağlı olduğunu çıkaralım.",
-                  "📊 Bir bulgu var. Tam olarak neyi kanıtlıyor, neyi kanıtlamıyor?",
-                  "🪐 Katalog kaydı silinmiş. Kalanından adı sen çıkaracaksın."],
+            id: "adult", label: "Adult", hint: "Archive · restrained · strategic", band: .adult,
+            sky: [rgb(0.00, 0.06, 0.29), rgb(0.04, 0.16, 0.31), rgb(0.42, 0.36, 0.24)],
+            arc: ["Every record in the archive hides a 'why'.",
+                  "Let's chain the scattered records into one line.",
+                  "Yesterday's records are due. Did they survive?"],
             scenes: [
-                V2Scene(title: "Bağlantı Haritası", tech: "PACER C — Haritala", pacer: .C, mechanic: .conceptMap,
-                        hook: "Hatırlamak neye bağlı?", obj: "🧠"),
-                V2Scene(title: "Neyi Kanıtlıyor", tech: "PACER E — Sakla + Bağla", pacer: .E, mechanic: nil,
-                        hook: "Bir bulgu var. Sınırı nerede?", obj: "📊"),
-                V2Scene(title: "Kayıp Kayıt", tech: "Retrieval Practice", pacer: .R, mechanic: .retrieval,
-                        hook: "Katalog adı silinmiş. Şıksız.", obj: "🪐")
+                V2Scene(title: "Why Is That?", tech: "Elaboration", mechanic: .elaboration,
+                        sourceLevel: 10, hook: "Every record hides a 'why'.", obj: "📚"),
+                V2Scene(title: "The Chain", tech: "Story Linking", mechanic: .story,
+                        sourceLevel: 11, hook: "Chain the records into one line.", obj: "🔗"),
+                V2Scene(title: "Secret Code", tech: "Number Shapes", mechanic: .numberShape,
+                        sourceLevel: 12, hook: "Every digit has a shape.", obj: "🔢")
             ])
     ]
 }

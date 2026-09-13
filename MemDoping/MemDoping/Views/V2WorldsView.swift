@@ -2,11 +2,10 @@
 //  V2WorldsView.swift
 //  MemDoping
 //
-//  The V2 entry: three age worlds, each with three PACER scenes, shown with the
-//  story arc, the six-phase flow and the animated micro-tutorial. Scenes that map
-//  to an existing mechanic launch it (reusing the 12 mechanics); PACER-only ones
-//  (triage / evidence) are marked "coming soon". Separate from the 100-level
-//  ladder — nothing there is touched.
+//  The V2 entry: three age worlds, each with three scenes, shown with the story
+//  arc, the six-phase flow and the animated micro-tutorial. Every scene plays one
+//  of the app's existing mechanics, taking its content from the ladder level named
+//  in `sourceLevel`. Separate from the 100-level ladder — nothing there is touched.
 //
 
 import SwiftUI
@@ -81,14 +80,7 @@ struct V2WorldsView: View {
                 Text(scene.tech).font(.caption).foregroundStyle(Brand.accentText)
             }
             Spacer()
-            if scene.mechanic == nil {
-                Text("Soon").font(.caption2.weight(.bold))
-                    .padding(.horizontal, 8).padding(.vertical, 4)
-                    .background(Brand.text.opacity(0.1), in: Capsule())
-                    .foregroundStyle(Brand.text.opacity(0.6))
-            } else {
-                Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.4))
-            }
+            Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.4))
         }
         .padding(14)
         .background(Color.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -118,7 +110,8 @@ struct V2WorldsView: View {
                 phaseBar
 
                 // Animated micro-tutorial (reuses per-mechanic animation).
-                MechanicDemo(mechanic: scene.mechanic ?? .pairRecall, tint: Brand.accent, caption: scene.tech)
+                MechanicDemo(mechanic: scene.mechanic, tint: Brand.accent,
+                             caption: SampleLevels.level(at: scene.sourceLevel)?.tip ?? "")
 
                 // Hook line.
                 Label {
@@ -129,17 +122,13 @@ struct V2WorldsView: View {
 
                 Spacer(minLength: 8)
 
-                if let m = scene.mechanic {
-                    PrimaryButton(title: "Play", systemImage: "play.fill") {
-                        if let level = SampleLevels.all.first(where: { $0.mechanic == m }) {
-                            store.setAgeBand(w.band)
-                            activeLevel = store.adapted(level)
-                        }
+                PrimaryButton(title: "Play", systemImage: "play.fill") {
+                    // Each scene names the ladder level that supplies its content,
+                    // so the world stays a presentation layer over existing levels.
+                    if let level = SampleLevels.level(at: scene.sourceLevel) {
+                        store.setAgeBand(w.band)
+                        activeLevel = store.adapted(level)
                     }
-                } else {
-                    Text("This PACER scene (\(scene.pacer.rawValue.uppercased())) is coming soon.")
-                        .font(.footnote).foregroundStyle(Brand.text.opacity(0.6))
-                        .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             .padding()
@@ -179,9 +168,6 @@ struct V2WorldsView: View {
             case .elaboration:  ElaborationMissionView(level: l)
             case .story:        StoryMissionView(level: l)
             case .numberShape:  NumberShapeMissionView(level: l)
-            case .procedure:    ProcedureMissionView(level: l)
-            case .analogy:      AnalogyMissionView(level: l)
-            case .conceptMap:   ConceptMapMissionView(level: l)
             }
         }
         .doorReveal()

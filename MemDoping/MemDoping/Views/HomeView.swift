@@ -64,9 +64,6 @@ struct HomeView: View {
                     case .elaboration: ElaborationMissionView(level: l)
                     case .story:      StoryMissionView(level: l)
                     case .numberShape: NumberShapeMissionView(level: l)
-                    case .procedure:  ProcedureMissionView(level: l)
-                    case .analogy:    AnalogyMissionView(level: l)
-                    case .conceptMap: ConceptMapMissionView(level: l)
                     }
                 }
                 .doorReveal()   // "doors opening" reveal on entering a level
@@ -407,7 +404,7 @@ struct HomeView: View {
                                 .background(Brand.accent.opacity(0.3), in: Capsule())
                                 .foregroundStyle(Brand.accentText)
                         }
-                        Text("Three worlds · PACER scenes · story-led")
+                        Text("Three worlds · nine scenes · story-led")
                             .font(.subheadline).foregroundStyle(Brand.text.opacity(0.75))
                     }
                     Spacer()

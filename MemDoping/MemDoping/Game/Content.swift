@@ -69,122 +69,6 @@ enum LevelMechanic: String, Hashable {
     /// Turn each digit into a shape image, memorize a number as shapes, then
     /// type it back (T11 Number-Shape System). Evidence is weak — sample only.
     case numberShape
-    /// PACER **P** — Procedural. Study a procedure once, then carry it out from
-    /// memory in the right order while refusing the steps that don't belong.
-    /// A wrong move is corrected on the spot, because feedback is what fixes
-    /// procedural knowledge (PACER guide p.3).
-    case procedure
-    /// PACER **A** — Analogous. Judge an analogy: which parts genuinely map,
-    /// and where does it break? The guide is explicit that an analogy is not
-    /// the thing itself, so the required operation is critique, not recall
-    /// (PACER guide p.4).
-    case analogy
-    /// PACER **C** — Conceptual. Build a labelled map: connect each idea to the
-    /// centre *and name the relation* (causes, increases, requires…), then
-    /// recall the relations. Mapping, not a single "why" (PACER guide p.5).
-    case conceptMap
-}
-
-// MARK: - PACER P — Procedural  (guide p.3, p.11)
-
-/// One move in a procedure. `why` is the corrective shown when the player puts
-/// it in the wrong place — the guide treats feedback as the thing that repairs
-/// procedural knowledge, so every step has to be able to explain its position.
-struct ProcedureStep: Identifiable, Hashable {
-    let id = UUID()
-    let icon: String
-    let text: String
-    /// Why this step belongs where it does. Shown on a misstep, not up front.
-    let why: String
-}
-
-/// A procedure the player performs from memory. `traps` are plausible-looking
-/// moves that are NOT part of it: knowing what doesn't belong is part of knowing
-/// the procedure.
-struct Procedure: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let goal: String
-    let steps: [ProcedureStep]     // in the one correct order
-    let traps: [ProcedureStep]     // plausible, but not part of this procedure
-}
-
-// MARK: - PACER A — Analogous  (guide p.4, p.11)
-
-/// One claim about an analogy. `holds == false` marks a point where the
-/// comparison stops being true — the guide's "analojinin kırıldığı nokta".
-struct AnalogyAspect: Identifiable, Hashable {
-    let id = UUID()
-    let text: String
-    let holds: Bool
-}
-
-/// An analogy to be critiqued rather than memorised.
-struct Analogy: Identifiable, Hashable {
-    let id: String
-    let symbol: String
-    /// The full comparison as the player meets it.
-    let claim: String
-    /// Short label for the thing being explained, used in recall prompts.
-    let target: String
-    let aspects: [AnalogyAspect]
-    /// What the analogy still fails to capture — the guide's "could a better
-    /// one be built?" beat, shown after the critique.
-    let blindSpot: String
-
-    var breakingPoints: [AnalogyAspect] { aspects.filter { !$0.holds } }
-    var holdingPoints: [AnalogyAspect] { aspects.filter(\.holds) }
-}
-
-// MARK: - PACER C — Conceptual  (guide p.5, p.11)
-
-/// The label on a connection. The guide insists the relation itself is written
-/// on the link ("neden olur, artırır, azaltır, gerektirir, örneğidir"), because
-/// an unlabelled line carries almost no meaning.
-enum RelationKind: String, Hashable, CaseIterable {
-    case causes, increases, decreases, requires, exampleOf
-
-    /// Reads as "<from> — <label> — <to>".
-    var label: String {
-        switch self {
-        case .causes:    return "causes"
-        case .increases: return "increases"
-        case .decreases: return "decreases"
-        case .requires:  return "requires"
-        case .exampleOf: return "is an example of"
-        }
-    }
-
-    var icon: String {
-        switch self {
-        case .causes:    return "arrow.right.circle.fill"
-        case .increases: return "arrow.up.circle.fill"
-        case .decreases: return "arrow.down.circle.fill"
-        case .requires:  return "lock.circle.fill"
-        case .exampleOf: return "circle.hexagongrid.circle.fill"
-        }
-    }
-}
-
-/// One idea placed around the centre of a map.
-struct ConceptNode: Identifiable, Hashable {
-    let id = UUID()
-    let icon: String
-    let name: String
-    /// How this node relates to the map's centre.
-    let relation: RelationKind
-    /// Plain-language note shown after the link is made, so a wrong guess still
-    /// teaches the relation instead of only marking it wrong.
-    let note: String
-}
-
-/// A small concept map: one centre, several labelled spokes.
-struct ConceptMapDeck: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let centerIcon: String
-    let center: String
-    let nodes: [ConceptNode]
 }
 
 /// A fact plus the reason behind it, for elaborative interrogation (T07).
@@ -284,12 +168,6 @@ struct GameLevel: Identifiable, Hashable {
     var interleavedThemes: [MemoryTheme]? = nil
     /// The fact set an Elaboration level uses. nil for other mechanics.
     var whyDeck: WhyDeck? = nil
-    /// The procedure a PACER-P level asks the player to carry out. nil elsewhere.
-    var procedure: Procedure? = nil
-    /// The analogies a PACER-A level critiques. nil elsewhere.
-    var analogies: [Analogy]? = nil
-    /// The map a PACER-C level builds. nil elsewhere.
-    var conceptMap: ConceptMapDeck? = nil
 
     var id: Int { index }
 
@@ -315,9 +193,6 @@ struct GameLevel: Identifiable, Hashable {
         case .numberShape: return 0.82 // reproduce a digit sequence via shapes
         case .loci:      return 0.90   // serial reconstruction along a route
         case .retrieval: return 0.95   // free recall — produce every letter
-        case .analogy:   return 0.80   // judge what holds and what breaks
-        case .conceptMap: return 0.86  // recall a labelled relation, not a fact
-        case .procedure: return 0.92   // perform the whole order unaided
         }
     }
 
@@ -346,12 +221,6 @@ struct GameLevel: Identifiable, Hashable {
             key = "Place each item along a route you know, then walk it back in your mind. This borrows your powerful spatial memory — a learnable skill, not a talent."
         case .numberShape:
             key = "Every digit has a shape — 1 a candle, 2 a swan. Turning numbers into pictures gives memory something concrete to hold."
-        case .procedure:
-            key = "Watch it once, then do it yourself. A procedure isn't learned by reading the steps — it's learned by running them and fixing what goes wrong."
-        case .analogy:
-            key = "A comparison is a shortcut, not the thing itself. Find where it fits, then find exactly where it stops fitting — that edge is the useful part."
-        case .conceptMap:
-            key = "Don't collect facts — connect them, and say what the connection is. Naming the link is what turns a pile of ideas into something you can think with."
         }
         return key.localizedContent
     }
@@ -381,12 +250,6 @@ struct GameLevel: Identifiable, Hashable {
             key = "The method of loci borrows your spatial memory. Maguire (2003): memory champions aren't smarter — they use this method."
         case .numberShape:
             key = "It combines chunking and imagery. Direct evidence for the number-shape trick itself is thin — treat it as a handy aid, not a rule."
-        case .procedure:
-            key = "PACER treats a procedure as something you practise, not store: you only know it once you can run it without looking, and errors plus feedback are what correct it."
-        case .analogy:
-            key = "PACER pairs analogies with critique, not recall. An analogy that is never tested at its edges quietly becomes a wrong belief."
-        case .conceptMap:
-            key = "PACER handles concepts by mapping: expertise is less about knowing separate facts than seeing how they connect — so the relation gets written on the link."
         }
         return key.localizedContent
     }
@@ -402,8 +265,7 @@ struct GameLevel: Identifiable, Hashable {
             choiceCount: choiceCount == 0 ? 0 : min(5, choiceCount + step / 3),
             memorizeSeconds: memorizeSeconds == 0 ? 0 : max(6, memorizeSeconds - step),
             theme: newTheme ?? theme, mechanic: mechanic, orientingDepth: orientingDepth,
-            route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck,
-            procedure: procedure, analogies: analogies, conceptMap: conceptMap
+            route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck
         )
     }
 
@@ -424,8 +286,7 @@ struct GameLevel: Identifiable, Hashable {
             itemCount: itemCount, questionCount: questionCount,
             choiceCount: choiceCount, memorizeSeconds: memorizeSeconds,
             theme: theme, mechanic: mechanic, orientingDepth: orientingDepth,
-            route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck,
-            procedure: procedure, analogies: analogies, conceptMap: conceptMap
+            route: route, interleavedThemes: interleavedThemes, whyDeck: whyDeck
         )
     }
 }
@@ -733,215 +594,6 @@ enum SampleContent {
             .init(icon: "📺", name: "TV")
         ]
     )
-
-    // MARK: - PACER P — procedures  (SAMPLE CONTENT)
-    // Everyday procedures where the order is genuinely causal, so a misstep can
-    // be explained rather than just marked wrong. Each carries "traps": moves
-    // that look reasonable but belong to a different job.
-
-    static let procedures: [Procedure] = [
-        Procedure(
-            id: "plant-a-seed",
-            title: "Plant a Seed",
-            goal: "Get a seed into soil so it can actually sprout.",
-            steps: [
-                .init(icon: "🪴", text: "Fill the pot with soil",
-                      why: "Nothing can be planted until there's somewhere to plant it."),
-                .init(icon: "🕳️", text: "Make a small hole",
-                      why: "The hole has to exist before the seed can go in — you can't dig around a buried seed."),
-                .init(icon: "🌰", text: "Drop the seed in",
-                      why: "This is the point of the whole job; everything before it is preparation."),
-                .init(icon: "🤲", text: "Cover it with soil",
-                      why: "An uncovered seed dries out. Cover before watering or the water just washes it away."),
-                .init(icon: "💧", text: "Water it",
-                      why: "Water comes after covering, so it soaks the soil instead of moving the seed."),
-                .init(icon: "☀️", text: "Put it somewhere bright",
-                      why: "Light matters once it's planted — moving it earlier changes nothing.")
-            ],
-            traps: [
-                .init(icon: "✂️", text: "Trim the leaves",
-                      why: "There are no leaves yet. This belongs to caring for a grown plant."),
-                .init(icon: "🧂", text: "Add salt to the soil",
-                      why: "Salt harms most plants — this isn't a step in any planting procedure."),
-                .init(icon: "🧊", text: "Freeze the seed first",
-                      why: "A few species need chilling, but it isn't part of ordinary planting.")
-            ]
-        ),
-        Procedure(
-            id: "wash-hands",
-            title: "Wash Your Hands",
-            goal: "Actually remove what's on your hands, not just rinse them.",
-            steps: [
-                .init(icon: "🚰", text: "Wet your hands",
-                      why: "Soap spreads and lathers on wet skin; on dry hands it mostly smears."),
-                .init(icon: "🧼", text: "Apply soap",
-                      why: "Soap is what lifts grease and germs — water alone slides past them."),
-                .init(icon: "🫧", text: "Scrub for 20 seconds",
-                      why: "The scrubbing does the work. This is the step people shorten, and it's the one that matters."),
-                .init(icon: "🚿", text: "Rinse thoroughly",
-                      why: "Rinsing carries away what the soap lifted. Skip it and it stays on your hands."),
-                .init(icon: "🧻", text: "Dry your hands",
-                      why: "Damp hands pick up and pass on far more than dry ones.")
-            ],
-            traps: [
-                .init(icon: "🧴", text: "Use hand sanitiser instead",
-                      why: "That's a different procedure — a substitute for washing, not a step inside it."),
-                .init(icon: "💨", text: "Shake them dry and move on",
-                      why: "It leaves hands damp, which undoes part of the work.")
-            ]
-        ),
-        Procedure(
-            id: "make-tea",
-            title: "Brew a Cup of Tea",
-            goal: "Get the flavour out of the leaves without ruining it.",
-            steps: [
-                .init(icon: "🫖", text: "Boil the water",
-                      why: "Hot water is what pulls flavour out; lukewarm water barely extracts anything."),
-                .init(icon: "🍵", text: "Put tea in the cup",
-                      why: "The tea has to be waiting when the water arrives, so steeping starts at full heat."),
-                .init(icon: "💦", text: "Pour the water over it",
-                      why: "Pouring over the leaves wets all of them at once — this is where brewing begins."),
-                .init(icon: "⏳", text: "Let it steep",
-                      why: "Time is the actual extraction. Rushing here is why weak tea is weak."),
-                .init(icon: "🥄", text: "Remove the tea",
-                      why: "Left too long it turns bitter — taking it out is what stops the process."),
-                .init(icon: "🍯", text: "Add milk or sugar if you like",
-                      why: "Last, once you can taste what you're adjusting.")
-            ],
-            traps: [
-                .init(icon: "🧊", text: "Add ice to cool it faster",
-                      why: "That's iced tea — a different drink, made a different way."),
-                .init(icon: "🔁", text: "Boil the tea in the pot",
-                      why: "Boiling leaves directly makes tea harsh. Steeping and boiling aren't the same operation.")
-            ]
-        )
-    ]
-
-    // MARK: - PACER A — analogies to critique  (SAMPLE CONTENT)
-    // Familiar comparisons that are genuinely useful *and* genuinely leaky. The
-    // first is the PACER guide's own worked example (p.4).
-
-    static let analogies: [Analogy] = [
-        Analogy(
-            id: "current-water",
-            symbol: "⚡️",
-            claim: "Electric current is like water flowing through a pipe.",
-            target: "electric current",
-            aspects: [
-                .init(text: "A narrower pipe resists flow, like a thin wire resists current", holds: true),
-                .init(text: "More pressure pushes more flow, like voltage pushes current", holds: true),
-                .init(text: "Both keep flowing in a loop when the path is closed", holds: true),
-                .init(text: "Water spills out of an open pipe — current does the same from a cut wire", holds: false),
-                .init(text: "You can see and touch the water; the same goes for current", holds: false)
-            ],
-            blindSpot: "The picture has no room for what electricity actually is — charges pushed along by a field — so it can't explain anything magnetic."
-        ),
-        Analogy(
-            id: "brain-computer",
-            symbol: "🧠",
-            claim: "The brain is like a computer.",
-            target: "the brain",
-            aspects: [
-                .init(text: "Both take in information, process it and produce output", holds: true),
-                .init(text: "Both can hold something briefly while working on it", holds: true),
-                .init(text: "The brain stores a memory in one place and reads it back unchanged", holds: false),
-                .init(text: "Its parts can be swapped out one at a time, like components", holds: false),
-                .init(text: "Deleting something removes it cleanly, as deleting a file does", holds: false)
-            ],
-            blindSpot: "Remembering rebuilds the memory each time and changes it a little — the opposite of reading a file, which is the whole point of the comparison."
-        ),
-        Analogy(
-            id: "eye-camera",
-            symbol: "👁️",
-            claim: "The eye is like a camera.",
-            target: "the eye",
-            aspects: [
-                .init(text: "A lens focuses light onto a surface at the back", holds: true),
-                .init(text: "An opening widens and narrows to control how much light enters", holds: true),
-                .init(text: "It captures a whole sharp image at once, like a photo", holds: false),
-                .init(text: "What you see is the picture exactly as it landed", holds: false)
-            ],
-            blindSpot: "Only a tiny patch of what you see is sharp. The steady, detailed scene in your head is assembled by the brain from darting glances."
-        ),
-        Analogy(
-            id: "atom-solar-system",
-            symbol: "⚛️",
-            claim: "An atom is like a tiny solar system.",
-            target: "an atom",
-            aspects: [
-                .init(text: "Something heavy sits at the centre with lighter things around it", holds: true),
-                .init(text: "Most of it is empty space", holds: true),
-                .init(text: "Electrons travel neat orbits, the way planets do", holds: false),
-                .init(text: "You could say where an electron is at a given moment", holds: false)
-            ],
-            blindSpot: "Electrons don't have paths to point at — only regions where they're likely to be. The orbit picture is the part every physics course has to undo later."
-        )
-    ]
-
-    // MARK: - PACER C — concept maps  (SAMPLE CONTENT)
-    // Small maps where the *relation* carries the meaning, so an unlabelled line
-    // would say almost nothing.
-
-    static let conceptMaps: [ConceptMapDeck] = [
-        ConceptMapDeck(
-            id: "memory-map",
-            title: "What Holds a Memory",
-            centerIcon: "🧠",
-            center: "Remembering",
-            nodes: [
-                .init(icon: "😴", name: "Sleep", relation: .requires,
-                      note: "Memories are consolidated during sleep — lose the sleep and you lose part of the day's learning."),
-                .init(icon: "🎯", name: "Attention", relation: .requires,
-                      note: "Nothing can be recalled that was never encoded, and encoding starts with attending."),
-                .init(icon: "🔁", name: "Retrieval practice", relation: .increases,
-                      note: "Pulling something up strengthens it — more than reading it again does."),
-                .init(icon: "😰", name: "Stress", relation: .decreases,
-                      note: "High stress crowds working memory, leaving less room to hold and link things."),
-                .init(icon: "📱", name: "Divided attention", relation: .decreases,
-                      note: "Splitting attention weakens encoding, so there's less to retrieve later."),
-                .init(icon: "🏰", name: "Method of loci", relation: .exampleOf,
-                      note: "It's one specific technique for remembering, not a separate kind of memory.")
-            ]
-        ),
-        ConceptMapDeck(
-            id: "plant-map",
-            title: "What a Plant Needs",
-            centerIcon: "🌱",
-            center: "Plant growth",
-            nodes: [
-                .init(icon: "☀️", name: "Sunlight", relation: .requires,
-                      note: "Photosynthesis is powered by light — without it the plant cannot make food."),
-                .init(icon: "💧", name: "Water", relation: .requires,
-                      note: "Water carries nutrients up the plant and keeps its cells firm."),
-                .init(icon: "🌡️", name: "Warmth", relation: .increases,
-                      note: "Growth speeds up with warmth, up to a point — then heat starts to harm."),
-                .init(icon: "🧂", name: "Salty soil", relation: .decreases,
-                      note: "Salt pulls water out of roots, so the plant struggles even when watered."),
-                .init(icon: "🍂", name: "Shade from taller plants", relation: .decreases,
-                      note: "Less light reaching the leaves means less food made."),
-                .init(icon: "🌻", name: "A sunflower", relation: .exampleOf,
-                      note: "A specific plant, not a condition for growth — examples sit on a different kind of link.")
-            ]
-        ),
-        ConceptMapDeck(
-            id: "forgetting-map",
-            title: "Why Things Slip Away",
-            centerIcon: "🌫️",
-            center: "Forgetting",
-            nodes: [
-                .init(icon: "⏳", name: "Time without review", relation: .causes,
-                      note: "Untouched memories fade — the classic forgetting curve."),
-                .init(icon: "🔀", name: "Similar memories", relation: .causes,
-                      note: "Close-but-different memories interfere with each other and blur."),
-                .init(icon: "📅", name: "Spaced review", relation: .decreases,
-                      note: "Revisiting at widening intervals flattens the curve."),
-                .init(icon: "🔗", name: "Meaningful links", relation: .decreases,
-                      note: "More hooks into what you already know means more ways back to it."),
-                .init(icon: "🫥", name: "Blanking in an exam", relation: .exampleOf,
-                      note: "One instance of forgetting, not a cause of it.")
-            ]
-        )
-    ]
 }
 
 // MARK: - Sample level ladder  (design stages of §3, simple -> complex)
@@ -1061,38 +713,6 @@ enum SampleLevels {
             itemCount: 4, questionCount: 4, choiceCount: 0, memorizeSeconds: 15,
             theme: SampleContent.animals,   // unused by this mechanic
             mechanic: .numberShape
-        ),
-        // PACER P / A / C. Appended after the existing twelve so no level below
-        // is renumbered — a player's saved highestUnlockedLevel keeps its meaning.
-        GameLevel(
-            index: 13,
-            title: "Do It Yourself",
-            technique: "Procedural — Practice",
-            tip: "Watch once, then run it from memory. Getting a step wrong is fine — that's how a procedure gets corrected.",
-            itemCount: 5, questionCount: 5, choiceCount: 0, memorizeSeconds: 16,
-            theme: SampleContent.animals,   // unused by this mechanic
-            mechanic: .procedure,
-            procedure: SampleContent.procedures[0]
-        ),
-        GameLevel(
-            index: 14,
-            title: "Where It Breaks",
-            technique: "Analogous — Critique",
-            tip: "Every comparison fits somewhere and fails somewhere. Find both — the failure is the part worth knowing.",
-            itemCount: 2, questionCount: 3, choiceCount: 3, memorizeSeconds: 0,
-            theme: SampleContent.animals,   // unused by this mechanic
-            mechanic: .analogy,
-            analogies: SampleContent.analogies
-        ),
-        GameLevel(
-            index: 15,
-            title: "Map It",
-            technique: "Conceptual — Mapping",
-            tip: "Connect each idea to the centre and say what the link is. The label is the knowledge — an unnamed line tells you nothing.",
-            itemCount: 5, questionCount: 4, choiceCount: 3, memorizeSeconds: 0,
-            theme: SampleContent.animals,   // unused by this mechanic
-            mechanic: .conceptMap,
-            conceptMap: SampleContent.conceptMaps[0]
         )
     ]
 

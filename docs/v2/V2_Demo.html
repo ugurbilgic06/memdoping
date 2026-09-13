@@ -7,723 +7,625 @@
 <style>
 :root{
   color-scheme: light;
-  --ink:#241C12; --warm:#7E6949; --rule:#DCD2BE; --paper:#FBF8F1;
-  --c1:#FF6B4A; --c2:#22C7C7; --c3:#FFC53D; --c4:#8B5CF6; --c5:#31D07A;
-  --glow:rgba(255,107,74,.34);
-  --sheen:rgba(255,255,255,.55);
+  --cream:#F7F2E8; --blue:#0452C3; --blue-lt:#00AFFD; --blue-dp:#02217B;
+  --navy:#011049; --pink:#FD7789;
+  --ink:#011049; --warm:#6B6250; --rule:#DDD5C4;
+  --c1:var(--pink); --c2:var(--blue-lt); --c3:#FFC53D; --c4:var(--blue); --c5:#31D07A;
+  --glow:rgba(253,119,137,.34); --sheen:rgba(255,255,255,.55);
 }
 *{box-sizing:border-box}
 body{margin:0;background:transparent;color:var(--ink);overflow-x:hidden;
   font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
 .wrap{max-width:960px;margin:0 auto;padding:4px 2px 30px;position:relative;z-index:1}
+.head{display:flex;align-items:center;gap:11px;margin-bottom:12px;flex-wrap:wrap}
+.head img{width:42px;height:auto;filter:drop-shadow(0 2px 4px rgba(1,16,73,.2))}
+h1{font-size:19px;margin:0}
+.sub{color:var(--warm);font-size:12px;margin:1px 0 0}
+.lang{margin-left:auto;display:flex;border:1.5px solid var(--rule);border-radius:99px;overflow:hidden}
+.lang button{border:0;background:transparent;font:inherit;font-size:12px;font-weight:700;
+  padding:6px 13px;cursor:pointer;color:var(--warm)}
+.lang button[aria-pressed="true"]{background:var(--blue);color:#fff}
 
-h1{font-size:20px;margin:0 0 3px}
-.sub{color:var(--warm);font-size:12.5px;margin:0 0 14px}
-
-/* ══════ DEKORATİF KATMAN — 3B sürüklenen cisimler ══════ */
 .amb{position:fixed;inset:0;pointer-events:none;z-index:0;perspective:900px;overflow:hidden}
 .amb i{position:absolute;width:60px;height:60px;transform-style:preserve-3d;
-  animation:drift linear infinite;opacity:.2}
+  animation:drift linear infinite;opacity:.16}
 .amb i::before,.amb i::after{content:"";position:absolute;inset:0;border-radius:14px}
-.amb i::before{background:linear-gradient(145deg,var(--c1),var(--c4));transform:translateZ(16px)}
-.amb i::after{background:linear-gradient(145deg,var(--c2),var(--c3));transform:translateZ(-16px)}
-@keyframes drift{
-  0%{transform:translate3d(0,110vh,0) rotateX(0) rotateY(0)}
+.amb i::before{background:linear-gradient(145deg,var(--pink),var(--blue));transform:translateZ(16px)}
+.amb i::after{background:linear-gradient(145deg,var(--blue-lt),var(--c3));transform:translateZ(-16px)}
+@keyframes drift{0%{transform:translate3d(0,110vh,0) rotateX(0) rotateY(0)}
   100%{transform:translate3d(0,-25vh,0) rotateX(360deg) rotateY(540deg)}}
 
-/* ══════ yaş yolu sekmeleri ══════ */
 .paths{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;perspective:900px}
 .path{flex:1;min-width:180px;border:0;border-radius:15px;padding:11px 13px;cursor:pointer;
   text-align:left;font-family:inherit;color:#fff;transform-style:preserve-3d;
   transition:transform .3s cubic-bezier(.2,.9,.3,1.3),box-shadow .3s}
 .path:hover{transform:translateZ(18px) rotateX(-7deg)}
-.path[aria-selected="true"]{transform:translateZ(26px) rotateX(-4deg);
-  box-shadow:0 16px 34px -10px var(--glow)}
-.path b{display:block;font-size:14.5px;text-shadow:0 1px 2px rgba(0,0,0,.22)}
-.path span{font-size:11px;opacity:.92}
+.path[aria-selected="true"]{transform:translateZ(26px) rotateX(-4deg);box-shadow:0 16px 34px -10px var(--glow)}
+.path b{display:block;font-size:14.5px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.path span{font-size:11px;opacity:.93}
 
-/* ══════ sahne ══════ */
-.stage{border-radius:19px;overflow:hidden;perspective:1250px;
-  transition:background .45s;position:relative}
+.stage{border-radius:19px;overflow:hidden;perspective:1250px;transition:background .45s;position:relative}
 .bar{display:flex;align-items:center;gap:9px;padding:9px 14px;flex-wrap:wrap;
-  font-size:12px;color:#fff;background:rgba(0,0,0,.22);backdrop-filter:blur(6px)}
+  font-size:12px;color:#fff;background:rgba(1,16,73,.28)}
 .chip{padding:2px 10px;border-radius:99px;font-size:10.5px;font-weight:800;
-  letter-spacing:.04em;text-transform:uppercase;color:#1a1208}
+  letter-spacing:.04em;text-transform:uppercase;color:var(--navy)}
 .steps{display:flex;gap:3px;margin-left:auto;flex-wrap:wrap}
-.step{font-size:9.5px;padding:2px 7px;border-radius:99px;opacity:.4;
-  border:1px solid currentColor;white-space:nowrap}
+.step{font-size:9.5px;padding:2px 7px;border-radius:99px;opacity:.4;border:1px solid currentColor;white-space:nowrap}
 .step.on{opacity:1;font-weight:800;background:rgba(255,255,255,.2)}
-.screen{padding:20px;min-height:360px;display:flex;flex-direction:column;
-  transform-style:preserve-3d}
-
-/* anlatı şeridi */
-.story{font-size:12.5px;color:#fff;opacity:.9;background:rgba(0,0,0,.2);
+.screen{padding:20px;min-height:360px;display:flex;flex-direction:column;transform-style:preserve-3d}
+.story{font-size:12.5px;color:#fff;opacity:.92;background:rgba(1,16,73,.22);
   padding:7px 13px;display:flex;gap:8px;align-items:center}
 .story em{font-style:normal;font-size:15px}
-
-.lead{font-size:12.5px;opacity:.75;margin:0 0 4px;color:#fff}
+.lead{font-size:12.5px;opacity:.78;margin:0 0 4px;color:#fff}
 .big{font-size:22px;font-weight:800;margin:0 0 12px;line-height:1.25;color:#fff;
-  text-shadow:0 2px 10px rgba(0,0,0,.3)}
+  text-shadow:0 2px 10px rgba(1,16,73,.35)}
 .mid{font-size:16px;font-weight:650;margin:0 0 10px;color:#fff}
 
-/* ══════ ANLAM TAŞIYAN HAREKET — kartlar ══════ */
+.narr{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.mascot{width:88px;flex:0 0 88px;position:relative;transform-origin:50% 88%}
+.mascot img{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 10px rgba(1,16,73,.34))}
+.mascot.idle{animation:bob 3.2s ease-in-out infinite}
+.mascot.talk{animation:talk .42s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-7px) rotate(1.5deg)}}
+@keyframes talk{0%,100%{transform:translateY(0) scale(1,1) rotate(-2deg)}
+  50%{transform:translateY(-4px) scale(1.04,.96) rotate(2deg)}}
+.bubble{flex:1;position:relative;background:#fff;border-radius:15px;padding:13px 15px;
+  font-size:15px;color:var(--navy);box-shadow:0 10px 24px -14px rgba(1,16,73,.7);min-height:54px}
+.bubble::before{content:"";position:absolute;left:-8px;top:22px;width:16px;height:16px;
+  background:#fff;transform:rotate(45deg)}
+.bubble .ctl{display:flex;gap:7px;margin-top:9px;align-items:center}
+.mini{border:1.5px solid var(--rule);background:#fff;border-radius:99px;font:inherit;
+  font-size:11.5px;padding:4px 11px;cursor:pointer;color:var(--navy)}
+.vol{font-size:11px;color:var(--warm);margin-left:auto}
+
+.demo{position:relative;height:180px;border-radius:16px;overflow:hidden;margin-bottom:11px;
+  background:rgba(1,16,73,.17);perspective:800px}
+.demo *{position:absolute}
+.replay{position:absolute;top:7px;right:8px;z-index:5;font-size:11px;padding:4px 9px;
+  border-radius:99px;border:0;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.88);color:var(--navy)}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:7px 12px;font-size:12.5px;
+  color:#fff;background:rgba(1,16,73,.42)}
+.d-card{padding:7px 11px;border-radius:10px;font-size:12.5px;font-weight:650;color:var(--navy);
+  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--dc,#fff);
+  box-shadow:0 4px 0 -1px color-mix(in srgb,var(--dc,#fff) 55%,#000);white-space:nowrap}
+.d-slot{width:34px;height:34px;border-radius:9px;border:2px dashed rgba(255,255,255,.45);
+  display:grid;place-items:center;font-size:16px}
+.d-hand{font-size:22px;z-index:4;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4));opacity:0}
+.d-line{height:3px;border-radius:9px;background:var(--c3);transform-origin:left center;transform:scaleX(0)}
+@keyframes dFly{0%{opacity:0;transform:translate(0,50px) scale(.8)}22%{opacity:1}
+  55%,100%{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes dLand{0%,44%{opacity:.25;border-style:dashed}
+  56%,100%{opacity:1;border-style:solid;border-color:transparent;background:var(--c5)}}
+@keyframes dTap{0%,55%{opacity:0;transform:translateY(12px)}66%{opacity:1;transform:translateY(0)}
+  76%{opacity:1;transform:translateY(-5px)}90%,100%{opacity:0}}
+@keyframes dMark{0%,40%{opacity:0;transform:scale(.5)}55%,100%{opacity:1;transform:scale(1)}}
+@keyframes dSplit{0%,30%{word-spacing:0}62%,100%{word-spacing:22px}}
+@keyframes dDraw{0%,30%{transform:scaleX(0)}62%,100%{transform:scaleX(1)}}
+@keyframes dIn{0%{opacity:0;transform:translateX(52px) scale(.7)}34%,100%{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes dLetter{0%{opacity:0;transform:translate(var(--fx),40px) scale(.6)}
+  40%,100%{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes dGlow{0%,40%{filter:none;transform:scale(1)}
+  60%{filter:drop-shadow(0 0 12px var(--c3));transform:scale(1.14)}
+  100%{filter:drop-shadow(0 0 6px var(--c3));transform:scale(1.06)}}
+
 .opts{display:flex;flex-direction:column;gap:9px;transform-style:preserve-3d}
 .opts.row{flex-direction:row;flex-wrap:wrap}
 .tile{border:0;border-radius:14px;padding:13px 15px;cursor:pointer;font-size:14.5px;
-  text-align:left;font-family:inherit;color:#1a1208;display:flex;align-items:center;gap:11px;
+  text-align:left;font-family:inherit;color:var(--navy);display:flex;align-items:center;gap:11px;
   transform-style:preserve-3d;position:relative;
   background:linear-gradient(160deg,var(--sheen),transparent 42%),
              linear-gradient(160deg,var(--tc,#fff),color-mix(in srgb,var(--tc,#fff) 70%,#000));
   box-shadow:0 8px 0 -2px color-mix(in srgb,var(--tc,#fff) 55%,#000),
-             0 14px 26px -12px rgba(0,0,0,.5);
-  transition:transform .16s cubic-bezier(.2,.9,.3,1.4),box-shadow .16s}
+             0 14px 26px -12px rgba(1,16,73,.5);
+  transition:transform .16s cubic-bezier(.2,.9,.3,1.4)}
 .tile:hover{transform:translateZ(16px) translateY(-3px) rotateX(-5deg)}
-.tile:active{transform:translateZ(4px) translateY(2px)}
-.tile em{font-style:normal;font-size:21px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+.tile em{font-style:normal;font-size:21px;line-height:1}
 .tile.ok{animation:flipOK .62s cubic-bezier(.3,.9,.3,1.1) forwards}
 .tile.no{animation:shake .34s}
 .tile.dim{opacity:.32;pointer-events:none;filter:grayscale(.7)}
-@keyframes flipOK{
-  0%{transform:rotateY(0) translateZ(0)}
+@keyframes flipOK{0%{transform:rotateY(0) translateZ(0)}
   55%{transform:rotateY(180deg) translateZ(44px) scale(1.07)}
   100%{transform:rotateY(360deg) translateZ(0) scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px) rotateZ(-2deg)}
   60%{transform:translateX(8px) rotateZ(2deg)}}
 
-/* kutular */
-.buckets{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap;perspective:800px}
-.bucket{flex:1;min-width:88px;border:0;border-radius:14px;padding:12px 7px;text-align:center;
-  cursor:pointer;font-family:inherit;color:#1a1208;transform-style:preserve-3d;
-  background:linear-gradient(160deg,var(--sheen),transparent 45%),var(--bc,#fff);
-  box-shadow:0 7px 0 -1px color-mix(in srgb,var(--bc,#fff) 55%,#000),
-             0 14px 22px -12px rgba(0,0,0,.45);
-  transition:transform .17s cubic-bezier(.2,.9,.3,1.4)}
-.bucket:hover{transform:translateZ(20px) translateY(-4px) rotateX(-8deg)}
-.bucket b{display:block;font-size:17px}
-.bucket span{font-size:10px;opacity:.72;display:block;margin-top:1px}
-.bucket.ok{animation:flipOK .62s forwards}
-.bucket.no{animation:shake .34s}
-
-.card{border-radius:15px;padding:15px 16px;font-size:15px;margin-bottom:12px;color:#1a1208;
-  background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.74));
-  box-shadow:0 12px 26px -14px rgba(0,0,0,.6);transform:translateZ(8px)}
-
-/* düzeltici */
+.card{border-radius:15px;padding:15px 16px;font-size:15px;margin-bottom:12px;color:var(--navy);
+  background:linear-gradient(160deg,rgba(255,255,255,.93),rgba(255,255,255,.78));
+  box-shadow:0 12px 26px -14px rgba(1,16,73,.6);transform:translateZ(8px)}
 .fix{border-left:4px solid var(--c3);border-radius:11px;padding:12px 14px;font-size:13px;
-  margin-top:11px;color:#1a1208;background:rgba(255,255,255,.93);
-  box-shadow:0 14px 30px -16px rgba(0,0,0,.7);animation:rise .26s}
+  margin-top:11px;color:var(--navy);background:rgba(255,255,255,.95);
+  box-shadow:0 14px 30px -16px rgba(1,16,73,.7);animation:rise .26s}
 .fix b{display:block;margin-bottom:3px}
-@keyframes rise{from{opacity:0;transform:translateY(9px) translateZ(0)}
-  to{opacity:1;transform:translateY(0) translateZ(20px)}}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0) translateZ(20px)}}
 
-/* yuvalar */
 .slots{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;min-height:50px;perspective:700px}
 .slot{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:21px;
-  background:rgba(255,255,255,.2);border:2px dashed rgba(255,255,255,.42);
-  transform-style:preserve-3d}
+  background:rgba(255,255,255,.2);border:2px dashed rgba(255,255,255,.45);transform-style:preserve-3d}
 .slot.filled{border-style:solid;border-color:transparent;animation:land .42s cubic-bezier(.2,.9,.3,1.4);
   background:linear-gradient(160deg,var(--sheen),transparent 45%),var(--c5);
   box-shadow:0 6px 0 -1px color-mix(in srgb,var(--c5) 55%,#000)}
 @keyframes land{0%{transform:translateZ(70px) translateY(-28px) rotateX(50deg);opacity:0}
   100%{transform:translateZ(0) translateY(0) rotateX(0);opacity:1}}
 
-/* ══════ 3B objeler ══════ */
-.obj{width:110px;height:110px;margin:6px auto 14px;position:relative;
+.obj{width:104px;height:104px;margin:4px auto 12px;position:relative;
   transform-style:preserve-3d;animation:spin 14s linear infinite}
 .obj.fast{animation-duration:6s}
 .obj u{position:absolute;inset:0;border-radius:22px;display:grid;place-items:center;
-  font-size:44px;text-decoration:none;
-  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--of,var(--c2));
+  font-size:42px;text-decoration:none;
+  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--of,var(--blue-lt));
   box-shadow:0 0 34px -6px var(--glow)}
-.obj u:nth-child(1){transform:translateZ(34px)}
-.obj u:nth-child(2){transform:rotateY(90deg) translateZ(34px);opacity:.92}
-.obj u:nth-child(3){transform:rotateY(180deg) translateZ(34px);opacity:.86}
-.obj u:nth-child(4){transform:rotateY(270deg) translateZ(34px);opacity:.92}
-@keyframes spin{from{transform:rotateX(-16deg) rotateY(0)}
-  to{transform:rotateX(-16deg) rotateY(360deg)}}
+.obj u:nth-child(1){transform:translateZ(32px)}
+.obj u:nth-child(2){transform:rotateY(90deg) translateZ(32px);opacity:.92}
+.obj u:nth-child(3){transform:rotateY(180deg) translateZ(32px);opacity:.86}
+.obj u:nth-child(4){transform:rotateY(270deg) translateZ(32px);opacity:.92}
+@keyframes spin{from{transform:rotateX(-16deg) rotateY(0)}to{transform:rotateX(-16deg) rotateY(360deg)}}
 
-/* ödül */
 .reward{margin:auto;text-align:center;transform-style:preserve-3d}
-.combo{font-size:12.5px;font-weight:900;padding:4px 13px;border-radius:99px;color:#1a1208;
-  background:linear-gradient(140deg,var(--c3),var(--c1));display:inline-block;
+.combo{font-size:12.5px;font-weight:900;padding:4px 13px;border-radius:99px;color:var(--navy);
+  background:linear-gradient(140deg,var(--c3),var(--pink));display:inline-block;
   animation:pulse .45s cubic-bezier(.2,.9,.3,1.6)}
-@keyframes pulse{0%{transform:scale(.6) translateZ(0)}
-  60%{transform:scale(1.22) translateZ(34px)}100%{transform:scale(1) translateZ(0)}}
-.meter{height:9px;border-radius:99px;background:rgba(255,255,255,.24);overflow:hidden;
-  margin:15px auto 0;max-width:240px}
+@keyframes pulse{0%{transform:scale(.6)}60%{transform:scale(1.22) translateZ(34px)}100%{transform:scale(1)}}
+.meter{height:9px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;margin:15px auto 0;max-width:240px}
 .meter i{display:block;height:100%;width:0;border-radius:99px;
-  background:linear-gradient(90deg,var(--c5),var(--c2),var(--c3));
+  background:linear-gradient(90deg,var(--c5),var(--blue-lt),var(--c3));
   transition:width 1s cubic-bezier(.2,.8,.3,1)}
-
-/* konfeti — dekoratif */
 .conf{position:absolute;inset:0;pointer-events:none;overflow:hidden;perspective:600px}
 .conf s{position:absolute;width:11px;height:16px;text-decoration:none;border-radius:3px;
   animation:fall 1.5s ease-in forwards;transform-style:preserve-3d}
-@keyframes fall{0%{transform:translateY(-20px) rotateX(0) rotateZ(0);opacity:1}
+@keyframes fall{0%{transform:translateY(-20px) rotateX(0);opacity:1}
   100%{transform:translateY(330px) rotateX(640deg) rotateZ(280deg);opacity:0}}
 
 .foot{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
 button.go{border:0;border-radius:13px;padding:12px 21px;font-size:14.5px;font-weight:800;
-  cursor:pointer;font-family:inherit;color:#1a1208;transform-style:preserve-3d;
-  background:linear-gradient(150deg,var(--sheen),transparent 45%),
-             linear-gradient(150deg,var(--c3),var(--c1));
-  box-shadow:0 8px 0 -2px color-mix(in srgb,var(--c1) 55%,#000),0 16px 28px -14px rgba(0,0,0,.6);
+  cursor:pointer;font-family:inherit;color:#fff;transform-style:preserve-3d;
+  background:linear-gradient(150deg,var(--blue-lt),var(--blue));
+  box-shadow:0 8px 0 -2px var(--blue-dp),0 16px 28px -14px rgba(1,16,73,.6);
   transition:transform .15s cubic-bezier(.2,.9,.3,1.4)}
 button.go:hover{transform:translateZ(14px) translateY(-3px)}
-button.go:active{transform:translateY(3px)}
-button.ghost{background:rgba(255,255,255,.18);color:#fff;box-shadow:none;
-  border:1.5px solid rgba(255,255,255,.42)}
-.tick{font-size:11.5px;color:#fff;opacity:.7;margin-left:auto}
+button.ghost{background:rgba(255,255,255,.2);color:#fff;box-shadow:none;border:1.5px solid rgba(255,255,255,.45)}
+.tick{font-size:11.5px;color:#fff;opacity:.72;margin-left:auto}
 
 .levels{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap}
 .lv{font-size:11.5px;padding:6px 12px;border-radius:99px;border:1.5px solid var(--rule);
-  cursor:pointer;background:var(--paper);font-family:inherit;color:var(--ink);
-  transition:transform .15s}
-.lv:hover{transform:translateY(-2px)}
-.lv[aria-current="true"]{border-color:var(--ink);font-weight:800}
+  cursor:pointer;background:var(--cream);font-family:inherit;color:var(--ink)}
+.lv[aria-current="true"]{border-color:var(--blue);font-weight:800}
 .lv.done::after{content:" ✓";color:#1F9254}
-
 .note{font-size:11.5px;color:var(--warm);margin-top:15px;line-height:1.6;
   border-top:1px solid var(--rule);padding-top:11px}
 .note b{color:var(--ink)}
-@media (prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  .amb{display:none}
-}
-
-/* ══════════ MİKRO ANLATIM SAHNESİ ══════════ */
-.demo{position:relative;height:196px;border-radius:16px;overflow:hidden;margin-bottom:11px;
-  background:rgba(0,0,0,.16);perspective:800px}
-.demo *{position:absolute}
-.demo .cap{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;font-size:13px;
-  color:#fff;background:rgba(0,0,0,.34);opacity:0;animation:capIn .5s 1.9s forwards}
-@keyframes capIn{to{opacity:1}}
-.replay{position:absolute;top:7px;right:8px;z-index:5;font-size:11px;padding:4px 9px;
-  border-radius:99px;border:0;cursor:pointer;font-family:inherit;
-  background:rgba(255,255,255,.85);color:#1a1208}
-
-/* ortak parçalar */
-.d-card{padding:7px 11px;border-radius:10px;font-size:12.5px;font-weight:650;color:#1a1208;
-  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--dc,#fff);
-  box-shadow:0 4px 0 -1px color-mix(in srgb,var(--dc,#fff) 55%,#000);white-space:nowrap}
-.d-slot{width:34px;height:34px;border-radius:9px;border:2px dashed rgba(255,255,255,.45);
-  display:grid;place-items:center;font-size:16px}
-.d-bucket{width:52px;height:44px;border-radius:11px;display:grid;place-items:center;
-  font-size:15px;font-weight:800;color:#1a1208;
-  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--dc,#fff)}
-.d-hand{font-size:22px;z-index:4;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4));opacity:0}
-.d-line{height:3px;border-radius:9px;background:var(--c3);transform-origin:left center;
-  transform:scaleX(0)}
-.d-lbl{font-size:10.5px;font-weight:800;color:#1a1208;background:var(--c3);
-  padding:2px 7px;border-radius:99px;opacity:0}
-
-/* 1 · AYIR */
-@keyframes dFall{0%{top:-40px;opacity:0}18%{top:26px;opacity:1}
-  58%{top:26px;left:50%;transform:translateX(-50%) scale(1)}
-  78%,100%{top:110px;left:29%;transform:translateX(-50%) scale(.82)}}
-@keyframes dPop{0%,62%{transform:scale(1)}72%{transform:scale(1.22)}
-  82%,100%{transform:scale(1.06);background:var(--c5)}}
-@keyframes dTap{0%,55%{opacity:0;transform:translateY(12px)}
-  66%{opacity:1;transform:translateY(0)}76%{opacity:1;transform:translateY(-5px)}
-  90%,100%{opacity:0}}
-
-/* 2 · SIRA */
-@keyframes dFly{0%{opacity:0;transform:translate(0,54px) scale(.8)}
-  22%{opacity:1}55%,100%{opacity:1;transform:translate(0,0) scale(1)}}
-@keyframes dLand{0%,44%{opacity:.25;border-style:dashed}
-  56%,100%{opacity:1;border-style:solid;border-color:transparent;background:var(--c5)}}
-
-/* 3 · YARGI */
-@keyframes dCrack{0%,55%{transform:rotate(0);filter:none}
-  70%{transform:rotate(-2deg)}85%,100%{transform:rotate(1.5deg);filter:saturate(.4)}}
-@keyframes dMark{0%,40%{opacity:0;transform:scale(.5)}
-  55%,100%{opacity:1;transform:scale(1)}}
-
-/* 4 · ÖBEK */
-@keyframes dSplit{0%,30%{letter-spacing:.06em;word-spacing:0}
-  62%,100%{letter-spacing:.06em;word-spacing:22px}}
-
-/* 5 · BAĞ */
-@keyframes dDraw{0%,30%{transform:scaleX(0)}62%,100%{transform:scaleX(1)}}
-@keyframes dIn{0%{opacity:0;transform:translateX(52px) scale(.7)}
-  34%,100%{opacity:1;transform:translateX(0) scale(1)}}
-@keyframes dLblIn{0%,60%{opacity:0;transform:translateY(7px)}
-  75%,100%{opacity:1;transform:translateY(0)}}
-
-/* 6 · KANIT */
-@keyframes dReject{0%,58%{opacity:1;transform:translateX(0)}
-  68%{transform:translateX(-7px)}76%{transform:translateX(7px)}
-  88%,100%{opacity:.3;filter:grayscale(1);transform:translateX(0)}}
-
-/* 7 · HARF */
-@keyframes dLetter{0%{opacity:0;transform:translate(var(--fx),44px) scale(.6)}
-  40%,100%{opacity:1;transform:translate(0,0) scale(1)}}
-
-/* ══════ telefon ══════ */
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.amb{display:none}}
 @media (max-width:520px){
-  body{font-size:16px}
-  .wrap{padding:2px 10px 26px}
-  h1{font-size:17px} .sub{font-size:11.5px;margin-bottom:11px}
-  .paths{gap:6px}
-  .path{min-width:0;flex:1 1 0;padding:9px 8px;border-radius:13px}
-  .path b{font-size:12.5px} .path span{font-size:9.5px;line-height:1.25;display:block}
-  .lv{font-size:11px;padding:7px 11px}
-  .bar{padding:8px 11px;gap:6px;font-size:11px}
-  .bar b{font-size:12.5px}
-  .steps{width:100%;margin-left:0;margin-top:3px}
-  .step{font-size:8.5px;padding:2px 5px}
-  .story{font-size:12px;padding:8px 11px}
-  .screen{padding:15px 13px;min-height:0}
-  .big{font-size:19px} .mid{font-size:15px}
-  .card{padding:13px;font-size:15px;border-radius:13px}
-  /* dokunma hedefleri büyüsün */
-  .tile{padding:15px 14px;font-size:15.5px;border-radius:13px;min-height:54px}
-  .opts.row .tile{flex:1 1 100%}
-  .bucket{min-width:0;flex:1 1 30%;padding:13px 5px;min-height:62px}
-  .bucket b{font-size:16px} .bucket span{font-size:9px}
-  .slot{width:44px;height:44px;font-size:19px}
-  .obj{width:88px;height:88px;margin:2px auto 10px}
-  .obj u{font-size:35px;border-radius:18px}
-  .obj u:nth-child(1){transform:translateZ(27px)}
-  .obj u:nth-child(2){transform:rotateY(90deg) translateZ(27px)}
-  .obj u:nth-child(3){transform:rotateY(180deg) translateZ(27px)}
-  .obj u:nth-child(4){transform:rotateY(270deg) translateZ(27px)}
-  button.go{padding:14px 20px;font-size:15px;min-height:52px}
-  .foot{gap:8px} .tick{font-size:10.5px}
-  .fix{font-size:13.5px;padding:13px}
-  .note{font-size:11px}
-  .amb i{opacity:.14}
-}
-/* çentik ve alt çubuk */
-@supports(padding:env(safe-area-inset-bottom)){
-  .wrap{padding-bottom:calc(26px + env(safe-area-inset-bottom))}
+  body{font-size:16px}.wrap{padding:2px 10px 26px}
+  h1{font-size:16px}.head img{width:34px}
+  .path{min-width:0;flex:1 1 0;padding:9px 8px}
+  .path b{font-size:12.5px}.path span{font-size:9.5px;display:block;line-height:1.25}
+  .screen{padding:15px 13px;min-height:0}.big{font-size:19px}
+  .narr{gap:9px}.mascot{width:64px;flex-basis:64px}.bubble{font-size:14.5px;padding:11px 13px}
+  .tile{padding:15px 14px;min-height:54px}.opts.row .tile{flex:1 1 100%}
+  .demo{height:158px}.obj{width:84px;height:84px}.obj u{font-size:33px}
+  button.go{padding:14px 20px;min-height:52px}
 }
 </style>
 </head>
 <body>
 <div class="amb" id="amb"></div>
 <div class="wrap">
-  <h1>MemDoping V2 — his prototipi</h1>
-  <p class="sub">Üç dünya · dünya başına 3 sahne · anlatı + 3B · dış varlık kullanılmadan</p>
-
+  <div class="head">
+    <img id="logo" alt="MemDoping">
+    <div><h1>MemDoping V2</h1><p class="sub" id="sub"></p></div>
+    <div class="lang">
+      <button data-l="tr" aria-pressed="true">TR</button>
+      <button data-l="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
   <div class="paths" role="tablist" id="paths"></div>
   <div class="levels" id="levels"></div>
-
   <div class="stage" id="stage">
     <div class="bar" id="bar"></div>
     <div class="story" id="storybar"></div>
     <div class="screen" id="screen"></div>
   </div>
-
-  <p class="note">
-    <b>İki hareket türü ayrı çalışıyor.</b>
-    <b>Anlam taşıyan:</b> doğru cevapta 3B çevirme, yuvaya oturan adımın yukarıdan inişi,
-    seri büyüdükçe öne çıkan rozet — hepsi bir bilgi veriyor.
-    <b>Dekoratif:</b> arka planda sürüklenen cisimler, konfeti, dönen 3B obje — bunlar yalnızca
-    kanca, ödül ve geçiş anlarında, yani dikkatin serbest olduğu yerlerde.
-    Oyun anında ekran sakinleşiyor, çünkü orada dikkat eğitilen şeyin kendisi.
-  </p>
+  <p class="note" id="note"></p>
 </div>
 
 <script>
-/* ══════════ DÜNYALAR ══════════ */
-const WORLDS = {
-  child:{ label:"Child", hint:"Orman Okulu · yavaş · büyük",
-    sky:"linear-gradient(160deg,#2BB6A8,#39C46F 55%,#FFC53D)",
-    c1:"#FF6B4A",c2:"#22C7C7",c3:"#FFC53D",c4:"#7ED957",c5:"#31D07A",
-    chip:"#FFE08A", tempo:1.0, buckets:3,
-    arc:["🦊 Tilki Efe kış hazırlığını unutmuş. Yardım eder misin?",
-         "🌰 Tohumları bulduk. Şimdi doğru sırayla ekmeliyiz.",
-         "🏠 Ambarı doldurduk. Nereye ne koyduğunu hatırlıyor musun?"] },
-  teen:{ label:"Teen", hint:"Sinyal · hızlı · combo",
-    sky:"linear-gradient(160deg,#2B1B5A,#6D28D9 50%,#0EA5E9)",
-    c1:"#FF3D8B",c2:"#22D3EE",c3:"#FDE047",c4:"#A855F7",c5:"#4ADE80",
-    chip:"#7DF9FF", tempo:0.55, buckets:5,
-    arc:["📡 Kesik kesik sinyaller geliyor. Türlerine ayır, yoksa kaybolur.",
-         "⚡️ Gelen mesaj bir benzetme. Nerede yalan söylüyor?",
-         "🔐 Son blok dokuz haneli. Grupla, yoksa tutamazsın."] },
-  adult:{ label:"Adult", hint:"Arşiv · sade · stratejik",
-    sky:"linear-gradient(160deg,#132A2E,#1F4E4A 55%,#B4813C)",
-    c1:"#E08A3C",c2:"#3FA9A0",c3:"#E8C46A",c4:"#9C6FB0",c5:"#5FBF8F",
-    chip:"#E8C46A", tempo:0.8, buckets:5,
-    arc:["📚 Arşiv dağılmış. Önce neyin neyle bağlı olduğunu çıkaralım.",
-         "📊 Bir bulgu var. Tam olarak neyi kanıtlıyor, neyi kanıtlamıyor?",
-         "🪐 Katalog kaydı silinmiş. Kalanından adı sen çıkaracaksın."] }
+const MASCOT = "data:image/png;base64,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";
+document.getElementById('logo').src = MASCOT;
+
+const UI = {
+ tr:{ sub:"Üç dünya · dokuz sahne · mevcut teknikler · anlatıcı maskot",
+  start:"Başla",got:"Anladım",how:"Nasıl çalışır?",next:"Devam",retry:"Tekrar dene",
+  again:"Tekrar",nextScene:"Sıradaki sahne",replay:"↻ tekrar",hear:"🔊 tekrar dinle",
+  mute:"🔇 sustur",unmute:"🔊 sesi aç",off:"ses kapalı",
+  micro:"Mikro anlatım · maskot anlatıyor",whatNext:"Sırada ne var?",
+  notYet:"Henüz değil",notPart:"Bu buraya ait değil",ready:"Hazırım, gizle",
+  done:"Sahne tamam",streak:"En uzun seri",sec:"sn",
+  stop:"durma noktası · 3 öğe yarın seni bekliyor",
+  hookTick:"KANCA ≤ 3 sn · atlanabilir",hidden:"uzun metin burada gizli",
+  research:"Arkasındaki araştırma",
+  flow:["KANCA","ANLATIM","OYUN","TEMPO","GERİ ÇAĞIR","ÖDÜL"],
+  yes:"Evet",no:"Hayır",remembered:"✅ Hatırladım",forgot:"🤔 Unuttum",
+  whichCat:"Hangi gruptan?",pickTwist:"Hangi sahneyi kuruyorsun?",
+  whyIs:"…çünkü?",placeIt:"Nereye bırakıyorsun?",
+  note:"<b>PACER kaldırıldı.</b> Dokuz sahnenin dokuzu da uygulamada zaten çalışan, araştırmaya dayalı tekniklerden: hafıza sarayı, canlı sahne, dikkat, öbekleme, aktif hatırlama, karışık pratik, elaborasyon, hikâye zincirleme, aralıklı tekrar. <b>Eski 100'lük ladder'a dokunulmadı</b> — bu ayrı bir V2 girişi. <b>Üçe bölünmüşlük</b> duruyor: her yaşın kendi dünyası, hikâyesi, temposu ve sesi var." },
+ en:{ sub:"Three worlds · nine scenes · existing techniques · narrator mascot",
+  start:"Start",got:"Got it",how:"How it works",next:"Next",retry:"Try again",
+  again:"Replay",nextScene:"Next scene",replay:"↻ replay",hear:"🔊 hear again",
+  mute:"🔇 mute",unmute:"🔊 sound on",off:"sound off",
+  micro:"Micro tutorial · the mascot explains",whatNext:"What comes next?",
+  notYet:"Not yet",notPart:"That doesn't belong here",ready:"Ready, hide it",
+  done:"Scene complete",streak:"Longest streak",sec:"s",
+  stop:"a stopping point · 3 items wait for you tomorrow",
+  hookTick:"HOOK ≤ 3s · skippable",hidden:"the long text lives here",
+  research:"The research behind it",
+  flow:["HOOK","TUTORIAL","PLAY","CHALLENGE","RECALL","REWARD"],
+  yes:"Yes",no:"No",remembered:"✅ I remembered",forgot:"🤔 I forgot",
+  whichCat:"Which group?",pickTwist:"Which scene do you build?",
+  whyIs:"…because?",placeIt:"Where do you leave it?",
+  note:"<b>PACER is gone.</b> All nine scenes use techniques the app already runs, each with real research behind it: memory palace, vivid imagery, attention, chunking, retrieval practice, interleaving, elaboration, story linking, spaced review. <b>The old 100-level ladder is untouched</b> — this is a separate V2 entry. <b>The three-way split stays</b>: each age has its own world, story, tempo and voice." }
 };
 
-const FLOW = ["KANCA","ANLATIM","OYUN","TEMPO","GERİ ÇAĞIR","ÖDÜL"];
-const TYPES = [{k:"P",n:"Uygula"},{k:"A",n:"Sorgula"},{k:"C",n:"Haritala"},
-               {k:"E",n:"Sakla+Bağla"},{k:"R",n:"Tekrarla"}];
+const WORLDS = {
+ child:{ tr:{label:"Çocuk",hint:"Orman Okulu · yavaş · büyük"},
+         en:{label:"Child",hint:"Forest School · slow · big"},
+   sky:"linear-gradient(160deg,#FD7789,#FFB45C 55%,#FFD98A)",
+   c:["#FD7789","#00AFFD","#FFC53D","#0452C3","#31D07A"],chip:"#FFE08A",
+   tempo:1.0,voice:{rate:.86,pitch:1.35} },
+ teen:{  tr:{label:"Genç",hint:"Sinyal · hızlı · combo"},
+         en:{label:"Teen",hint:"Signal · fast · combo"},
+   sky:"linear-gradient(160deg,#011049,#02217B 50%,#0452C3)",
+   c:["#FD7789","#00AFFD","#FFC53D","#7DF9FF","#31D07A"],chip:"#7DF9FF",
+   tempo:.55,voice:{rate:1.06,pitch:1.0} },
+ adult:{ tr:{label:"Yetişkin",hint:"Arşiv · sade · stratejik"},
+         en:{label:"Adult",hint:"Archive · restrained · strategic"},
+   sky:"linear-gradient(160deg,#011049,#0A2A4E 55%,#6B5B3E)",
+   c:["#0452C3","#C9BFA6","#FD7789","#00AFFD","#31D07A"],chip:"#C9BFA6",
+   tempo:.8,voice:{rate:.98,pitch:.92} }
+};
 
-const LEVELS = {
+const ARC={
+ child:{tr:["🦊 Tilki Efe ambarı doldurdu ama nereye ne koyduğunu unuttu.",
+            "🎨 Hatırlamak için resim kuralım — ne kadar tuhaf, o kadar iyi.",
+            "👀 Her şeye bakmak yetmiyor. Bir karar vermen gerek."],
+        en:["🦊 Fox Efe filled the barn but forgot what went where.",
+            "🎨 Let's build a picture to remember — the odder the better.",
+            "👀 Looking isn't enough. You have to decide something."]},
+ teen:{ tr:["📡 Dokuz haneli kod geliyor. Grupla, yoksa tutamazsın.",
+            "🔓 Şifre çözüldü ama liste yok. Kendin çıkaracaksın.",
+            "🌀 İki kanal karışık akıyor. Hangisi hangisi?"],
+        en:["📡 A nine-digit code is coming. Group it or lose it.",
+            "🔓 Decoded — but there's no list. You produce it yourself.",
+            "🌀 Two channels are mixed. Which is which?"]},
+ adult:{tr:["📚 Arşivdeki her kayıt bir 'neden' saklıyor.",
+            "🔗 Dağınık kayıtları tek bir zincire dizelim.",
+            "⏳ Dünkü kayıtların vakti geldi. Duruyorlar mı?"],
+        en:["📚 Every record in the archive hides a 'why'.",
+            "🔗 Let's chain the scattered records into one line.",
+            "⏳ Yesterday's records are due. Did they survive?"]}
+};
+
+/* Dokuz sahne — hepsi uygulamada zaten var olan mekanikler */
+const L={
 child:[
- {t:"Ayır", kind:"triage", tech:"PACER — sınıflandırma", obj:"📦",
-  hook:"Efe'nin notları karışmış!", tut:"Her bilgi aynı tür değil. Nasıl yapılır → Uygula kutusu.",
-  items:[{x:"Önce suyu kaynat, sonra çayı demle.",a:"P",why:"Adım sırası var — yapılarak öğrenilir."},
-         {x:"Suyun kaynama noktası 100 °C.",a:"R",why:"Tek başına duran kesin bir ayrıntı."},
-         {x:"Stres hatırlamayı zayıflatır.",a:"C",why:"İki kavram arasında yönlü bir ilişki."}]},
- {t:"Adım Adım", kind:"order", tech:"PACER P — Uygula", obj:"🌱",
-  hook:"Tohumu ekebilir misin?", tut:"Bir kez izle, sonra kendin yap.", goal:"Tohum çimlensin",
-  steps:[{e:"🪴",x:"Toprağı doldur",w:"Ekecek yer olmadan hiçbir şey ekilemez."},
-         {e:"🕳️",x:"Küçük bir çukur aç",w:"Gömülü tohumun etrafını kazamazsın — çukur önce açılır."},
-         {e:"🌰",x:"Tohumu bırak",w:"İşin özü bu; öncesi hazırlık."},
-         {e:"🤲",x:"Üstünü ört",w:"Örtmeden sularsan su tohumu sürükler."},
-         {e:"💧",x:"Sula",w:"Örttükten sonra sularsan toprağa işler."}],
-  traps:[{e:"✂️",x:"Yaprakları buda",w:"Henüz yaprak yok. Bu, büyümüş bitkinin işi."}]},
- {t:"Ambar", kind:"order", tech:"Method of Loci", obj:"🏠",
-  hook:"Ambarı gez, nereye ne koyduğunu hatırla.", tut:"Her eşyayı bir durağa koy, sonra aynı yolu yürü.",
-  goal:"Yolu doğru sırada yürü",
-  steps:[{e:"🚪",x:"Kapı — 🦊 tilki",w:"Yol her zaman kapıdan başlar."},
-         {e:"🛋️",x:"Koltuk — 🐢 kaplumbağa",w:"Kapıdan sonraki ilk durak."},
-         {e:"🪟",x:"Pencere — 🦉 baykuş",w:"Koltuktan sonra gelir."},
-         {e:"🛏️",x:"Yatak — 🐝 arı",w:"Yolun sonu."}],
-  traps:[{e:"🚿",x:"Duş — 🐙 ahtapot",w:"Bu durağa bu turda bir şey bırakmadın."}]}
+ {t:{tr:"Ambar",en:"The Barn"},kind:"order",tech:{tr:"Hafıza Sarayı",en:"Method of Loci"},obj:"🏠",
+  sci:{tr:"Uzamsal belleği ödünç alır. Maguire (2003): hafıza şampiyonları daha zeki değil, bu yöntemi kullanıyor.",
+       en:"It borrows spatial memory. Maguire (2003): memory champions aren't smarter — they use this method."},
+  hook:{tr:"Ambarı gez, nereye ne koyduğunu hatırla.",en:"Walk the barn, remember what went where."},
+  tut:{tr:"Her eşyayı bir durağa bırak, sonra aynı yolu yürü.",en:"Leave each item at a stop, then walk the same route."},
+  goal:{tr:"Yolu doğru sırada yürü",en:"Walk the route in order"},
+  steps:[{e:"🚪",x:{tr:"Kapı — 🦊 tilki",en:"Door — 🦊 fox"},w:{tr:"Yol her zaman kapıdan başlar.",en:"The route always starts at the door."}},
+         {e:"🛋️",x:{tr:"Koltuk — 🐢 kaplumbağa",en:"Couch — 🐢 turtle"},w:{tr:"Kapıdan sonraki ilk durak.",en:"The first stop after the door."}},
+         {e:"🪟",x:{tr:"Pencere — 🦉 baykuş",en:"Window — 🦉 owl"},w:{tr:"Koltuktan sonra gelir.",en:"It comes after the couch."}},
+         {e:"🛏️",x:{tr:"Yatak — 🐝 arı",en:"Bed — 🐝 bee"},w:{tr:"Yolun sonu.",en:"The end of the route."}}],
+  traps:[{e:"🚿",x:{tr:"Duş — 🐙 ahtapot",en:"Shower — 🐙 octopus"},w:{tr:"Bu durağa bu turda bir şey bırakmadın.",en:"You left nothing here this round."}}]},
+ {t:{tr:"Canlı Sahne",en:"Make a Scene"},kind:"pick",tech:{tr:"Çağrışım & İmgeleme",en:"Association & Imagery"},obj:"🎨",
+  sci:{tr:"Çift kodlama (Paivio): kelime ve görüntü belleğe iki ayrı yol açar. Etkisi ölçülü ve koşullu.",
+       en:"Dual coding (Paivio): a word plus an image gives memory two routes. A modest, conditional effect."},
+  hook:{tr:"Tuhaf olan akılda kalır.",en:"The odd one sticks."},
+  tut:{tr:"Kendi kurduğun resim, hazır bir resimden daha kolay bulunur.",en:"A picture you build yourself is easier to find again."},
+  prompt:{tr:"🦊 Tilki + 🎩 şapka",en:"🦊 Fox + 🎩 hat"},
+  ask:"pickTwist",
+  opts:[{x:{tr:"Tilki şapkayı yiyor",en:"The fox eats the hat"},ok:true},
+        {x:{tr:"Tilki şapkanın yanında duruyor",en:"The fox stands next to the hat"},ok:false},
+        {x:{tr:"Şapka tilkinin üstünde dans ediyor",en:"The hat dances on the fox"},ok:true}],
+  why:{tr:"Hareketli ve tuhaf olan sahneler tutuyor. 'Yanında duruyor' bir sahne değil, bir liste.",
+       en:"Scenes with motion and oddity stick. 'Stands next to' isn't a scene, it's a list."}},
+ {t:{tr:"Dikkat",en:"Look Closer"},kind:"binary",tech:{tr:"Dikkat & Kodlama",en:"Attention & Encoding"},obj:"👀",
+  sci:{tr:"İşleme düzeyleri (Craik & Lockhart): bir şeyi ne kadar anlamlı işlersen, o kadar iyi hatırlarsın.",
+       en:"Levels of processing (Craik & Lockhart): the more meaningfully you handle something, the better you recall it."},
+  hook:{tr:"Sadece bakmak yetmez.",en:"Just looking isn't enough."},
+  tut:{tr:"Her öğe için küçük bir karar ver. Karar vermek, aklında kalmasını sağlar.",
+       en:"Make a small decision about each item. Deciding is what makes it stick."},
+  q:{tr:"Uçabilir mi?",en:"Can it fly?"},
+  items:[{e:"🦉",n:{tr:"Baykuş",en:"Owl"},a:true},{e:"🐢",n:{tr:"Kaplumbağa",en:"Turtle"},a:false},
+         {e:"🦋",n:{tr:"Kelebek",en:"Butterfly"},a:true},{e:"🦊",n:{tr:"Tilki",en:"Fox"},a:false}]}
 ],
 teen:[
- {t:"Ayır — hızlı tur", kind:"triage", tech:"PACER — sınıflandırma", obj:"📡",
-  hook:"5 kanal. Süre işliyor. Seri yap.", tut:"Türü bul, kanala at. Hata seriyi kırar, puanı değil.",
-  items:[{x:"Beyin bir bilgisayar gibidir.",a:"A",why:"Yeniyi bildiğe bağlayan bir benzetme."},
-         {x:"Bir çalışmada A grubu %40 fazla hatırladı.",a:"E",why:"Bir iddiayı destekleyen veri."},
-         {x:"Formülü uygulamak için önce değişkenleri yaz.",a:"P",why:"Uygulanarak öğrenilen adımlar."},
-         {x:"Mitokondri hücrenin enerji merkezidir.",a:"C",why:"Yapı ve işlev arasında ilişki kuran kavram."}]},
- {t:"Nerede Kırılıyor", kind:"judge", tech:"PACER A — Sorgula", obj:"⚡️",
-  hook:"Gelen mesaj: “Akım, borudaki su gibidir.”", tut:"Nerede tutuyor, nerede kırılıyor? İkisini de bul.",
-  claim:"Elektrik akımı, borudaki su gibidir.",
-  aspects:[{x:"Dar boru akışa direnir — ince tel de akıma",h:true},
-           {x:"Basınç akışı iter, voltaj akımı iter",h:true},
-           {x:"Kesik telden akım dökülür, sudaki gibi",h:false},
-           {x:"Suyu görür ve tutarsın; akımı da",h:false}],
-  blind:"Bu resimde elektriğin ne olduğuna yer yok — o yüzden manyetik hiçbir şeyi açıklayamaz."},
- {t:"Grupla", kind:"chunk", tech:"Chunking", obj:"🔐",
-  hook:"Son blok: 9 hane, 15 saniye.", tut:"Tek tek tutma — üçerli grupla. Grup tek şey sayılır.",
-  digits:"427905318"}
+ {t:{tr:"Grupla",en:"Group It"},kind:"chunk",tech:{tr:"Öbekleme",en:"Chunking"},obj:"🔐",
+  sci:{tr:"Çalışma belleği yaklaşık dört öbek tutar (Miller; Cowan). Gruplamak sınırı aşmadan daha çok taşımanı sağlar.",
+       en:"Working memory holds about four chunks (Miller; Cowan) — grouping lets you carry more within the limit."},
+  hook:{tr:"Dokuz hane. On beş saniye.",en:"Nine digits. Fifteen seconds."},
+  tut:{tr:"Tek tek tutma — üçerli grupla. Bir grup tek şey sayılır.",en:"Don't hold them one by one — group in threes. A group counts as one."},
+  digits:"427905318"},
+ {t:{tr:"Kendin Söyle",en:"Say It Yourself"},kind:"letters",tech:{tr:"Aktif Hatırlama",en:"Retrieval Practice"},obj:"🔓",
+  sci:{tr:"Test etkisi: hatırlamaya çalışmak, tekrar okumaktan daha güçlü (Roediger & Karpicke). En sağlam bulgulardan biri.",
+       en:"The testing effect: retrieving beats re-reading (Roediger & Karpicke) — one of the most robust findings."},
+  hook:{tr:"Şık yok. Kendin çıkaracaksın.",en:"No options. You produce it."},
+  tut:{tr:"Zor gelmesi normal — asıl işi yapan da o zorluk.",en:"It feels hard — that difficulty is what works."},
+  word:{tr:"SATÜRN",en:"SATURN"},clue:{tr:"🪐 Halkalı gezegen",en:"🪐 The ringed planet"}},
+ {t:{tr:"Karıştır",en:"Mix It Up"},kind:"pick",tech:{tr:"Karışık Pratik",en:"Interleaving"},obj:"🌀",
+  sci:{tr:"Karışık pratik, doğru yöntemi seçmeyi keskinleştirir — Taylor & Rohrer'de ertesi gün başarıyı yaklaşık iki katına çıkardı.",
+       en:"Mixed practice sharpens choosing the right method — it roughly doubled next-day accuracy in Taylor & Rohrer."},
+  hook:{tr:"İki kanal karışık akıyor.",en:"Two channels are mixed."},
+  tut:{tr:"Önce hangi gruptan olduğunu bul, sonra cevapla. Karıştırmak şimdi zor, sonra kolaylaştırıyor.",
+       en:"Find the group first, then answer. Mixing is harder now, easier later."},
+  prompt:{tr:"🐙 Ahtapot",en:"🐙 Octopus"},ask:"whichCat",
+  opts:[{x:{tr:"Hayvanlar",en:"Animals"},ok:true},{x:{tr:"Uzay",en:"Space"},ok:false},
+        {x:{tr:"Yiyecekler",en:"Food"},ok:false}],
+  why:{tr:"Kategoriyi bulmak, doğru hatırlama yolunu açar. Bloklu çalışmada bu adım hiç gerekmez — o yüzden de öğrenilmez.",
+       en:"Finding the category opens the right retrieval path. Blocked practice never asks for this step — so it never teaches it."}}
 ],
 adult:[
- {t:"Bağlantı Haritası", kind:"relate", tech:"PACER C — Haritala", obj:"🧠",
-  hook:"Hatırlamak neye bağlı?", tut:"Her kavramı merkeze bağla — ve bağın adını koy.",
-  center:"Hatırlamak", centerIcon:"🧠",
-  nodes:[{e:"😴",n:"Uyku",r:"gerektirir",note:"Anılar uykuda pekişir; uyku giderse günün öğrenmesi de gider."},
-         {e:"🔁",n:"Geri çağırma pratiği",r:"artırır",note:"Hatırlamaya çalışmak, tekrar okumaktan daha çok güçlendirir."},
-         {e:"😰",n:"Stres",r:"azaltır",note:"Yüksek stres çalışma belleğini daraltır."}],
-  rels:["gerektirir","artırır","azaltır","örneğidir"]},
- {t:"Neyi Kanıtlıyor", kind:"evidence", tech:"PACER E — Sakla + Bağla", obj:"📊",
-  hook:"Bir bulgu var. Sınırı nerede?", tut:"Kanıtı desteklediği iddiaya bağla. Sonra sınırını çiz.",
-  ev:"Bir çalışmada aralıklı tekrar yapan grup, bir hafta sonra %40 daha fazla hatırladı.",
-  claims:[{x:"Aralıklı tekrar, kalıcılığı artırır.",ok:true},
-          {x:"Aralıklı tekrar, anlamayı da artırır.",ok:false},
-          {x:"Aralıklı tekrar herkes için en iyi yöntemdir.",ok:false}],
-  limit:"Çalışma bir haftalık kalıcılığı ölçtü — anlamayı veya uzun vadeyi değil."},
- {t:"Kayıp Kayıt", kind:"recallword", tech:"Retrieval Practice", obj:"🪐",
-  hook:"Katalog adı silinmiş. Şıksız.", tut:"Hatırlamaya çalışmak zor gelir — asıl işi yapan da o.",
-  word:"SATÜRN", clue:"🪐 Halkalı gezegen"}
+ {t:{tr:"Neden Böyle?",en:"Why Is That?"},kind:"pick",tech:{tr:"Elaborasyon",en:"Elaboration"},obj:"📚",
+  sci:{tr:"Ayrıntılandırıcı sorgulama: 'neden' diye sormak olguyu bildiklerine bağlar. Ölçülü bir katkı, tanıdık konularda en iyi.",
+       en:"Elaborative interrogation: asking 'why' links facts to what you know. A moderate benefit, best on familiar material."},
+  hook:{tr:"Her kayıt bir 'neden' saklıyor.",en:"Every record hides a 'why'."},
+  tut:{tr:"Nedeni kendin bulduğunda, olgu bir yere tutunur.",en:"When you work out the reason, the fact gets something to hold on to."},
+  prompt:{tr:"🦉 Baykuşlar gece avlanır",en:"🦉 Owls hunt at night"},ask:"whyIs",
+  opts:[{x:{tr:"gözleri karanlıkta iyi görür",en:"their eyes see well in the dark"},ok:true},
+        {x:{tr:"güneşten korkarlar",en:"they are afraid of the sun"},ok:false},
+        {x:{tr:"siyah rengi severler",en:"they like the colour black"},ok:false}],
+  why:{tr:"Sağlam neden, olguyu zaten bildiğin bir şeye bağlayandır. Diğerleri kulağa hoş gelir ama hiçbir yere bağlanmaz.",
+       en:"The sound reason ties the fact to something you already know. The others sound fine but connect to nothing."}},
+ {t:{tr:"Zincir",en:"The Chain"},kind:"order",tech:{tr:"Hikâye Zincirleme",en:"Story Linking"},obj:"🔗",
+  sci:{tr:"Bower & Clark: hikâye kuran grup listeyi çok daha fazla hatırladı — klasik bir çalışmadan çarpıcı bir sonuç.",
+       en:"Bower & Clark found a story group recalled far more of a list — a striking result from a classic study."},
+  hook:{tr:"Dağınık kayıtları tek bir zincire dizelim.",en:"Chain the scattered records into one line."},
+  tut:{tr:"Liste ezberleme — hikâye kur. Hikâye sırayı senin yerine taşır.",
+       en:"Don't memorise a list — build a story. The story carries the order for you."},
+  goal:{tr:"Hikâyeyi sırayla kur",en:"Build the story in order"},
+  steps:[{e:"🗝️",x:{tr:"Anahtar kapıyı açtı",en:"The key opened the door"},w:{tr:"Hikâye buradan başlıyor.",en:"The story starts here."}},
+         {e:"📜",x:{tr:"Kapının ardında bir tomar vardı",en:"Behind the door was a scroll"},w:{tr:"Kapı açılmadan tomar görünmez.",en:"The scroll isn't visible until the door opens."}},
+         {e:"🕯️",x:{tr:"Tomarı mumla okudu",en:"He read it by candlelight"},w:{tr:"Önce tomarı bulman gerek.",en:"You need the scroll first."}},
+         {e:"🗺️",x:{tr:"Yazıda bir harita vardı",en:"The writing held a map"},w:{tr:"Zincirin son halkası.",en:"The last link in the chain."}}],
+  traps:[{e:"⚓️",x:{tr:"Gemi limandan ayrıldı",en:"The ship left the harbour"},w:{tr:"Bu zincirde böyle bir halka yok.",en:"There's no such link in this chain."}}]},
+ {t:{tr:"Geri Dön",en:"Come Back"},kind:"binary",tech:{tr:"Aralıklı Tekrar",en:"Spaced Review"},obj:"⏳",
+  sci:{tr:"Genişleyen aralıklarla tekrar, unutma eğrisini düzleştirir (Cepeda ve ark.). Geciken tekrar ertelenir, cezalandırılmaz.",
+       en:"Reviewing at widening intervals flattens the forgetting curve (Cepeda et al.). A late review is deferred, never punished."},
+  hook:{tr:"Dünkü kayıtların vakti geldi.",en:"Yesterday's records are due."},
+  tut:{tr:"Tam unutmak üzereyken geri gelirler. Hatırlayamamak da bilgi — aralık kısalır.",
+       en:"They return just as you're about to forget. Failing is information too — the interval shortens."},
+  q:{tr:"Hatırlıyor musun?",en:"Do you remember it?"},
+  items:[{e:"🪐",n:{tr:"Satürn",en:"Saturn"},a:true},{e:"🦋",n:{tr:"Kelebek",en:"Butterfly"},a:true},
+         {e:"🐙",n:{tr:"Ahtapot",en:"Octopus"},a:true}],
+  binaryFree:true}
 ]};
 
-/* ══════════ durum ══════════ */
-let path="child", lvl=0, step=0, idx=0, combo=0, best=0, done={};
+let lang="tr",path="child",lvl=0,step=0,idx=0,combo=0,best=0,done={},muted=false;
 const $=id=>document.getElementById(id);
-const W=()=>WORLDS[path];
+const W=()=>WORLDS[path], T=()=>UI[lang];
+const tx=o=>typeof o==="string"?o:(o&&o[lang])||"";
 const tempo=ms=>Math.round(ms*W().tempo);
-const pick=(i)=>[W().c1,W().c2,W().c3,W().c4,W().c5][i%5];
+const pick=i=>W().c[i%5];
 
-/* dekoratif arka plan */
-function ambient(){
-  $('amb').innerHTML=Array.from({length:9},(_,i)=>
-    `<i style="left:${6+i*11}%;animation-duration:${17+i*3.5}s;animation-delay:${-i*4}s;
-        width:${34+i*7}px;height:${34+i*7}px"></i>`).join('');
+let voices=[];
+function loadVoices(){ try{voices=speechSynthesis.getVoices()||[];}catch(e){voices=[];} }
+loadVoices(); if(window.speechSynthesis) speechSynthesis.onvoiceschanged=loadVoices;
+function say(t){
+  if(muted||!window.speechSynthesis||!t) return;
+  try{ speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(String(t).replace(/[\p{Emoji}‍]/gu,''));
+    u.lang=lang==="tr"?"tr-TR":"en-US";
+    const v=voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith(lang==="tr"?"tr":"en"));
+    if(v)u.voice=v;
+    u.rate=W().voice.rate; u.pitch=W().voice.pitch;
+    const m=document.querySelector('.mascot');
+    if(m){m.classList.remove('idle');m.classList.add('talk');}
+    u.onend=u.onerror=()=>{const mm=document.querySelector('.mascot');
+      if(mm){mm.classList.remove('talk');mm.classList.add('idle');}};
+    speechSynthesis.speak(u);
+  }catch(e){}
 }
+function hush(){ try{speechSynthesis.cancel();}catch(e){} }
+
+function ambient(){ $('amb').innerHTML=Array.from({length:9},(_,i)=>
+  `<i style="left:${6+i*11}%;animation-duration:${17+i*3.5}s;animation-delay:${-i*4}s;
+     width:${34+i*7}px;height:${34+i*7}px"></i>`).join(''); }
 
 function chrome(){
-  const w=W(), r=document.documentElement.style;
-  r.setProperty('--c1',w.c1); r.setProperty('--c2',w.c2); r.setProperty('--c3',w.c3);
-  r.setProperty('--c4',w.c4); r.setProperty('--c5',w.c5);
-  r.setProperty('--glow',w.c1+'66');
+  const w=W(),r=document.documentElement.style;
+  w.c.forEach((c,i)=>r.setProperty(`--c${i+1}`,c));
+  r.setProperty('--glow',w.c[0]+'66');
   $('stage').style.background=w.sky;
-
+  $('sub').textContent=T().sub; $('note').innerHTML=T().note;
+  document.documentElement.lang=lang;
   $('paths').innerHTML=Object.entries(WORLDS).map(([k,v])=>
     `<button class="path" role="tab" aria-selected="${k===path}" data-p="${k}"
-       style="background:${v.sky}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
-
-  $('levels').innerHTML=LEVELS[path].map((L,i)=>
+       style="background:${v.sky}"><b>${v[lang].label}</b><span>${v[lang].hint}</span></button>`).join('');
+  $('levels').innerHTML=L[path].map((x,i)=>
     `<button class="lv ${done[path+i]?'done':''}" aria-current="${i===lvl}" data-l="${i}">
-       ${i+1}. ${L.t}</button>`).join('');
-
-  const L=LEVELS[path][lvl];
-  $('bar').innerHTML=`<span class="chip" style="background:${w.chip}">${w.label}</span>
-     <b>${L.t}</b><span style="opacity:.75;font-size:11.5px">${L.tech}</span>
-     <span class="steps">${FLOW.map((s,i)=>
-       `<span class="step ${i===step?'on':''}">${s}</span>`).join('')}</span>`;
-  $('storybar').innerHTML=`<em>📖</em><span>${w.arc[lvl]}</span>`;
+       ${i+1}. ${tx(x.t)}</button>`).join('');
+  const s=L[path][lvl];
+  $('bar').innerHTML=`<span class="chip" style="background:${w.chip}">${w[lang].label}</span>
+    <b>${tx(s.t)}</b><span style="opacity:.75;font-size:11.5px">${tx(s.tech)}</span>
+    <span class="steps">${T().flow.map((f,i)=>`<span class="step ${i===step?'on':''}">${f}</span>`).join('')}</span>`;
+  $('storybar').innerHTML=`<em>📖</em><span>${ARC[path][lang][lvl]}</span>`;
 }
-
-function go(s){ step=s; chrome(); render(); }
-
+function go(s){ hush(); step=s; chrome(); render(); }
 function render(){
-  const L=LEVELS[path][lvl], S=$('screen');
-  if(step===0) return hook(L,S);
-  if(step===1) return tut(L,S);
-  if(step<5)   return play(L,S);
+  const s=L[path][lvl],S=$('screen');
+  if(step===0)return hook(s,S);
+  if(step===1)return tut(s,S);
+  if(step<5)return play(s,S);
   return reward(S);
 }
 const ramp=()=>step===3;
+function obj3d(i,f){return `<div class="obj ${f?'fast':''}" style="--of:${pick(1)}">
+  <u>${i}</u><u>${i}</u><u>${i}</u><u>${i}</u></div>`;}
 
-function obj3d(icon,fast){
-  return `<div class="obj ${fast?'fast':''}" style="--of:${W().c2}">
-    <u>${icon}</u><u>${icon}</u><u>${icon}</u><u>${icon}</u></div>`;
+function hook(s,S){
+  S.innerHTML=`<div class="reward">${obj3d(s.obj,path==="teen")}
+    <p class="big">${tx(s.hook)}</p><button class="go" id="n">${T().start}</button>
+    <div class="tick" style="margin:9px 0 0">${T().hookTick}</div></div>`;
+  say(tx(s.hook)); $('n').onclick=()=>go(1);
+  setTimeout(()=>{if(step===0)go(1);},tempo(3800));
 }
-
-/* ── kanca: dekoratif hareket serbest ── */
-function hook(L,S){
-  S.innerHTML=`<div class="reward">
-     ${obj3d(L.obj, path==="teen")}
-     <p class="big">${L.hook}</p>
-     <button class="go" id="n">Başla</button>
-     <div class="tick" style="margin:9px 0 0">KANCA ≤ 3 sn · atlanabilir</div></div>`;
-  $('n').onclick=()=>go(1);
-  setTimeout(()=>{ if(step===0) go(1); }, tempo(3600));
-}
-
-/* ══════ mikro anlatım: her mekanik için 3–4 sn gösterim ══════ */
-function scene(L){
-  const c=i=>pick(i), cap=t=>`<div class="cap">${t}</div>`;
-  const hand=(l,t)=>`<span class="d-hand" style="left:${l};top:${t};
-      animation:dTap 3.4s .1s both">👆</span>`;
-
-  if(L.kind==="triage"){
-    const ks=["P","C","R"];
-    return `
-      <div class="d-card" style="--dc:${c(0)};left:50%;top:-40px;transform:translateX(-50%);
-        animation:dFall 3.4s .2s forwards">Önce suyu kaynat…</div>
-      ${ks.map((k,i)=>`<div class="d-bucket" style="--dc:${c(i)};left:${14+i*30}%;top:112px;
-        ${i===0?'animation:dPop 3.4s .2s forwards':''}">${k}</div>`).join('')}
-      ${hand('18%','104px')}
-      ${cap("Türünü seç — kutu açılır.")}`;
-  }
-  if(L.kind==="order"){
-    const st=L.steps.slice(0,4);
-    return `
-      ${st.map((s,i)=>`<div class="d-slot" style="left:${12+i*21}%;top:52px;
-        animation:dLand 3.4s ${.25+i*.42}s both"></div>`).join('')}
-      ${st.map((s,i)=>`<span style="left:${12+i*21}%;top:52px;width:34px;height:34px;
-        display:grid;place-items:center;font-size:17px;
-        animation:dFly 3.4s ${.25+i*.42}s both">${s.e}</span>`).join('')}
-      ${hand('14%','104px')}
-      ${cap("Bir kez izle — sonra sırayı sen kur.")}`;
-  }
-  if(L.kind==="judge"){
-    return `
-      <div class="d-card" style="--dc:${c(1)};left:9%;top:22px;white-space:normal;max-width:82%;
-        animation:dCrack 3.4s .2s forwards">Akım, borudaki su gibidir</div>
-      <div class="d-card" style="--dc:${c(4)};left:9%;top:84px;font-size:11.5px">
-        Dar boru direnir ✓</div>
-      <span style="left:64%;top:84px;font-size:19px;animation:dMark 3.4s .3s both">✅</span>
-      <div class="d-card" style="--dc:${c(0)};left:9%;top:126px;font-size:11.5px">
-        Akım dökülür ✗</div>
-      <span style="left:64%;top:126px;font-size:19px;animation:dMark 3.4s 1.5s both">⚡️</span>
-      ${cap("Nerede tutuyor, nerede kırılıyor?")}`;
-  }
-  if(L.kind==="chunk"){
-    return `
-      <div style="left:0;right:0;top:58px;text-align:center;font-size:27px;font-weight:800;
-        color:#fff;animation:dSplit 3.4s .3s forwards">427 905 318</div>
-      ${[0,1,2].map(i=>`<span style="left:${20+i*22}%;top:104px;font-size:11px;font-weight:800;
-        color:#1a1208;background:${c(i)};padding:2px 8px;border-radius:99px;
-        animation:dMark 3.4s ${1.2+i*.28}s both">tek parça</span>`).join('')}
-      ${cap("Dokuz hane değil — üç grup.")}`;
-  }
-  if(L.kind==="relate"){
-    return `
-      <span style="left:12%;top:62px;font-size:33px">${L.centerIcon}</span>
-      <div class="d-line" style="left:27%;top:80px;width:40%;animation:dDraw 3.4s .3s both"></div>
-      <span class="d-lbl" style="left:37%;top:88px;animation:dLblIn 3.4s .3s both">artırır</span>
-      <div class="d-card" style="--dc:${c(2)};left:70%;top:64px;
-        animation:dIn 3.4s .3s both">🔁 Pratik</div>
-      ${cap("Bağla — ve bağın adını koy.")}`;
-  }
-  if(L.kind==="evidence"){
-    return `
-      <div class="d-card" style="--dc:${c(4)};left:9%;top:20px;white-space:normal;max-width:80%;
-        font-size:11.5px">📊 %40 daha fazla hatırladı</div>
-      <div class="d-line" style="left:22%;top:62px;width:30%;transform:rotate(26deg);
-        animation:dDraw 3.4s .4s both"></div>
-      <div class="d-card" style="--dc:${c(2)};left:9%;top:104px;font-size:11.5px">
-        Kalıcılığı artırır ✓</div>
-      <div class="d-card" style="--dc:${c(0)};left:9%;top:146px;font-size:11.5px;
-        animation:dReject 3.4s .3s forwards">Anlamayı da artırır</div>
-      ${cap("Kanıt neyi destekliyor — neyi desteklemiyor?")}`;
-  }
-  if(L.kind==="recallword"){
-    const w="SATÜRN";
-    return `
-      ${[...w].map((ch,i)=>`<div class="d-slot" style="left:${11+i*13}%;top:66px;
-        animation:dLand 3.4s ${.2+i*.32}s both"></div>`).join('')}
-      ${[...w].map((ch,i)=>`<span style="left:${11+i*13}%;top:66px;width:34px;height:34px;
-        display:grid;place-items:center;font-weight:800;color:#1a1208;
-        --fx:${(i%2?1:-1)*(30+i*9)}px;animation:dLetter 3.4s ${.2+i*.32}s both">${ch}</span>`).join('')}
-      ${cap("Şık yok — kendin çıkaracaksın.")}`;
-  }
-  return cap(L.tut);
-}
-
-function tut(L,S){
-  const draw=()=>`<div class="demo" id="dm">
-      <button class="replay" id="rp">↻ tekrar</button>${scene(L)}</div>`;
-  S.innerHTML=`<p class="lead">Mikro anlatım · 3–4 sn · gösterim</p>
-    ${draw()}
-    <div class="foot"><button class="go" id="n">Anladım</button>
-      <button class="go ghost" id="d">Nasıl çalışır? ▾</button>
-      <span class="tick">uzun metin burada gizli</span></div>`;
-  bindReplay(L,S);
-  $('n').onclick=()=>{ idx=0; combo=0; go(2); };
+function tut(s,S){
+  S.innerHTML=`<p class="lead">${T().micro}</p>
+    <div class="narr"><div class="mascot idle"><img src="${MASCOT}" alt=""></div>
+      <div class="bubble"><div>${tx(s.tut)}</div><div class="ctl">
+        <button class="mini" id="hear">${T().hear}</button>
+        <button class="mini" id="mute">${muted?T().unmute:T().mute}</button>
+        <span class="vol" id="vol">${muted?T().off:""}</span></div></div></div>
+    <div class="demo" id="dm"><button class="replay" id="rp">${T().replay}</button>${scene(s)}</div>
+    <div class="foot"><button class="go" id="n">${T().got}</button>
+      <button class="go ghost" id="d">${T().how} ▾</button>
+      <span class="tick">${T().hidden}</span></div>`;
+  say(tx(s.tut));
+  $('hear').onclick=()=>say(tx(s.tut));
+  $('mute').onclick=()=>{muted=!muted; if(muted)hush(); else say(tx(s.tut));
+    $('mute').textContent=muted?T().unmute:T().mute; $('vol').textContent=muted?T().off:"";};
+  bindReplay(s);
+  $('n').onclick=()=>{hush();idx=0;combo=0;go(2);};
   $('d').onclick=()=>{ $('d').insertAdjacentHTML('afterend',
-    `<div class="fix" style="flex-basis:100%"><b>Arkasındaki araştırma</b>
-     Projede bu alan hakemli atıflar taşır. PACER düzeni belirler, güvenilirliği literatür taşır.</div>`);
+    `<div class="fix" style="flex-basis:100%"><b>${T().research}</b>${tx(s.sci)}</div>`);
     $('d').disabled=true; };
 }
+function bindReplay(s){ const b=$('rp'); if(!b)return;
+  b.onclick=()=>{const o=$('dm'),f=document.createElement('div');
+    f.className='demo';f.id='dm';
+    f.innerHTML=`<button class="replay" id="rp">${T().replay}</button>${scene(s)}`;
+    o.replaceWith(f);bindReplay(s);}; }
 
-function bindReplay(L,S){
-  const b=$('rp'); if(!b) return;
-  b.onclick=()=>{
-    const old=$('dm');
-    const fresh=document.createElement('div');
-    fresh.className='demo'; fresh.id='dm';
-    fresh.innerHTML=`<button class="replay" id="rp">↻ tekrar</button>${scene(L)}`;
-    old.replaceWith(fresh);
-    bindReplay(L,S);
-  };
+function scene(s){
+  const c=i=>pick(i), cap=t=>`<div class="cap">${t}</div>`;
+  const hand=(l,t)=>`<span class="d-hand" style="left:${l};top:${t};animation:dTap 3.4s .1s both">👆</span>`;
+  if(s.kind==="order"){
+    const st=s.steps.slice(0,4);
+    return `${st.map((x,i)=>`<div class="d-slot" style="left:${12+i*21}%;top:46px;
+      animation:dLand 3.4s ${.25+i*.42}s both"></div>`).join('')}
+      ${st.map((x,i)=>`<span style="left:${12+i*21}%;top:46px;width:34px;height:34px;display:grid;
+        place-items:center;font-size:17px;animation:dFly 3.4s ${.25+i*.42}s both">${x.e}</span>`).join('')}
+      ${hand('14%','96px')}${cap(tx(s.goal))}`;
+  }
+  if(s.kind==="pick"){
+    return `<div class="d-card" style="--dc:${c(0)};left:50%;top:22px;transform:translateX(-50%)">${tx(s.prompt)}</div>
+      <div class="d-line" style="left:26%;top:66px;width:48%;animation:dDraw 3.4s .3s both"></div>
+      <div class="d-card" style="--dc:${c(4)};left:22%;top:96px;font-size:11.5px;
+        animation:dGlow 3.4s .9s both">✓</div>
+      <div class="d-card" style="--dc:${c(2)};left:58%;top:96px;font-size:11.5px;
+        animation:dIn 3.4s .5s both">?</div>
+      ${hand('26%','88px')}${cap(T()[s.ask]||"")}`;
+  }
+  if(s.kind==="binary"){
+    return `<span style="left:44%;top:28px;font-size:38px;animation:dIn 3.4s .2s both">${s.items[0].e}</span>
+      <div class="d-card" style="--dc:${c(4)};left:14%;top:104px;animation:dGlow 3.4s 1.1s both">✓</div>
+      <div class="d-card" style="--dc:${c(0)};left:64%;top:104px">✗</div>
+      ${hand('18%','96px')}${cap(tx(s.q))}`;
+  }
+  if(s.kind==="chunk"){
+    return `<div style="left:0;right:0;top:52px;text-align:center;font-size:26px;font-weight:800;
+      color:#fff;animation:dSplit 3.4s .3s forwards">427 905 318</div>
+      ${[0,1,2].map(i=>`<span style="left:${20+i*22}%;top:96px;font-size:11px;font-weight:800;
+        color:#011049;background:${c(i)};padding:2px 8px;border-radius:99px;
+        animation:dMark 3.4s ${1.2+i*.28}s both">1</span>`).join('')}${cap(tx(s.tut))}`;
+  }
+  if(s.kind==="letters"){
+    const w=tx(s.word);
+    return `${[...w].map((ch,i)=>`<div class="d-slot" style="left:${11+i*13}%;top:60px;
+      animation:dLand 3.4s ${.2+i*.32}s both"></div>`).join('')}
+      ${[...w].map((ch,i)=>`<span style="left:${11+i*13}%;top:60px;width:34px;height:34px;display:grid;
+        place-items:center;font-weight:800;color:#011049;--fx:${(i%2?1:-1)*(30+i*9)}px;
+        animation:dLetter 3.4s ${.2+i*.32}s both">${ch}</span>`).join('')}${cap(tx(s.clue))}`;
+  }
+  return cap(tx(s.tut));
 }
 
-function play(L,S){
-  return ({triage,order,judge,chunk,relate,evidence,recallword})[L.kind](L,S);
-}
-
+function play(s,S){ return ({order,pick:pickQ,binary,chunk,letters})[s.kind](s,S); }
+function total(s){ return (s.items||s.opts||s.steps||[1]).length; }
 function next(){
-  const L=LEVELS[path][lvl];
-  const total=(L.items||L.aspects||L.nodes||L.claims||L.steps||[1]).length;
+  const s=L[path][lvl], t=total(s);
   idx++;
-  if(idx>=total){ done[path+lvl]=true; go(5); }
-  else if(idx===Math.ceil(total/2)&&step===2) go(3);
+  if(idx>=t){ done[path+lvl]=true; go(5); }
+  else if(idx===Math.ceil(t/2)&&step===2) go(3);
   else render();
 }
 function hit(ok){ ok?(combo++,best=Math.max(best,combo)):(combo=0); }
-const tag=()=>combo>1?`<span class="combo">🔥 ${combo}× seri</span>`:'';
+const tag=()=>combo>1?`<span class="combo">🔥 ${combo}×</span>`:'';
 
-/* ── triage ── */
-function triage(L,S){
-  const it=L.items[idx], n=W().buckets;
-  const types=n===3?[TYPES[0],TYPES[2],TYPES[4]]:TYPES;
-  S.innerHTML=`<p class="lead">${idx+1}/${L.items.length} ${ramp()?'· tempo yükseldi':''} ${tag()}</p>
-    <div class="card" style="font-size:17px;font-weight:650">${it.x}</div>
-    <p class="mid" style="font-size:14px;opacity:.85">Bu hangi tür bilgi?</p>
-    <div class="buckets">${types.map((t,i)=>
-      `<button class="bucket" data-k="${t.k}" style="--bc:${pick(i)}">
-         <b>${t.k}</b><span>${t.n}</span></button>`).join('')}</div>`;
-  S.querySelectorAll('.bucket').forEach(b=>b.onclick=()=>{
-    const ok=b.dataset.k===it.a; b.classList.add(ok?'ok':'no'); hit(ok);
-    if(ok) setTimeout(next,tempo(700));
-    else S.insertAdjacentHTML('beforeend',
-      `<div class="fix"><b>Buraya ait değil</b>${it.why}
-       <div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
-  });
-}
-
-/* ── order ── */
-function order(L,S){
-  const pool=[...L.steps,...(L.traps||[])], placed=L.steps.slice(0,idx);
-  S.innerHTML=`<p class="lead">${idx}/${L.steps.length} ${ramp()?'· destek azaldı':''} ${tag()}</p>
-    <p class="mid">${L.goal}</p>
-    <div class="slots">${L.steps.map((s,i)=>
-      `<div class="slot ${i<idx?'filled':''}">${i<idx?s.e:''}</div>`).join('')}</div>
-    <p class="lead">Sırada ne var?</p>
-    <div class="opts">${pool.filter(s=>!placed.includes(s)).sort(()=>Math.random()-.5)
-      .map((s,i)=>`<button class="tile" style="--tc:${pick(i)}" data-x="${encodeURIComponent(s.x)}">
-        <em>${s.e}</em>${s.x}</button>`).join('')}</div>`;
+function order(s,S){
+  const pool=[...s.steps,...(s.traps||[])], placed=s.steps.slice(0,idx);
+  S.innerHTML=`<p class="lead">${idx}/${s.steps.length} ${tag()}</p>
+    <p class="mid">${tx(s.goal)}</p>
+    <div class="slots">${s.steps.map((x,i)=>
+      `<div class="slot ${i<idx?'filled':''}">${i<idx?x.e:''}</div>`).join('')}</div>
+    <p class="lead">${T().whatNext}</p>
+    <div class="opts">${pool.filter(x=>!placed.includes(x)).sort(()=>Math.random()-.5)
+      .map((x,i)=>`<button class="tile" style="--tc:${pick(i)}" data-x="${encodeURIComponent(tx(x.x))}">
+        <em>${x.e}</em>${tx(x.x)}</button>`).join('')}</div>`;
   S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
-    const x=decodeURIComponent(b.dataset.x), want=L.steps[idx], ok=x===want.x;
+    const v=decodeURIComponent(b.dataset.x), want=s.steps[idx], ok=v===tx(want.x);
     b.classList.add(ok?'ok':'no'); hit(ok);
     if(ok) setTimeout(next,tempo(640));
-    else{ const wrong=pool.find(s=>s.x===x);
+    else{ const wr=pool.find(x=>tx(x.x)===v); say(tx(wr.w));
       S.insertAdjacentHTML('beforeend',
-       `<div class="fix"><b>${(L.traps||[]).some(t=>t.x===x)?'Bu, bu işin parçası değil':'Henüz değil'}</b>
-        ${wrong.w}<div style="margin-top:6px;opacity:.8">Buraya gelen: <b>${want.e} ${want.x}</b></div>
-        <div style="margin-top:8px"><button class="go" onclick="render()">Tekrar dene</button></div></div>`); }
+        `<div class="fix"><b>${(s.traps||[]).some(t=>tx(t.x)===v)?T().notPart:T().notYet}</b>${tx(wr.w)}
+         <div style="margin-top:6px;opacity:.8">→ <b>${want.e} ${tx(want.x)}</b></div>
+         <div style="margin-top:8px"><button class="go" onclick="render()">${T().retry}</button></div></div>`); }
   });
 }
-
-/* ── judge ── */
-function judge(L,S){
-  const a=L.aspects[idx];
-  S.innerHTML=`<p class="lead">${idx+1}/${L.aspects.length} ${tag()}</p>
-    <div class="card" style="font-weight:650">${L.claim}</div>
-    <div class="card" style="font-size:16px">${a.x}</div>
-    <div class="opts row" style="margin-top:auto">
-      <button class="tile" style="--tc:${W().c5};flex:1;justify-content:center" data-h="1">✅ Tutuyor</button>
-      <button class="tile" style="--tc:${W().c1};flex:1;justify-content:center" data-h="0">⚡️ Burada kırılıyor</button></div>`;
+function pickQ(s,S){
+  S.innerHTML=`<p class="lead">${tag()}</p>
+    <div class="card" style="text-align:center;font-size:19px;font-weight:650">${tx(s.prompt)}</div>
+    <p class="lead">${T()[s.ask]||""}</p>
+    <div class="opts">${s.opts.map((o,i)=>
+      `<button class="tile" style="--tc:${pick(i)}" data-i="${i}">${tx(o.x)}</button>`).join('')}</div>`;
   S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
-    const ok=(b.dataset.h==="1")===a.h; hit(ok); b.classList.add(ok?'ok':'no');
+    const o=s.opts[+b.dataset.i]; hit(o.ok); b.classList.add(o.ok?'ok':'no'); say(tx(s.why));
     S.insertAdjacentHTML('beforeend',
-      `<div class="fix"><b>${a.h?'Benzetme burada tutuyor.':'Benzetme burada kırılıyor.'}</b>
-       ${idx===L.aspects.length-1?L.blind:'Bir benzetme kenarlarında sınanmazsa sessizce inanca dönüşür.'}
-       <div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
+      `<div class="fix"><b>${o.ok?"✓":"✗"}</b>${tx(s.why)}
+       <div style="margin-top:8px"><button class="go" onclick="next()">${T().next}</button></div></div>`);
   });
 }
-
-/* ── chunk ── */
-function chunk(L,S){
-  const d=L.digits, g=[d.slice(0,3),d.slice(3,6),d.slice(6)];
-  S.innerHTML=`<p class="lead">${ramp()?'Süre kısaldı':'Grupla ve tut'} ${tag()}</p>
+function binary(s,S){
+  const it=s.items[idx], free=!!s.binaryFree;
+  S.innerHTML=`<p class="lead">${idx+1}/${s.items.length} ${ramp()?'· ⏩':''} ${tag()}</p>
+    <div class="card" style="text-align:center">
+      <div style="font-size:44px">${it.e}</div>
+      <div style="font-size:18px;font-weight:650;margin-top:4px">${tx(it.n)}</div></div>
+    <p class="mid" style="font-size:15px">${tx(s.q)}</p>
+    <div class="opts row" style="margin-top:auto">
+      <button class="tile" style="--tc:${pick(4)};flex:1;justify-content:center" data-v="1">
+        ${free?T().remembered:T().yes}</button>
+      <button class="tile" style="--tc:${pick(0)};flex:1;justify-content:center" data-v="0">
+        ${free?T().forgot:T().no}</button></div>`;
+  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    const said=b.dataset.v==="1";
+    const ok=free?said:(said===it.a);
+    hit(ok); b.classList.add(ok?'ok':'no');
+    if(free&&!said){ say(tx(s.tut));
+      S.insertAdjacentHTML('beforeend',
+        `<div class="fix"><b>${T().notYet}</b>${tx(s.tut)}
+         <div style="margin-top:8px"><button class="go" onclick="next()">${T().next}</button></div></div>`); }
+    else setTimeout(next,tempo(640));
+  });
+}
+function chunk(s,S){
+  const d=s.digits,g=[d.slice(0,3),d.slice(3,6),d.slice(6)];
+  S.innerHTML=`<p class="lead">${tag()}</p>
     <div class="slots" style="justify-content:center;gap:14px">${g.map((x,i)=>
       `<div class="slot filled" style="width:auto;padding:0 17px;font-size:27px;font-weight:800;
-        --c5:${pick(i)};background:linear-gradient(160deg,var(--sheen),transparent 45%),${pick(i)};
-        box-shadow:0 6px 0 -1px color-mix(in srgb,${pick(i)} 55%,#000)">${x}</div>`).join('')}</div>
-    <div class="card" style="font-size:13.5px">Dokuz hane değil — <b>üç</b> grup.
-      Çalışma belleğin üç şey taşır.</div>
-    <div class="foot" style="margin-top:auto"><button class="go" id="n">Hazırım, gizle</button>
-      <span class="tick">${tempo(ramp()?9000:15000)/1000} sn</span></div>`;
-  $('n').onclick=()=>{ hit(true); next(); };
+        background:${pick(i)};box-shadow:0 6px 0 -1px color-mix(in srgb,${pick(i)} 55%,#000)">${x}</div>`).join('')}</div>
+    <div class="card" style="font-size:13.5px">${tx(s.tut)}</div>
+    <div class="foot" style="margin-top:auto"><button class="go" id="n">${T().ready}</button>
+      <span class="tick">${tempo(ramp()?9000:15000)/1000} ${T().sec}</span></div>`;
+  $('n').onclick=()=>{hit(true);done[path+lvl]=true;go(5);};
 }
-
-/* ── relate ── */
-function relate(L,S){
-  const nd=L.nodes[idx];
-  S.innerHTML=`<p class="lead">${idx+1}/${L.nodes.length} ${tag()}</p>
-    ${obj3d(L.centerIcon)}
-    <p class="big" style="text-align:center;font-size:17px;margin-bottom:10px">${L.center}</p>
-    <div class="card" style="text-align:center;font-size:17px">
-      <span style="font-size:23px">${nd.e}</span> &nbsp;${nd.n}</div>
-    <p class="lead">Bu, <b>${L.center}</b> ile nasıl bağlanıyor?</p>
-    <div class="opts">${L.rels.map((r,i)=>
-      `<button class="tile" style="--tc:${pick(i)}" data-r="${r}"><em>🔗</em>${r}</button>`).join('')}</div>`;
-  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
-    const ok=b.dataset.r===nd.r; hit(ok); b.classList.add(ok?'ok':'no');
-    S.insertAdjacentHTML('beforeend',
-      `<div class="fix"><b>${nd.n} — ${nd.r} — ${L.center}</b>${nd.note}
-       <div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
-  });
-}
-
-/* ── evidence ── */
-function evidence(L,S){
-  const c=L.claims[idx];
-  S.innerHTML=`<p class="lead">${idx+1}/${L.claims.length} · kanıt sabit, iddia değişiyor ${tag()}</p>
-    <div class="card" style="border-left:5px solid ${W().c5}">📊 ${L.ev}</div>
-    <p class="lead">Bu kanıt şunu destekliyor mu?</p>
-    <div class="card" style="font-size:16px;font-weight:650">${c.x}</div>
-    <div class="opts row" style="margin-top:auto">
-      <button class="tile" style="--tc:${W().c5};flex:1;justify-content:center" data-v="1">✅ Destekliyor</button>
-      <button class="tile" style="--tc:${W().c1};flex:1;justify-content:center" data-v="0">🚫 Bu kadarını demiyor</button></div>`;
-  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
-    const ok=(b.dataset.v==="1")===c.ok; hit(ok); b.classList.add(ok?'ok':'no');
-    S.insertAdjacentHTML('beforeend',
-      `<div class="fix"><b>${c.ok?'Evet — kanıt tam olarak bunu destekliyor.':'Hayır — bu, kanıtın söylediğinden fazlası.'}</b>
-       ${L.limit}<div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
-  });
-}
-
-/* ── retrieval ── */
-function recallword(L,S){
-  const w=L.word;
-  S.innerHTML=`<p class="lead">Şıksız · kendin çıkar</p>
-    <div class="card" style="text-align:center;font-size:19px">${L.clue}</div>
+function letters(s,S){
+  const w=tx(s.word);
+  S.innerHTML=`<p class="lead">${tag()}</p>
+    <div class="card" style="text-align:center;font-size:19px">${tx(s.clue)}</div>
     <div class="slots" style="justify-content:center">${[...w].map((c,i)=>
       `<div class="slot" id="s${i}" style="width:42px;height:48px;font-size:18px;font-weight:800"></div>`).join('')}</div>
     <div class="opts row" style="justify-content:center">${[...w].sort(()=>Math.random()-.5)
@@ -731,39 +633,39 @@ function recallword(L,S){
         data-c="${c}">${c}</button>`).join('')}</div>`;
   let at=0;
   S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
-    if(at>=w.length) return;
-    if(b.dataset.c===w[at]){ const s=$('s'+at); s.textContent=w[at]; s.classList.add('filled');
-      b.classList.add('dim'); at++; hit(true);
-      if(at===w.length){ done[path+lvl]=true; setTimeout(()=>go(5),tempo(620)); } }
-    else { b.classList.add('no'); hit(false); setTimeout(()=>b.classList.remove('no'),360); }
+    if(at>=w.length)return;
+    if(b.dataset.c===w[at]){const sl=$('s'+at);sl.textContent=w[at];sl.classList.add('filled');
+      b.classList.add('dim');at++;hit(true);
+      if(at===w.length){done[path+lvl]=true;setTimeout(()=>go(5),tempo(620));}}
+    else{b.classList.add('no');hit(false);setTimeout(()=>b.classList.remove('no'),360);}
   });
 }
-
-/* ── ödül: dekoratif hareket serbest ── */
 function reward(S){
-  const w=W();
   S.innerHTML=`<div class="conf">${Array.from({length:22},(_,i)=>
       `<s style="left:${4+i*4.3}%;background:${pick(i)};animation-delay:${i*.055}s"></s>`).join('')}</div>
-    <div class="reward">${obj3d("🏅",true)}
-     <p class="big" style="margin:4px 0 2px">${w.arc[lvl].split(' ')[0]} tamam</p>
-     <p class="lead">En uzun seri: ${best||1}×</p>
-     <div class="meter"><i id="m"></i></div>
-     <div class="foot" style="justify-content:center;margin-top:16px">
-       <button class="go" id="again">Tekrar</button>
-       <button class="go ghost" id="nx">Sıradaki sahne</button></div>
-     <div class="tick" style="margin:10px 0 0">
-       durma noktası · 3 öğe yarın seni bekliyor</div></div>`;
-  setTimeout(()=>{ $('m').style.width='78%'; },90);
-  $('again').onclick=()=>{ idx=0;combo=0; go(0); };
-  $('nx').onclick=()=>{ lvl=(lvl+1)%LEVELS[path].length; idx=0;combo=0;best=0; go(0); };
+    <div class="reward">
+      <div class="mascot idle" style="width:104px;margin:0 auto 8px"><img src="${MASCOT}" alt=""></div>
+      <p class="big" style="margin:4px 0 2px">${T().done}</p>
+      <p class="lead">${T().streak}: ${best||1}×</p>
+      <div class="meter"><i id="m"></i></div>
+      <div class="foot" style="justify-content:center;margin-top:16px">
+        <button class="go" id="again">${T().again}</button>
+        <button class="go ghost" id="nx">${T().nextScene}</button></div>
+      <div class="tick" style="margin:10px 0 0">${T().stop}</div></div>`;
+  say(T().done);
+  setTimeout(()=>{$('m').style.width='78%';},90);
+  $('again').onclick=()=>{idx=0;combo=0;go(0);};
+  $('nx').onclick=()=>{lvl=(lvl+1)%L[path].length;idx=0;combo=0;best=0;go(0);};
 }
 
 document.addEventListener('click',e=>{
-  const p=e.target.closest('[data-p]'), l=e.target.closest('[data-l]');
-  if(p){ path=p.dataset.p; lvl=0;idx=0;combo=0;best=0; ambient(); go(0); }
-  if(l){ lvl=+l.dataset.l; idx=0;combo=0;best=0; go(0); }
+  const p=e.target.closest('[data-p]'),l=e.target.closest('[data-l]'),g=e.target.closest('.lang button');
+  if(g&&g.dataset.l){ lang=g.dataset.l;
+    document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang));
+    idx=0;combo=0;best=0;go(step); return; }
+  if(p){path=p.dataset.p;lvl=0;idx=0;combo=0;best=0;ambient();go(0);}
+  if(l){lvl=+l.dataset.l;idx=0;combo=0;best=0;go(0);}
 });
-
 ambient(); go(0);
 </script>
 </body>

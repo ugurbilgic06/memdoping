@@ -83,9 +83,6 @@ struct MechanicDemo: View {
         case .interleaving: InterleaveDemo()
         case .elaboration:  ElaborationDemo()
         case .story:        StoryDemo()
-        case .procedure:    ProcedureDemo(tint: tint)
-        case .analogy:      AnalogyDemo()
-        case .conceptMap:   ConceptMapDemo(tint: tint)
         }
     }
 }
@@ -308,82 +305,4 @@ private struct StoryDemo: View {
             withAnimation(.easeInOut(duration: 0.6).delay(0.7)) { link = true }
         }
     }
-}
-
-// MARK: - Procedure (steps light up in order)
-
-private struct ProcedureDemo: View {
-    var tint: Color
-    @Environment(\.accessibilityReduceMotion) private var rm
-    @State private var step = 0
-    var body: some View {
-        HStack(spacing: 10) {
-            ForEach(1...3, id: \.self) { n in
-                Text("\(n)").font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(step >= n ? .white : Brand.text)
-                    .frame(width: 48, height: 48)
-                    .background(step >= n ? tint : Color.white.opacity(0.7), in: Circle())
-                    .overlay(Circle().strokeBorder(Brand.edgeHighlight, lineWidth: 1))
-                    .scaleEffect(step == n ? 1.12 : 1)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear {
-            if rm { step = 3; return }
-            for n in 1...3 {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.6).delay(0.5 + Double(n) * 0.45)) { step = n }
-            }
-        }
-    }
-}
-
-// MARK: - Analogy (holds here, breaks there)
-
-private struct AnalogyDemo: View {
-    @Environment(\.accessibilityReduceMotion) private var rm
-    @State private var show = false
-    var body: some View {
-        HStack(spacing: 10) {
-            Text("💧").font(.system(size: 40)).frame(width: 56, height: 56).demoCard(14)
-            VStack(spacing: 6) {
-                Image(systemName: "checkmark.circle.fill").foregroundStyle(Brand.successText)
-                    .opacity(show ? 1 : 0).scaleEffect(show ? 1 : 0.4)
-                Image(systemName: "xmark.circle.fill").foregroundStyle(Brand.danger)
-                    .opacity(show ? 1 : 0).scaleEffect(show ? 1 : 0.4)
-            }
-            Text("⚡️").font(.system(size: 40)).frame(width: 56, height: 56).demoCard(14)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear {
-            if rm { show = true; return }
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.8)) { show = true }
-        }
-    }
-}
-
-// MARK: - Concept map (scattered nodes pull together)
-
-private struct ConceptMapDemo: View {
-    var tint: Color
-    @Environment(\.accessibilityReduceMotion) private var rm
-    @State private var pulled = false
-    private let spots: [CGSize] = [CGSize(width: -70, height: -30), CGSize(width: 74, height: -22),
-                                   CGSize(width: -54, height: 34), CGSize(width: 60, height: 36)]
-    var body: some View {
-        ZStack {
-            Circle().fill(tint.opacity(0.3)).frame(width: 30, height: 30)
-            ForEach(0..<spots.count, id: \.self) { i in
-                Circle().fill(.white.opacity(0.85))
-                    .frame(width: 22, height: 22)
-                    .overlay(Circle().strokeBorder(Brand.accentText.opacity(0.6), lineWidth: 2))
-                    .offset(pulled ? scaled(spots[i], 0.45) : spots[i])
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear {
-            if rm { pulled = true; return }
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.6)) { pulled = true }
-        }
-    }
-    private func scaled(_ s: CGSize, _ f: CGFloat) -> CGSize { CGSize(width: s.width * f, height: s.height * f) }
 }

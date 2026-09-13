@@ -1,0 +1,50 @@
+=== MemDoping üretim günlüğü ===
+13 Eyl 2026 Paz +03 15:19:12
+Çalışma klasörü: /Users/ubilgic/Desktop/memdoping
+
+denendi: /Applications/Blender.app/Contents/MacOS/Blender
+denendi: /Users/ubilgic/Applications/Blender.app/Contents/MacOS/Blender
+denendi: /Users/ubilgic/Downloads/Blender.app/Contents/MacOS/Blender
+denendi: /Users/ubilgic/Desktop/Blender.app/Contents/MacOS/Blender
+denendi: /Volumes/Blender/Blender.app/Contents/MacOS/Blender
+  ↑ BULUNDU
+
+Blender: /Volumes/Blender/Blender.app/Contents/MacOS/Blender
+Script:  tools/blender/memory_palace.py
+----------------------------------------
+/Users/ubilgic/Desktop/memdoping/tools/blender/memory_palace.py:138: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+
+[MemDoping] Rota: home · 8 durak
+  · Station_01_FrontDoor
+  · Station_02_Couch
+  · Station_03_Window
+  · Station_04_Table
+  · Station_05_Bed
+  · Station_06_Plant
+  · Station_07_Shower
+  · Station_08_TV
+
+[MemDoping] Üçgen: 552 / 50,000 bütçe
+[MemDoping] Materyal: 4 (doku dosyası yok — düz renk)
+[MemDoping] Bu sürümde desteklenmeyen seçenekler atlandı: ['export_textures', 'visible_objects_only']
+[MemDoping] Doğrulama kopyası: MemDoping/MemDoping/Resources/Models/palace_home.usda
+[MemDoping] Yazıldı: MemDoping/MemDoping/Resources/Models/palace_home.usdz (14 KB)
+
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 01:35:57)
+USD export of 'MemDoping/MemDoping/Resources/Models/palace_home.usdz' took 28.07 ms
+USD export of 'MemDoping/MemDoping/Resources/Models/palace_home.usda' took 19.33 ms
+
+Blender quit
+----------------------------------------
+Blender çıkış kodu: 0
+
+total 200
+drwxr-xr-x  5 ubilgic  staff    160 13 Eyl 15:19 .
+drwxr-xr-x@ 3 ubilgic  staff     96 13 Eyl 14:26 ..
+-rw-r--r--@ 1 ubilgic  staff  85681 13 Eyl 15:19 palace_home.usda
+-rw-r--r--@ 1 ubilgic  staff  14538 13 Eyl 15:19 palace_home.usdz
+drwxr-xr-x@ 3 ubilgic  staff     96 13 Eyl 15:19 textures
+
+=== bitti ===
+Kapatmak için bir tuşa basın
