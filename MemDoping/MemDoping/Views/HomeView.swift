@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var activeLevel: GameLevel?
     @State private var showReview = false
     @State private var showNight = false
+    @State private var showV2 = false
     @State private var expandedChapters: Set<Int> = []
     @State private var showAudience = false
 
@@ -36,6 +37,7 @@ struct HomeView: View {
                         dailyMissionCard.dealIn(2)
                         reviewCard.dealIn(3)
                         continueCard.dealIn(4)
+                        v2Card.dealIn(5)
                         levelLadder.dealIn(5)
                         nightCard.dealIn(6)
                         disclaimer.dealIn(7)
@@ -74,6 +76,9 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $showNight) {
                 NightDopingView()
+            }
+            .navigationDestination(isPresented: $showV2) {
+                V2WorldsView()
             }
         }
     }
@@ -388,6 +393,30 @@ struct HomeView: View {
     }
 
     // MARK: Night Doping (§4 — optional calm mode)
+
+    private var v2Card: some View {
+        Button { showV2 = true } label: {
+            Card {
+                HStack(spacing: 14) {
+                    Text("🧭").font(.title)
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: 6) {
+                            Text("V2 Worlds").font(.headline).foregroundStyle(Brand.text)
+                            Text("BETA").font(.caption2.weight(.bold))
+                                .padding(.horizontal, 6).padding(.vertical, 2)
+                                .background(Brand.accent.opacity(0.3), in: Capsule())
+                                .foregroundStyle(Brand.accentText)
+                        }
+                        Text("Three worlds · PACER scenes · story-led")
+                            .font(.subheadline).foregroundStyle(Brand.text.opacity(0.75))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
+                }
+            }
+        }
+        .buttonStyle(.plain)
+    }
 
     private var nightCard: some View {
         Button { showNight = true } label: {
