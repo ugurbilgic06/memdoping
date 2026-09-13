@@ -168,3 +168,4 @@ final class HapticsPlayer {
         #endif
     }
 }
+

@@ -152,4 +152,51 @@ struct GameStoreTests {
         // A timerless mechanic never gains a study timer.
         #expect(store.adapted(level(1)).memorizeSeconds == 0)
     }
+
+    // MARK: PACER levels were appended, not spliced in
+
+    /// The original twelve keep their index *and* their mechanic, so a saved
+    /// highestUnlockedLevel still means what it meant before.
+    @Test func addingPacerLevelsDidNotRenumberTheExistingLadder() {
+        let expected: [LevelMechanic] = [
+            .pairRecall, .chunking, .scene, .scene, .retrieval, .retrieval,
+            .interleaving, .pairRecall, .loci, .elaboration, .story, .numberShape
+        ]
+        for (i, mechanic) in expected.enumerated() {
+            #expect(level(i + 1).mechanic == mechanic)
+        }
+        #expect(SampleLevels.all.count == 100)
+    }
+
+    @Test func pacerLevelsCarryTheirContent() {
+        #expect(level(13).mechanic == .procedure)
+        #expect(level(13).procedure != nil)
+        #expect(level(14).mechanic == .analogy)
+        #expect((level(14).analogies ?? []).isEmpty == false)
+        #expect(level(15).mechanic == .conceptMap)
+        #expect(level(15).conceptMap != nil)
+    }
+
+    /// Difficulty-scaled clones and adaptive variants must keep the wired
+    /// content — dropping it would make a generated PACER level fall back to
+    /// the default deck and silently change the mission.
+    @Test func scalingAndAdaptingPreservePacerContent() {
+        let store = freshStore()
+
+        let scaled = level(13).scaled(toIndex: 28, step: 1)
+        #expect(scaled.procedure?.id == level(13).procedure?.id)
+
+        let adaptedAnalogy = store.adapted(level(14))
+        #expect((adaptedAnalogy.analogies ?? []).count == (level(14).analogies ?? []).count)
+
+        let adaptedMap = store.adapted(level(15))
+        #expect(adaptedMap.conceptMap?.id == level(15).conceptMap?.id)
+    }
+
+    /// Production-heavy PACER work must not weigh less than recognition.
+    @Test func pacerMechanicsWeighAboveMultipleChoice() {
+        #expect(level(13).memoryDifficulty > level(1).memoryDifficulty)   // perform > recognise
+        #expect(level(15).memoryDifficulty > level(10).memoryDifficulty)  // map > single why
+        #expect(level(14).memoryDifficulty > level(1).memoryDifficulty)
+    }
 }

@@ -154,4 +154,141 @@ struct MechanicsTests {
         // Every digit maps to a non-empty shape.
         for d in 0...9 { #expect(s.shape(for: d) != "?") }
     }
+
+    // MARK: PACER P — Procedural. Only unaided placements score, and a wrong
+    // move must teach rather than simply fail.
+
+    @Test func procedureScoresOnlyFirstTryPlacements() {
+        let s = ProcedureSession(level: level(13))
+        s.beginStudy()
+        s.beginPerforming()
+        while s.phase == .perform, let expected = s.expectedStep {
+            s.attempt(expected)
+        }
+        #expect(s.correctCount == s.totalSteps)
+        #expect(s.accuracy == 1.0)
+        #expect(s.missteps.isEmpty)
+    }
+
+    @Test func procedureMisstepCorrectsInsteadOfAdvancing() {
+        let s = ProcedureSession(level: level(13))
+        s.beginStudy()
+        s.beginPerforming()
+
+        guard let expected = s.expectedStep,
+              let wrong = s.tray.first(where: { $0.id != expected.id }) else {
+            Issue.record("tray should offer at least one wrong move")
+            return
+        }
+
+        let placedBefore = s.placed.count
+        s.attempt(wrong)
+
+        #expect(s.placed.count == placedBefore)      // nothing moved
+        #expect(s.correction != nil)                 // the corrective is raised
+        #expect(s.correction?.expected.id == expected.id)
+        #expect(!(s.correction?.step.why ?? "").isEmpty)   // and it explains itself
+
+        s.acknowledgeCorrection()
+        #expect(s.correction == nil)
+
+        // Same position, now answered correctly — but it no longer counts.
+        s.attempt(expected)
+        #expect(s.placed.count == placedBefore + 1)
+        #expect(s.correctCount == placedBefore)
+    }
+
+    @Test func procedureTrapsAreNotPartOfTheOrder() {
+        let s = ProcedureSession(level: level(13))
+        let traps = s.tray.filter { s.isTrap($0) }
+        #expect(!traps.isEmpty)
+        // A trap is never one of the steps the procedure actually asks for.
+        for trap in traps {
+            #expect(!s.steps.contains { $0.id == trap.id })
+        }
+    }
+
+    // MARK: PACER A — Analogous. The critique must have both sides, and recall
+    // distractors must come from *other* comparisons.
+
+    @Test func analogyOffersBothHoldingAndBreakingClaims() {
+        let s = AnalogySession(level: level(14))
+        for analogy in s.analogies {
+            #expect(!analogy.holdingPoints.isEmpty)
+            #expect(!analogy.breakingPoints.isEmpty)
+        }
+    }
+
+    @Test func analogyScoresTheRecalledBreakingPoint() {
+        let s = AnalogySession(level: level(14))
+        s.beginCritique()
+        while s.phase == .critique, let j = s.currentJudgement {
+            s.judge(holds: j.aspect.holds)       // judge every claim correctly
+            s.advanceAfterJudgement()
+        }
+        #expect(s.critiqueCorrect == s.critiqueTotal)
+
+        while s.phase == .recall, let q = s.currentQuestion {
+            s.answerCurrent(q.answer)
+            s.advanceAfterAnswer()
+        }
+        #expect(s.correctCount == s.totalQuestions)
+        #expect(s.accuracy == 1.0)
+    }
+
+    @Test func analogyDistractorsBelongToOtherComparisons() {
+        let s = AnalogySession(level: level(14))
+        for q in s.questions {
+            let ownBreaks = Set(q.analogy.breakingPoints.map(\.text))
+            let distractors = q.options.filter { $0 != q.answer }
+            #expect(!distractors.isEmpty)
+            for d in distractors {
+                #expect(!ownBreaks.contains(d))   // never this analogy's own break
+            }
+        }
+    }
+
+    // MARK: PACER C — Conceptual. The relation is the answer, and the
+    // confusable twin always stays on the table.
+
+    @Test func conceptMapScoresRecalledRelations() {
+        let s = ConceptMapSession(level: level(15))
+        s.beginMapping()
+        while s.phase == .map, let link = s.currentLink {
+            s.chooseRelation(link.node.relation)
+            s.advanceAfterLink()
+        }
+        #expect(s.mappedCorrect == s.mappedTotal)
+
+        while s.phase == .recall, let q = s.currentQuestion {
+            s.answerCurrent(q.node.relation)
+            s.advanceAfterAnswer()
+        }
+        #expect(s.correctCount == s.totalQuestions)
+        #expect(s.accuracy == 1.0)
+    }
+
+    @Test func conceptMapKeepsTheConfusableTwinInPlay() {
+        let s = ConceptMapSession(level: level(15))
+        let twins: [RelationKind: RelationKind] = [
+            .increases: .decreases, .decreases: .increases,
+            .causes: .requires, .requires: .causes
+        ]
+        for link in s.links {
+            #expect(link.options.contains(link.node.relation))
+            if let twin = twins[link.node.relation] {
+                #expect(link.options.contains(twin))
+            }
+        }
+    }
+
+    @Test func conceptMapOptionsNeverRepeat() {
+        let s = ConceptMapSession(level: level(15))
+        for link in s.links {
+            #expect(Set(link.options).count == link.options.count)
+        }
+        for q in s.questions {
+            #expect(Set(q.options).count == q.options.count)
+        }
+    }
 }

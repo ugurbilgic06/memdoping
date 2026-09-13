@@ -48,6 +48,9 @@ struct HomeView: View {
                     case .elaboration: ElaborationMissionView(level: l)
                     case .story:      StoryMissionView(level: l)
                     case .numberShape: NumberShapeMissionView(level: l)
+                    case .procedure:  ProcedureMissionView(level: l)
+                    case .analogy:    AnalogyMissionView(level: l)
+                    case .conceptMap: ConceptMapMissionView(level: l)
                     }
                 }
                 .doorReveal()   // "doors opening" reveal on entering a level

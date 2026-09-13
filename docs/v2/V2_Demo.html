@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MemDoping V2 — Demo</title>
+<style>
+:root{
+  color-scheme: light;
+  --ink:#241C12; --warm:#7E6949; --rule:#DCD2BE; --paper:#FBF8F1;
+  --c1:#FF6B4A; --c2:#22C7C7; --c3:#FFC53D; --c4:#8B5CF6; --c5:#31D07A;
+  --glow:rgba(255,107,74,.34);
+  --sheen:rgba(255,255,255,.55);
+}
+*{box-sizing:border-box}
+body{margin:0;background:transparent;color:var(--ink);overflow-x:hidden;
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:4px 2px 30px;position:relative;z-index:1}
+
+h1{font-size:20px;margin:0 0 3px}
+.sub{color:var(--warm);font-size:12.5px;margin:0 0 14px}
+
+/* ══════ DEKORATİF KATMAN — 3B sürüklenen cisimler ══════ */
+.amb{position:fixed;inset:0;pointer-events:none;z-index:0;perspective:900px;overflow:hidden}
+.amb i{position:absolute;width:60px;height:60px;transform-style:preserve-3d;
+  animation:drift linear infinite;opacity:.2}
+.amb i::before,.amb i::after{content:"";position:absolute;inset:0;border-radius:14px}
+.amb i::before{background:linear-gradient(145deg,var(--c1),var(--c4));transform:translateZ(16px)}
+.amb i::after{background:linear-gradient(145deg,var(--c2),var(--c3));transform:translateZ(-16px)}
+@keyframes drift{
+  0%{transform:translate3d(0,110vh,0) rotateX(0) rotateY(0)}
+  100%{transform:translate3d(0,-25vh,0) rotateX(360deg) rotateY(540deg)}}
+
+/* ══════ yaş yolu sekmeleri ══════ */
+.paths{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;perspective:900px}
+.path{flex:1;min-width:180px;border:0;border-radius:15px;padding:11px 13px;cursor:pointer;
+  text-align:left;font-family:inherit;color:#fff;transform-style:preserve-3d;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1.3),box-shadow .3s}
+.path:hover{transform:translateZ(18px) rotateX(-7deg)}
+.path[aria-selected="true"]{transform:translateZ(26px) rotateX(-4deg);
+  box-shadow:0 16px 34px -10px var(--glow)}
+.path b{display:block;font-size:14.5px;text-shadow:0 1px 2px rgba(0,0,0,.22)}
+.path span{font-size:11px;opacity:.92}
+
+/* ══════ sahne ══════ */
+.stage{border-radius:19px;overflow:hidden;perspective:1250px;
+  transition:background .45s;position:relative}
+.bar{display:flex;align-items:center;gap:9px;padding:9px 14px;flex-wrap:wrap;
+  font-size:12px;color:#fff;background:rgba(0,0,0,.22);backdrop-filter:blur(6px)}
+.chip{padding:2px 10px;border-radius:99px;font-size:10.5px;font-weight:800;
+  letter-spacing:.04em;text-transform:uppercase;color:#1a1208}
+.steps{display:flex;gap:3px;margin-left:auto;flex-wrap:wrap}
+.step{font-size:9.5px;padding:2px 7px;border-radius:99px;opacity:.4;
+  border:1px solid currentColor;white-space:nowrap}
+.step.on{opacity:1;font-weight:800;background:rgba(255,255,255,.2)}
+.screen{padding:20px;min-height:360px;display:flex;flex-direction:column;
+  transform-style:preserve-3d}
+
+/* anlatı şeridi */
+.story{font-size:12.5px;color:#fff;opacity:.9;background:rgba(0,0,0,.2);
+  padding:7px 13px;display:flex;gap:8px;align-items:center}
+.story em{font-style:normal;font-size:15px}
+
+.lead{font-size:12.5px;opacity:.75;margin:0 0 4px;color:#fff}
+.big{font-size:22px;font-weight:800;margin:0 0 12px;line-height:1.25;color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.mid{font-size:16px;font-weight:650;margin:0 0 10px;color:#fff}
+
+/* ══════ ANLAM TAŞIYAN HAREKET — kartlar ══════ */
+.opts{display:flex;flex-direction:column;gap:9px;transform-style:preserve-3d}
+.opts.row{flex-direction:row;flex-wrap:wrap}
+.tile{border:0;border-radius:14px;padding:13px 15px;cursor:pointer;font-size:14.5px;
+  text-align:left;font-family:inherit;color:#1a1208;display:flex;align-items:center;gap:11px;
+  transform-style:preserve-3d;position:relative;
+  background:linear-gradient(160deg,var(--sheen),transparent 42%),
+             linear-gradient(160deg,var(--tc,#fff),color-mix(in srgb,var(--tc,#fff) 70%,#000));
+  box-shadow:0 8px 0 -2px color-mix(in srgb,var(--tc,#fff) 55%,#000),
+             0 14px 26px -12px rgba(0,0,0,.5);
+  transition:transform .16s cubic-bezier(.2,.9,.3,1.4),box-shadow .16s}
+.tile:hover{transform:translateZ(16px) translateY(-3px) rotateX(-5deg)}
+.tile:active{transform:translateZ(4px) translateY(2px)}
+.tile em{font-style:normal;font-size:21px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+.tile.ok{animation:flipOK .62s cubic-bezier(.3,.9,.3,1.1) forwards}
+.tile.no{animation:shake .34s}
+.tile.dim{opacity:.32;pointer-events:none;filter:grayscale(.7)}
+@keyframes flipOK{
+  0%{transform:rotateY(0) translateZ(0)}
+  55%{transform:rotateY(180deg) translateZ(44px) scale(1.07)}
+  100%{transform:rotateY(360deg) translateZ(0) scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px) rotateZ(-2deg)}
+  60%{transform:translateX(8px) rotateZ(2deg)}}
+
+/* kutular */
+.buckets{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap;perspective:800px}
+.bucket{flex:1;min-width:88px;border:0;border-radius:14px;padding:12px 7px;text-align:center;
+  cursor:pointer;font-family:inherit;color:#1a1208;transform-style:preserve-3d;
+  background:linear-gradient(160deg,var(--sheen),transparent 45%),var(--bc,#fff);
+  box-shadow:0 7px 0 -1px color-mix(in srgb,var(--bc,#fff) 55%,#000),
+             0 14px 22px -12px rgba(0,0,0,.45);
+  transition:transform .17s cubic-bezier(.2,.9,.3,1.4)}
+.bucket:hover{transform:translateZ(20px) translateY(-4px) rotateX(-8deg)}
+.bucket b{display:block;font-size:17px}
+.bucket span{font-size:10px;opacity:.72;display:block;margin-top:1px}
+.bucket.ok{animation:flipOK .62s forwards}
+.bucket.no{animation:shake .34s}
+
+.card{border-radius:15px;padding:15px 16px;font-size:15px;margin-bottom:12px;color:#1a1208;
+  background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.74));
+  box-shadow:0 12px 26px -14px rgba(0,0,0,.6);transform:translateZ(8px)}
+
+/* düzeltici */
+.fix{border-left:4px solid var(--c3);border-radius:11px;padding:12px 14px;font-size:13px;
+  margin-top:11px;color:#1a1208;background:rgba(255,255,255,.93);
+  box-shadow:0 14px 30px -16px rgba(0,0,0,.7);animation:rise .26s}
+.fix b{display:block;margin-bottom:3px}
+@keyframes rise{from{opacity:0;transform:translateY(9px) translateZ(0)}
+  to{opacity:1;transform:translateY(0) translateZ(20px)}}
+
+/* yuvalar */
+.slots{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;min-height:50px;perspective:700px}
+.slot{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:21px;
+  background:rgba(255,255,255,.2);border:2px dashed rgba(255,255,255,.42);
+  transform-style:preserve-3d}
+.slot.filled{border-style:solid;border-color:transparent;animation:land .42s cubic-bezier(.2,.9,.3,1.4);
+  background:linear-gradient(160deg,var(--sheen),transparent 45%),var(--c5);
+  box-shadow:0 6px 0 -1px color-mix(in srgb,var(--c5) 55%,#000)}
+@keyframes land{0%{transform:translateZ(70px) translateY(-28px) rotateX(50deg);opacity:0}
+  100%{transform:translateZ(0) translateY(0) rotateX(0);opacity:1}}
+
+/* ══════ 3B objeler ══════ */
+.obj{width:110px;height:110px;margin:6px auto 14px;position:relative;
+  transform-style:preserve-3d;animation:spin 14s linear infinite}
+.obj.fast{animation-duration:6s}
+.obj u{position:absolute;inset:0;border-radius:22px;display:grid;place-items:center;
+  font-size:44px;text-decoration:none;
+  background:linear-gradient(150deg,var(--sheen),transparent 45%),var(--of,var(--c2));
+  box-shadow:0 0 34px -6px var(--glow)}
+.obj u:nth-child(1){transform:translateZ(34px)}
+.obj u:nth-child(2){transform:rotateY(90deg) translateZ(34px);opacity:.92}
+.obj u:nth-child(3){transform:rotateY(180deg) translateZ(34px);opacity:.86}
+.obj u:nth-child(4){transform:rotateY(270deg) translateZ(34px);opacity:.92}
+@keyframes spin{from{transform:rotateX(-16deg) rotateY(0)}
+  to{transform:rotateX(-16deg) rotateY(360deg)}}
+
+/* ödül */
+.reward{margin:auto;text-align:center;transform-style:preserve-3d}
+.combo{font-size:12.5px;font-weight:900;padding:4px 13px;border-radius:99px;color:#1a1208;
+  background:linear-gradient(140deg,var(--c3),var(--c1));display:inline-block;
+  animation:pulse .45s cubic-bezier(.2,.9,.3,1.6)}
+@keyframes pulse{0%{transform:scale(.6) translateZ(0)}
+  60%{transform:scale(1.22) translateZ(34px)}100%{transform:scale(1) translateZ(0)}}
+.meter{height:9px;border-radius:99px;background:rgba(255,255,255,.24);overflow:hidden;
+  margin:15px auto 0;max-width:240px}
+.meter i{display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--c5),var(--c2),var(--c3));
+  transition:width 1s cubic-bezier(.2,.8,.3,1)}
+
+/* konfeti — dekoratif */
+.conf{position:absolute;inset:0;pointer-events:none;overflow:hidden;perspective:600px}
+.conf s{position:absolute;width:11px;height:16px;text-decoration:none;border-radius:3px;
+  animation:fall 1.5s ease-in forwards;transform-style:preserve-3d}
+@keyframes fall{0%{transform:translateY(-20px) rotateX(0) rotateZ(0);opacity:1}
+  100%{transform:translateY(330px) rotateX(640deg) rotateZ(280deg);opacity:0}}
+
+.foot{display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap}
+button.go{border:0;border-radius:13px;padding:12px 21px;font-size:14.5px;font-weight:800;
+  cursor:pointer;font-family:inherit;color:#1a1208;transform-style:preserve-3d;
+  background:linear-gradient(150deg,var(--sheen),transparent 45%),
+             linear-gradient(150deg,var(--c3),var(--c1));
+  box-shadow:0 8px 0 -2px color-mix(in srgb,var(--c1) 55%,#000),0 16px 28px -14px rgba(0,0,0,.6);
+  transition:transform .15s cubic-bezier(.2,.9,.3,1.4)}
+button.go:hover{transform:translateZ(14px) translateY(-3px)}
+button.go:active{transform:translateY(3px)}
+button.ghost{background:rgba(255,255,255,.18);color:#fff;box-shadow:none;
+  border:1.5px solid rgba(255,255,255,.42)}
+.tick{font-size:11.5px;color:#fff;opacity:.7;margin-left:auto}
+
+.levels{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap}
+.lv{font-size:11.5px;padding:6px 12px;border-radius:99px;border:1.5px solid var(--rule);
+  cursor:pointer;background:var(--paper);font-family:inherit;color:var(--ink);
+  transition:transform .15s}
+.lv:hover{transform:translateY(-2px)}
+.lv[aria-current="true"]{border-color:var(--ink);font-weight:800}
+.lv.done::after{content:" ✓";color:#1F9254}
+
+.note{font-size:11.5px;color:var(--warm);margin-top:15px;line-height:1.6;
+  border-top:1px solid var(--rule);padding-top:11px}
+.note b{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .amb{display:none}
+}
+</style>
+</head>
+<body>
+<div class="amb" id="amb"></div>
+<div class="wrap">
+  <h1>MemDoping V2 — his prototipi</h1>
+  <p class="sub">Üç dünya · dünya başına 3 sahne · anlatı + 3B · dış varlık kullanılmadan</p>
+
+  <div class="paths" role="tablist" id="paths"></div>
+  <div class="levels" id="levels"></div>
+
+  <div class="stage" id="stage">
+    <div class="bar" id="bar"></div>
+    <div class="story" id="storybar"></div>
+    <div class="screen" id="screen"></div>
+  </div>
+
+  <p class="note">
+    <b>İki hareket türü ayrı çalışıyor.</b>
+    <b>Anlam taşıyan:</b> doğru cevapta 3B çevirme, yuvaya oturan adımın yukarıdan inişi,
+    seri büyüdükçe öne çıkan rozet — hepsi bir bilgi veriyor.
+    <b>Dekoratif:</b> arka planda sürüklenen cisimler, konfeti, dönen 3B obje — bunlar yalnızca
+    kanca, ödül ve geçiş anlarında, yani dikkatin serbest olduğu yerlerde.
+    Oyun anında ekran sakinleşiyor, çünkü orada dikkat eğitilen şeyin kendisi.
+  </p>
+</div>
+
+<script>
+/* ══════════ DÜNYALAR ══════════ */
+const WORLDS = {
+  child:{ label:"Child", hint:"Orman Okulu · yavaş · büyük",
+    sky:"linear-gradient(160deg,#2BB6A8,#39C46F 55%,#FFC53D)",
+    c1:"#FF6B4A",c2:"#22C7C7",c3:"#FFC53D",c4:"#7ED957",c5:"#31D07A",
+    chip:"#FFE08A", tempo:1.0, buckets:3,
+    arc:["🦊 Tilki Efe kış hazırlığını unutmuş. Yardım eder misin?",
+         "🌰 Tohumları bulduk. Şimdi doğru sırayla ekmeliyiz.",
+         "🏠 Ambarı doldurduk. Nereye ne koyduğunu hatırlıyor musun?"] },
+  teen:{ label:"Teen", hint:"Sinyal · hızlı · combo",
+    sky:"linear-gradient(160deg,#2B1B5A,#6D28D9 50%,#0EA5E9)",
+    c1:"#FF3D8B",c2:"#22D3EE",c3:"#FDE047",c4:"#A855F7",c5:"#4ADE80",
+    chip:"#7DF9FF", tempo:0.55, buckets:5,
+    arc:["📡 Kesik kesik sinyaller geliyor. Türlerine ayır, yoksa kaybolur.",
+         "⚡️ Gelen mesaj bir benzetme. Nerede yalan söylüyor?",
+         "🔐 Son blok dokuz haneli. Grupla, yoksa tutamazsın."] },
+  adult:{ label:"Adult", hint:"Arşiv · sade · stratejik",
+    sky:"linear-gradient(160deg,#132A2E,#1F4E4A 55%,#B4813C)",
+    c1:"#E08A3C",c2:"#3FA9A0",c3:"#E8C46A",c4:"#9C6FB0",c5:"#5FBF8F",
+    chip:"#E8C46A", tempo:0.8, buckets:5,
+    arc:["📚 Arşiv dağılmış. Önce neyin neyle bağlı olduğunu çıkaralım.",
+         "📊 Bir bulgu var. Tam olarak neyi kanıtlıyor, neyi kanıtlamıyor?",
+         "🪐 Katalog kaydı silinmiş. Kalanından adı sen çıkaracaksın."] }
+};
+
+const FLOW = ["KANCA","ANLATIM","OYUN","TEMPO","GERİ ÇAĞIR","ÖDÜL"];
+const TYPES = [{k:"P",n:"Uygula"},{k:"A",n:"Sorgula"},{k:"C",n:"Haritala"},
+               {k:"E",n:"Sakla+Bağla"},{k:"R",n:"Tekrarla"}];
+
+const LEVELS = {
+child:[
+ {t:"Ayır", kind:"triage", tech:"PACER — sınıflandırma", obj:"📦",
+  hook:"Efe'nin notları karışmış!", tut:"Her bilgi aynı tür değil. Nasıl yapılır → Uygula kutusu.",
+  items:[{x:"Önce suyu kaynat, sonra çayı demle.",a:"P",why:"Adım sırası var — yapılarak öğrenilir."},
+         {x:"Suyun kaynama noktası 100 °C.",a:"R",why:"Tek başına duran kesin bir ayrıntı."},
+         {x:"Stres hatırlamayı zayıflatır.",a:"C",why:"İki kavram arasında yönlü bir ilişki."}]},
+ {t:"Adım Adım", kind:"order", tech:"PACER P — Uygula", obj:"🌱",
+  hook:"Tohumu ekebilir misin?", tut:"Bir kez izle, sonra kendin yap.", goal:"Tohum çimlensin",
+  steps:[{e:"🪴",x:"Toprağı doldur",w:"Ekecek yer olmadan hiçbir şey ekilemez."},
+         {e:"🕳️",x:"Küçük bir çukur aç",w:"Gömülü tohumun etrafını kazamazsın — çukur önce açılır."},
+         {e:"🌰",x:"Tohumu bırak",w:"İşin özü bu; öncesi hazırlık."},
+         {e:"🤲",x:"Üstünü ört",w:"Örtmeden sularsan su tohumu sürükler."},
+         {e:"💧",x:"Sula",w:"Örttükten sonra sularsan toprağa işler."}],
+  traps:[{e:"✂️",x:"Yaprakları buda",w:"Henüz yaprak yok. Bu, büyümüş bitkinin işi."}]},
+ {t:"Ambar", kind:"order", tech:"Method of Loci", obj:"🏠",
+  hook:"Ambarı gez, nereye ne koyduğunu hatırla.", tut:"Her eşyayı bir durağa koy, sonra aynı yolu yürü.",
+  goal:"Yolu doğru sırada yürü",
+  steps:[{e:"🚪",x:"Kapı — 🦊 tilki",w:"Yol her zaman kapıdan başlar."},
+         {e:"🛋️",x:"Koltuk — 🐢 kaplumbağa",w:"Kapıdan sonraki ilk durak."},
+         {e:"🪟",x:"Pencere — 🦉 baykuş",w:"Koltuktan sonra gelir."},
+         {e:"🛏️",x:"Yatak — 🐝 arı",w:"Yolun sonu."}],
+  traps:[{e:"🚿",x:"Duş — 🐙 ahtapot",w:"Bu durağa bu turda bir şey bırakmadın."}]}
+],
+teen:[
+ {t:"Ayır — hızlı tur", kind:"triage", tech:"PACER — sınıflandırma", obj:"📡",
+  hook:"5 kanal. Süre işliyor. Seri yap.", tut:"Türü bul, kanala at. Hata seriyi kırar, puanı değil.",
+  items:[{x:"Beyin bir bilgisayar gibidir.",a:"A",why:"Yeniyi bildiğe bağlayan bir benzetme."},
+         {x:"Bir çalışmada A grubu %40 fazla hatırladı.",a:"E",why:"Bir iddiayı destekleyen veri."},
+         {x:"Formülü uygulamak için önce değişkenleri yaz.",a:"P",why:"Uygulanarak öğrenilen adımlar."},
+         {x:"Mitokondri hücrenin enerji merkezidir.",a:"C",why:"Yapı ve işlev arasında ilişki kuran kavram."}]},
+ {t:"Nerede Kırılıyor", kind:"judge", tech:"PACER A — Sorgula", obj:"⚡️",
+  hook:"Gelen mesaj: “Akım, borudaki su gibidir.”", tut:"Nerede tutuyor, nerede kırılıyor? İkisini de bul.",
+  claim:"Elektrik akımı, borudaki su gibidir.",
+  aspects:[{x:"Dar boru akışa direnir — ince tel de akıma",h:true},
+           {x:"Basınç akışı iter, voltaj akımı iter",h:true},
+           {x:"Kesik telden akım dökülür, sudaki gibi",h:false},
+           {x:"Suyu görür ve tutarsın; akımı da",h:false}],
+  blind:"Bu resimde elektriğin ne olduğuna yer yok — o yüzden manyetik hiçbir şeyi açıklayamaz."},
+ {t:"Grupla", kind:"chunk", tech:"Chunking", obj:"🔐",
+  hook:"Son blok: 9 hane, 15 saniye.", tut:"Tek tek tutma — üçerli grupla. Grup tek şey sayılır.",
+  digits:"427905318"}
+],
+adult:[
+ {t:"Bağlantı Haritası", kind:"relate", tech:"PACER C — Haritala", obj:"🧠",
+  hook:"Hatırlamak neye bağlı?", tut:"Her kavramı merkeze bağla — ve bağın adını koy.",
+  center:"Hatırlamak", centerIcon:"🧠",
+  nodes:[{e:"😴",n:"Uyku",r:"gerektirir",note:"Anılar uykuda pekişir; uyku giderse günün öğrenmesi de gider."},
+         {e:"🔁",n:"Geri çağırma pratiği",r:"artırır",note:"Hatırlamaya çalışmak, tekrar okumaktan daha çok güçlendirir."},
+         {e:"😰",n:"Stres",r:"azaltır",note:"Yüksek stres çalışma belleğini daraltır."}],
+  rels:["gerektirir","artırır","azaltır","örneğidir"]},
+ {t:"Neyi Kanıtlıyor", kind:"evidence", tech:"PACER E — Sakla + Bağla", obj:"📊",
+  hook:"Bir bulgu var. Sınırı nerede?", tut:"Kanıtı desteklediği iddiaya bağla. Sonra sınırını çiz.",
+  ev:"Bir çalışmada aralıklı tekrar yapan grup, bir hafta sonra %40 daha fazla hatırladı.",
+  claims:[{x:"Aralıklı tekrar, kalıcılığı artırır.",ok:true},
+          {x:"Aralıklı tekrar, anlamayı da artırır.",ok:false},
+          {x:"Aralıklı tekrar herkes için en iyi yöntemdir.",ok:false}],
+  limit:"Çalışma bir haftalık kalıcılığı ölçtü — anlamayı veya uzun vadeyi değil."},
+ {t:"Kayıp Kayıt", kind:"recallword", tech:"Retrieval Practice", obj:"🪐",
+  hook:"Katalog adı silinmiş. Şıksız.", tut:"Hatırlamaya çalışmak zor gelir — asıl işi yapan da o.",
+  word:"SATÜRN", clue:"🪐 Halkalı gezegen"}
+]};
+
+/* ══════════ durum ══════════ */
+let path="child", lvl=0, step=0, idx=0, combo=0, best=0, done={};
+const $=id=>document.getElementById(id);
+const W=()=>WORLDS[path];
+const tempo=ms=>Math.round(ms*W().tempo);
+const pick=(i)=>[W().c1,W().c2,W().c3,W().c4,W().c5][i%5];
+
+/* dekoratif arka plan */
+function ambient(){
+  $('amb').innerHTML=Array.from({length:9},(_,i)=>
+    `<i style="left:${6+i*11}%;animation-duration:${17+i*3.5}s;animation-delay:${-i*4}s;
+        width:${34+i*7}px;height:${34+i*7}px"></i>`).join('');
+}
+
+function chrome(){
+  const w=W(), r=document.documentElement.style;
+  r.setProperty('--c1',w.c1); r.setProperty('--c2',w.c2); r.setProperty('--c3',w.c3);
+  r.setProperty('--c4',w.c4); r.setProperty('--c5',w.c5);
+  r.setProperty('--glow',w.c1+'66');
+  $('stage').style.background=w.sky;
+
+  $('paths').innerHTML=Object.entries(WORLDS).map(([k,v])=>
+    `<button class="path" role="tab" aria-selected="${k===path}" data-p="${k}"
+       style="background:${v.sky}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+
+  $('levels').innerHTML=LEVELS[path].map((L,i)=>
+    `<button class="lv ${done[path+i]?'done':''}" aria-current="${i===lvl}" data-l="${i}">
+       ${i+1}. ${L.t}</button>`).join('');
+
+  const L=LEVELS[path][lvl];
+  $('bar').innerHTML=`<span class="chip" style="background:${w.chip}">${w.label}</span>
+     <b>${L.t}</b><span style="opacity:.75;font-size:11.5px">${L.tech}</span>
+     <span class="steps">${FLOW.map((s,i)=>
+       `<span class="step ${i===step?'on':''}">${s}</span>`).join('')}</span>`;
+  $('storybar').innerHTML=`<em>📖</em><span>${w.arc[lvl]}</span>`;
+}
+
+function go(s){ step=s; chrome(); render(); }
+
+function render(){
+  const L=LEVELS[path][lvl], S=$('screen');
+  if(step===0) return hook(L,S);
+  if(step===1) return tut(L,S);
+  if(step<5)   return play(L,S);
+  return reward(S);
+}
+const ramp=()=>step===3;
+
+function obj3d(icon,fast){
+  return `<div class="obj ${fast?'fast':''}" style="--of:${W().c2}">
+    <u>${icon}</u><u>${icon}</u><u>${icon}</u><u>${icon}</u></div>`;
+}
+
+/* ── kanca: dekoratif hareket serbest ── */
+function hook(L,S){
+  S.innerHTML=`<div class="reward">
+     ${obj3d(L.obj, path==="teen")}
+     <p class="big">${L.hook}</p>
+     <button class="go" id="n">Başla</button>
+     <div class="tick" style="margin:9px 0 0">KANCA ≤ 3 sn · atlanabilir</div></div>`;
+  $('n').onclick=()=>go(1);
+  setTimeout(()=>{ if(step===0) go(1); }, tempo(3600));
+}
+
+function tut(L,S){
+  S.innerHTML=`<p class="lead">Mikro anlatım · tek cümle</p>
+    <p class="big">${L.tut}</p>
+    <div class="card">${L.goal?('🎯 '+L.goal):'Gösterim burada oynar — 3–5 sn, metin değil hareket.'}</div>
+    <div class="foot"><button class="go" id="n">Anladım</button>
+      <button class="go ghost" id="d">Nasıl çalışır? ▾</button>
+      <span class="tick">uzun metin burada gizli</span></div>`;
+  $('n').onclick=()=>{ idx=0; combo=0; go(2); };
+  $('d').onclick=()=>{ $('d').insertAdjacentHTML('afterend',
+    `<div class="fix" style="flex-basis:100%"><b>Arkasındaki araştırma</b>
+     Projede bu alan hakemli atıflar taşır. PACER düzeni belirler, güvenilirliği literatür taşır.</div>`);
+    $('d').disabled=true; };
+}
+
+function play(L,S){
+  return ({triage,order,judge,chunk,relate,evidence,recallword})[L.kind](L,S);
+}
+
+function next(){
+  const L=LEVELS[path][lvl];
+  const total=(L.items||L.aspects||L.nodes||L.claims||L.steps||[1]).length;
+  idx++;
+  if(idx>=total){ done[path+lvl]=true; go(5); }
+  else if(idx===Math.ceil(total/2)&&step===2) go(3);
+  else render();
+}
+function hit(ok){ ok?(combo++,best=Math.max(best,combo)):(combo=0); }
+const tag=()=>combo>1?`<span class="combo">🔥 ${combo}× seri</span>`:'';
+
+/* ── triage ── */
+function triage(L,S){
+  const it=L.items[idx], n=W().buckets;
+  const types=n===3?[TYPES[0],TYPES[2],TYPES[4]]:TYPES;
+  S.innerHTML=`<p class="lead">${idx+1}/${L.items.length} ${ramp()?'· tempo yükseldi':''} ${tag()}</p>
+    <div class="card" style="font-size:17px;font-weight:650">${it.x}</div>
+    <p class="mid" style="font-size:14px;opacity:.85">Bu hangi tür bilgi?</p>
+    <div class="buckets">${types.map((t,i)=>
+      `<button class="bucket" data-k="${t.k}" style="--bc:${pick(i)}">
+         <b>${t.k}</b><span>${t.n}</span></button>`).join('')}</div>`;
+  S.querySelectorAll('.bucket').forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.k===it.a; b.classList.add(ok?'ok':'no'); hit(ok);
+    if(ok) setTimeout(next,tempo(700));
+    else S.insertAdjacentHTML('beforeend',
+      `<div class="fix"><b>Buraya ait değil</b>${it.why}
+       <div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
+  });
+}
+
+/* ── order ── */
+function order(L,S){
+  const pool=[...L.steps,...(L.traps||[])], placed=L.steps.slice(0,idx);
+  S.innerHTML=`<p class="lead">${idx}/${L.steps.length} ${ramp()?'· destek azaldı':''} ${tag()}</p>
+    <p class="mid">${L.goal}</p>
+    <div class="slots">${L.steps.map((s,i)=>
+      `<div class="slot ${i<idx?'filled':''}">${i<idx?s.e:''}</div>`).join('')}</div>
+    <p class="lead">Sırada ne var?</p>
+    <div class="opts">${pool.filter(s=>!placed.includes(s)).sort(()=>Math.random()-.5)
+      .map((s,i)=>`<button class="tile" style="--tc:${pick(i)}" data-x="${encodeURIComponent(s.x)}">
+        <em>${s.e}</em>${s.x}</button>`).join('')}</div>`;
+  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    const x=decodeURIComponent(b.dataset.x), want=L.steps[idx], ok=x===want.x;
+    b.classList.add(ok?'ok':'no'); hit(ok);
+    if(ok) setTimeout(next,tempo(640));
+    else{ const wrong=pool.find(s=>s.x===x);
+      S.insertAdjacentHTML('beforeend',
+       `<div class="fix"><b>${(L.traps||[]).some(t=>t.x===x)?'Bu, bu işin parçası değil':'Henüz değil'}</b>
+        ${wrong.w}<div style="margin-top:6px;opacity:.8">Buraya gelen: <b>${want.e} ${want.x}</b></div>
+        <div style="margin-top:8px"><button class="go" onclick="render()">Tekrar dene</button></div></div>`); }
+  });
+}
+
+/* ── judge ── */
+function judge(L,S){
+  const a=L.aspects[idx];
+  S.innerHTML=`<p class="lead">${idx+1}/${L.aspects.length} ${tag()}</p>
+    <div class="card" style="font-weight:650">${L.claim}</div>
+    <div class="card" style="font-size:16px">${a.x}</div>
+    <div class="opts row" style="margin-top:auto">
+      <button class="tile" style="--tc:${W().c5};flex:1;justify-content:center" data-h="1">✅ Tutuyor</button>
+      <button class="tile" style="--tc:${W().c1};flex:1;justify-content:center" data-h="0">⚡️ Burada kırılıyor</button></div>`;
+  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    const ok=(b.dataset.h==="1")===a.h; hit(ok); b.classList.add(ok?'ok':'no');
+    S.insertAdjacentHTML('beforeend',
+      `<div class="fix"><b>${a.h?'Benzetme burada tutuyor.':'Benzetme burada kırılıyor.'}</b>
+       ${idx===L.aspects.length-1?L.blind:'Bir benzetme kenarlarında sınanmazsa sessizce inanca dönüşür.'}
+       <div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
+  });
+}
+
+/* ── chunk ── */
+function chunk(L,S){
+  const d=L.digits, g=[d.slice(0,3),d.slice(3,6),d.slice(6)];
+  S.innerHTML=`<p class="lead">${ramp()?'Süre kısaldı':'Grupla ve tut'} ${tag()}</p>
+    <div class="slots" style="justify-content:center;gap:14px">${g.map((x,i)=>
+      `<div class="slot filled" style="width:auto;padding:0 17px;font-size:27px;font-weight:800;
+        --c5:${pick(i)};background:linear-gradient(160deg,var(--sheen),transparent 45%),${pick(i)};
+        box-shadow:0 6px 0 -1px color-mix(in srgb,${pick(i)} 55%,#000)">${x}</div>`).join('')}</div>
+    <div class="card" style="font-size:13.5px">Dokuz hane değil — <b>üç</b> grup.
+      Çalışma belleğin üç şey taşır.</div>
+    <div class="foot" style="margin-top:auto"><button class="go" id="n">Hazırım, gizle</button>
+      <span class="tick">${tempo(ramp()?9000:15000)/1000} sn</span></div>`;
+  $('n').onclick=()=>{ hit(true); next(); };
+}
+
+/* ── relate ── */
+function relate(L,S){
+  const nd=L.nodes[idx];
+  S.innerHTML=`<p class="lead">${idx+1}/${L.nodes.length} ${tag()}</p>
+    ${obj3d(L.centerIcon)}
+    <p class="big" style="text-align:center;font-size:17px;margin-bottom:10px">${L.center}</p>
+    <div class="card" style="text-align:center;font-size:17px">
+      <span style="font-size:23px">${nd.e}</span> &nbsp;${nd.n}</div>
+    <p class="lead">Bu, <b>${L.center}</b> ile nasıl bağlanıyor?</p>
+    <div class="opts">${L.rels.map((r,i)=>
+      `<button class="tile" style="--tc:${pick(i)}" data-r="${r}"><em>🔗</em>${r}</button>`).join('')}</div>`;
+  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.r===nd.r; hit(ok); b.classList.add(ok?'ok':'no');
+    S.insertAdjacentHTML('beforeend',
+      `<div class="fix"><b>${nd.n} — ${nd.r} — ${L.center}</b>${nd.note}
+       <div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
+  });
+}
+
+/* ── evidence ── */
+function evidence(L,S){
+  const c=L.claims[idx];
+  S.innerHTML=`<p class="lead">${idx+1}/${L.claims.length} · kanıt sabit, iddia değişiyor ${tag()}</p>
+    <div class="card" style="border-left:5px solid ${W().c5}">📊 ${L.ev}</div>
+    <p class="lead">Bu kanıt şunu destekliyor mu?</p>
+    <div class="card" style="font-size:16px;font-weight:650">${c.x}</div>
+    <div class="opts row" style="margin-top:auto">
+      <button class="tile" style="--tc:${W().c5};flex:1;justify-content:center" data-v="1">✅ Destekliyor</button>
+      <button class="tile" style="--tc:${W().c1};flex:1;justify-content:center" data-v="0">🚫 Bu kadarını demiyor</button></div>`;
+  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    const ok=(b.dataset.v==="1")===c.ok; hit(ok); b.classList.add(ok?'ok':'no');
+    S.insertAdjacentHTML('beforeend',
+      `<div class="fix"><b>${c.ok?'Evet — kanıt tam olarak bunu destekliyor.':'Hayır — bu, kanıtın söylediğinden fazlası.'}</b>
+       ${L.limit}<div style="margin-top:8px"><button class="go" onclick="next()">Devam</button></div></div>`);
+  });
+}
+
+/* ── retrieval ── */
+function recallword(L,S){
+  const w=L.word;
+  S.innerHTML=`<p class="lead">Şıksız · kendin çıkar</p>
+    <div class="card" style="text-align:center;font-size:19px">${L.clue}</div>
+    <div class="slots" style="justify-content:center">${[...w].map((c,i)=>
+      `<div class="slot" id="s${i}" style="width:42px;height:48px;font-size:18px;font-weight:800"></div>`).join('')}</div>
+    <div class="opts row" style="justify-content:center">${[...w].sort(()=>Math.random()-.5)
+      .map((c,i)=>`<button class="tile" style="--tc:${pick(i)};padding:10px 15px;font-weight:800"
+        data-c="${c}">${c}</button>`).join('')}</div>`;
+  let at=0;
+  S.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    if(at>=w.length) return;
+    if(b.dataset.c===w[at]){ const s=$('s'+at); s.textContent=w[at]; s.classList.add('filled');
+      b.classList.add('dim'); at++; hit(true);
+      if(at===w.length){ done[path+lvl]=true; setTimeout(()=>go(5),tempo(620)); } }
+    else { b.classList.add('no'); hit(false); setTimeout(()=>b.classList.remove('no'),360); }
+  });
+}
+
+/* ── ödül: dekoratif hareket serbest ── */
+function reward(S){
+  const w=W();
+  S.innerHTML=`<div class="conf">${Array.from({length:22},(_,i)=>
+      `<s style="left:${4+i*4.3}%;background:${pick(i)};animation-delay:${i*.055}s"></s>`).join('')}</div>
+    <div class="reward">${obj3d("🏅",true)}
+     <p class="big" style="margin:4px 0 2px">${w.arc[lvl].split(' ')[0]} tamam</p>
+     <p class="lead">En uzun seri: ${best||1}×</p>
+     <div class="meter"><i id="m"></i></div>
+     <div class="foot" style="justify-content:center;margin-top:16px">
+       <button class="go" id="again">Tekrar</button>
+       <button class="go ghost" id="nx">Sıradaki sahne</button></div>
+     <div class="tick" style="margin:10px 0 0">
+       durma noktası · 3 öğe yarın seni bekliyor</div></div>`;
+  setTimeout(()=>{ $('m').style.width='78%'; },90);
+  $('again').onclick=()=>{ idx=0;combo=0; go(0); };
+  $('nx').onclick=()=>{ lvl=(lvl+1)%LEVELS[path].length; idx=0;combo=0;best=0; go(0); };
+}
+
+document.addEventListener('click',e=>{
+  const p=e.target.closest('[data-p]'), l=e.target.closest('[data-l]');
+  if(p){ path=p.dataset.p; lvl=0;idx=0;combo=0;best=0; ambient(); go(0); }
+  if(l){ lvl=+l.dataset.l; idx=0;combo=0;best=0; go(0); }
+});
+
+ambient(); go(0);
+</script>
+</body>
+</html>
