@@ -20,18 +20,20 @@ struct HomeView: View {
         NavigationStack {
             ZStack {
                 BrandBackground()
-                ScrollView {
-                    VStack(spacing: 20) {
-                        header.dealIn(0)
-                        statsRow.dealIn(1)
-                        dailyMissionCard.dealIn(2)
-                        reviewCard.dealIn(3)
-                        continueCard.dealIn(4)
-                        levelLadder.dealIn(5)
-                        nightCard.dealIn(6)
-                        disclaimer.dealIn(7)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            header(proxy).dealIn(0)
+                            statsRow.dealIn(1)
+                            dailyMissionCard.dealIn(2)
+                            reviewCard.dealIn(3)
+                            continueCard.dealIn(4)
+                            levelLadder.dealIn(5).id("levels")
+                            nightCard.dealIn(6)
+                            disclaimer.dealIn(7)
+                        }
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .navigationDestination(item: $activeLevel) { level in
@@ -66,10 +68,18 @@ struct HomeView: View {
 
     // MARK: Header
 
-    private var header: some View {
+    private func header(_ proxy: ScrollViewProxy) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 10) {
-                Hero3DView(size: 58, interactive: false)
+                // Tapping the cube jumps to the level list — a quick "change level".
+                Button {
+                    if store.hapticsEnabled { HapticsPlayer.shared.tap() }
+                    withAnimation(.easeInOut) { proxy.scrollTo("levels", anchor: .top) }
+                } label: {
+                    Hero3DView(size: 58, interactive: false)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Go to levels")
                 VStack(alignment: .leading, spacing: 2) {
                     Text("MemDoping")
                         .font(.largeTitle.bold())
