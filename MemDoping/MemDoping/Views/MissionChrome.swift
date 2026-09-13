@@ -123,6 +123,14 @@ struct MissionSummary: View {
     @State private var celebrationScale: CGFloat = 0.6
     @State private var badgesVisible = false
     @State private var titleScale: CGFloat = 0.7
+    @State private var countStart: Date? = nil
+
+    /// 0→1 eased progress for the counting-up stat numbers.
+    private func countProgress(_ now: Date) -> Double {
+        guard !reduceMotion, let start = countStart else { return 1 }
+        let p = min(1, max(0, now.timeIntervalSince(start) / 0.9))
+        return 1 - pow(1 - p, 3)   // ease-out
+    }
 
     var body: some View {
         ZStack {
@@ -155,18 +163,22 @@ struct MissionSummary: View {
 
             if let outcome {
                 VStack(spacing: 12) {
-                    HStack(spacing: 12) {
-                        StatChip(title: "MemDoping XP", value: "+\(outcome.xpEarned)",
-                                 systemImage: "bolt.fill", tint: Brand.accent)
-                            .dealIn(0)
-                        StatChip(title: "Accuracy",
-                                 value: "\(Int(accuracy * 100))%",
-                                 systemImage: "target")
-                            .dealIn(1)
-                        StatChip(title: "Memory Score",
-                                 value: outcome.memoryScore.map { "\($0)" } ?? "—",
-                                 systemImage: "brain.head.profile")
-                            .dealIn(2)
+                    // Numbers count up rather than snapping in (§1.5 reward).
+                    TimelineView(.animation) { tl in
+                        let p = countProgress(tl.date)
+                        HStack(spacing: 12) {
+                            StatChip(title: "MemDoping XP", value: "+\(Int((Double(outcome.xpEarned) * p).rounded()))",
+                                     systemImage: "bolt.fill", tint: Brand.accent)
+                                .dealIn(0)
+                            StatChip(title: "Accuracy",
+                                     value: "\(Int((accuracy * 100 * p).rounded()))%",
+                                     systemImage: "target")
+                                .dealIn(1)
+                            StatChip(title: "Memory Score",
+                                     value: outcome.memoryScore.map { "\(Int((Double($0) * p).rounded()))" } ?? "—",
+                                     systemImage: "brain.head.profile")
+                                .dealIn(2)
+                        }
                     }
                     if outcome.unlockedNextLevel {
                         badge("New level unlocked!", "lock.open.fill", Brand.success)
@@ -199,6 +211,7 @@ struct MissionSummary: View {
     }
 
     private func revealCelebration() {
+        countStart = Date()   // begin counting the stat numbers up
         guard !reduceMotion else {
             celebrationScale = 1
             titleScale = 1
