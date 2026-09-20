@@ -104,7 +104,13 @@ final class GameStore {
     /// The chosen audience band; nil until picked (treated as neutral).
     private(set) var ageBand: AgeBand?
 
-    func setAgeBand(_ band: AgeBand) { ageBand = band; save() }
+    func setAgeBand(_ band: AgeBand) {
+        ageBand = band
+        save()
+        // Each audience has its own daytime loop, so switch it with the band
+        // (but never interrupt the Night Doping loop).
+        if musicEnabled, !MusicPlayer.shared.isNight { MusicPlayer.shared.start(for: band) }
+    }
 
     /// A baseline difficulty shift from the age band: younger = gentler.
     var ageOffset: Int {

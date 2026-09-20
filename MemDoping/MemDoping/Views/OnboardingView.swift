@@ -61,7 +61,7 @@ struct OnboardingView: View {
         pageLayout(
             art: { brandArt },
             title: "MemDoping",
-            subtitle: "Hafıza Dopingi",
+            subtitle: "Memory Doping",
             body: "Science-based memory techniques, turned into short, playful games. Don't add games to learning — make learning the game."
         )
     }

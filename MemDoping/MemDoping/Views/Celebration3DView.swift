@@ -23,17 +23,19 @@ struct Celebration3DView: View {
     var body: some View {
         ZStack {
             Circle()
+                // Light halo — kept faint because the brand green is now deep
+                // and a strong wash reads as a smudge on the yellow backdrop.
                 .fill(RadialGradient(
-                    colors: [Brand.accent.opacity(0.55), .clear],
-                    center: .center, startRadius: 6, endRadius: size * 0.85))
+                    colors: [Brand.accent.opacity(0.22), .clear],
+                    center: .center, startRadius: 6, endRadius: size * 0.7))
                 .frame(width: size * 1.4, height: size * 1.4)
                 .blur(radius: 8)
 
-            SceneView(scene: Celebration3DView.makeScene(spins: spins), options: [])
+            // Transparent, so the trophy floats on the app's backdrop instead of
+            // sitting on a white disc.
+            TransparentSceneView(scene: Celebration3DView.makeScene(spins: spins))
                 .frame(width: size, height: size)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Brand.edgeHighlight, lineWidth: 1))
-                .shadow(color: .black.opacity(0.35), radius: 14, y: 8)
+                .shadow(color: .black.opacity(0.28), radius: 12, y: 8)
         }
         .frame(width: size, height: size)
         .accessibilityHidden(true)
@@ -41,7 +43,7 @@ struct Celebration3DView: View {
 
     static func makeScene(spins: Bool) -> SCNScene {
         let scene = SCNScene()
-        scene.background.contents = cg(0.96, 0.95, 0.99)   // light, airy pod
+        scene.background.contents = nil   // transparent — no white plate
 
         let gold = SCNMaterial()
         gold.lightingModel = .physicallyBased
@@ -109,33 +111,9 @@ struct Celebration3DView: View {
         ambient.light?.color = cg(0.85, 0.85, 0.9)
         scene.rootNode.addChildNode(ambient)
 
-        // Real 3D confetti: a one-shot particle burst around the trophy.
-        let confetti = SCNParticleSystem()
-        confetti.loops = false
-        confetti.birthRate = 340
-        confetti.emissionDuration = 0.22
-        confetti.particleLifeSpan = 1.7
-        confetti.particleLifeSpanVariation = 0.7
-        confetti.particleVelocity = 4.6
-        confetti.particleVelocityVariation = 3.0
-        confetti.spreadingAngle = 110
-        confetti.emittingDirection = SCNVector3(0, 1, 0)
-        confetti.acceleration = SCNVector3(0, -7, 0)
-        confetti.particleSize = 0.08
-        confetti.particleSizeVariation = 0.05
-        #if canImport(UIKit)
-        confetti.particleColor = UIColor(red: 1.0, green: 0.72, blue: 0.35, alpha: 1)
-        #elseif canImport(AppKit)
-        confetti.particleColor = NSColor(srgbRed: 1.0, green: 0.72, blue: 0.35, alpha: 1)
-        #endif
-        // Wide hue variation so the burst reads as multi-colour confetti.
-        confetti.particleColorVariation = SCNVector4(0.6, 0.5, 0.5, 0)
-        confetti.blendMode = .additive
-        confetti.isAffectedByGravity = false
-        let emitter = SCNNode()
-        emitter.position = SCNVector3(0, 0.4, 0)
-        emitter.addParticleSystem(confetti)
-        scene.rootNode.addChildNode(emitter)
+        // No particle burst here: the summary already rains full-screen confetti
+        // (ConfettiView), and a second burst only crowded the trophy once the
+        // scene stopped being clipped to a disc.
 
         return scene
     }

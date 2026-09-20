@@ -11,30 +11,52 @@ import SwiftUI
 /// MemDoping brand palette.
 enum Brand {
     static let primary = Color(red: 0.55, green: 0.45, blue: 0.28)   // warm brown
-    static let accent  = Color(red: 0.46, green: 0.60, blue: 0.30)   // moss green (visible on cream)
-    static let success = Color(red: 0.42, green: 0.72, blue: 0.40)   // fresh leaf green
-    static let danger  = Color(red: 0.90, green: 0.42, blue: 0.42)   // soft terracotta rose
+    static let accent  = Color(red: 0.13, green: 0.56, blue: 0.26)   // deep green (contrasts on yellow)
+    static let success = Color(red: 0.14, green: 0.64, blue: 0.31)   // vivid leaf green
+    static let danger  = Color(red: 0.86, green: 0.15, blue: 0.18)   // true red — the lead accent
 
     /// Dark ink used on light fills (e.g. the primary button).
     static let ink = Color(red: 0.18, green: 0.16, blue: 0.08)
 
-    /// The body-text colour across the app — a deep espresso instead of pure
-    /// black, so text reads as a warm, intentional contrast to the light
-    /// cream/moss backgrounds rather than harsh black.
-    static let text = Color(red: 0.19, green: 0.13, blue: 0.07)
+    /// The body-text colour across the app — a deep indigo instead of black or
+    /// brown. Against the warm yellow backgrounds it reads as a crisp, friendly
+    /// contrast (cool ink on warm paper) without the harshness of pure black.
+    static let text = Color(red: 0.16, green: 0.17, blue: 0.38)
 
     /// A deep moss for accent *text* on the light theme — the `accent` green is
     /// used for fills/tints, but as text on a light surface a deeper tone reads
     /// better, so coloured labels use this instead.
-    static let accentText = Color(red: 0.26, green: 0.38, blue: 0.14)
+    static let accentText = Color(red: 0.07, green: 0.37, blue: 0.15)
 
     /// A deep green for *text* — the light `success` green is for fills/tints;
     /// as text on a light surface it's nearly invisible, so use this.
-    static let successText = Color(red: 0.06, green: 0.50, blue: 0.34)
+    static let successText = Color(red: 0.03, green: 0.42, blue: 0.24)
 
     /// A vivid magenta that contrasts strongly with the teal/turquoise accents —
     /// used to make things stand out clearly (e.g. chunk dividers).
     static let mark = Color(red: 0.93, green: 0.16, blue: 0.55)
+
+    /// The house colours — red, blue, orange, yellow, pink, green — tuned for
+    /// strong contrast against the app's warm yellow backgrounds (greens and
+    /// blues are deepened so they don't wash out). Red recurs more often than
+    /// the others, so it reads as the lead colour.
+    static func houseColor(_ index: Int, cartoon: Double = 0) -> Color {
+        // Saturated enough to stand out on the yellow backdrop, but light
+        // enough that the dark ink and the emoji on top stay crisp — dark text
+        // on a dark plate was the readability problem.
+        //                      hue,   saturation, brightness
+        let red    = (0.985, 0.70, 0.93)   // softened a notch
+        let blue   = (0.600, 0.80, 0.88)
+        let green  = (0.340, 0.80, 0.78)
+        let orange = (0.070, 0.84, 0.98)
+        let yellow = (0.125, 0.88, 0.96)
+        let pink   = (0.920, 0.66, 0.95)
+        let wheel = [red, blue, orange, red, green, pink, red, yellow, blue, green]
+        let c = wheel[((index % wheel.count) + wheel.count) % wheel.count]
+        return Color(hue: c.0,
+                     saturation: min(1, c.1 + 0.06 * cartoon),
+                     brightness: c.2)
+    }
 
     static var backgroundGradient: LinearGradient {
         LinearGradient(
@@ -90,10 +112,10 @@ struct BrandBackground: View {
     /// Light, natural gradients — a different one each game so the backdrop
     /// colour changes as you play. All kept soft so dark text stays readable.
     private static let palettes: [[Color]] = [
-        [rgb(0.99, 0.98, 0.91), rgb(0.90, 0.93, 0.78), rgb(0.80, 0.85, 0.66)], // cream → moss
+        [rgb(1.00, 0.98, 0.78), rgb(1.00, 0.95, 0.63), rgb(0.99, 0.90, 0.50)], // warm yellow
         [rgb(1.00, 0.94, 0.86), rgb(1.00, 0.88, 0.77), rgb(0.97, 0.80, 0.66)], // peach → apricot
         [rgb(1.00, 0.99, 0.86), rgb(0.93, 0.95, 0.72), rgb(0.82, 0.88, 0.58)], // butter → lime
-        [rgb(0.90, 0.98, 0.93), rgb(0.79, 0.93, 0.85), rgb(0.69, 0.86, 0.75)], // mint → sage
+        [rgb(1.00, 0.97, 0.74), rgb(1.00, 0.93, 0.58), rgb(1.00, 0.88, 0.45)], // sunny yellow
         [rgb(1.00, 0.93, 0.93), rgb(0.99, 0.86, 0.86), rgb(0.95, 0.78, 0.80)], // blush rose
         [rgb(0.90, 0.96, 0.99), rgb(0.81, 0.92, 0.98), rgb(0.72, 0.87, 0.96)], // soft sky
         [rgb(0.96, 0.93, 0.99), rgb(0.90, 0.86, 0.98), rgb(0.83, 0.79, 0.95)], // lilac
@@ -278,12 +300,9 @@ extension GameLevel {
     /// The tile motif evolves as you climb the ladder, so later levels feel new.
     /// Grouped into four colour tiers across the level range.
     var tileBase: Color {
-        // A cheerful, bright palette cycled per level — cyan/teal/green/blue/
-        // pink/coral. Purple and amber are avoided on purpose; kept light and
-        // saturated so dark text stays readable on the tile.
-        let hues: [Double] = [0.50, 0.42, 0.55, 0.34, 0.93, 0.60, 0.02, 0.88]
-        let hue = hues[(index - 1) % hues.count]
-        return Color(hue: hue, saturation: 0.62, brightness: 0.86)
+        // The shared house palette, cycled per level — red-led, with deepened
+        // greens and blues so tiles stand out against the yellow backdrop.
+        Brand.houseColor(index - 1)
     }
 }
 
@@ -314,18 +333,8 @@ struct SymbolBadge: View {
 
     @Environment(\.cartoonLevel) private var cartoon
 
-    /// A cheerful palette — cyan/teal/green/blue/pink/coral. Purple and amber
-    /// are avoided on purpose (the owner's steer).
-    private var plate: Color {
-        // A full, bright rainbow across the whole wheel — ordered so consecutive
-        // seeds jump far around it, giving a lively "rengarenk" spread rather
-        // than a run of similar tones. Kept luminous so nothing reads gloomy.
-        let hues: [Double] = [0.00, 0.50, 0.13, 0.62, 0.33, 0.85, 0.08,
-                              0.55, 0.75, 0.28, 0.92, 0.44, 0.68, 0.18]
-        let h = hues[abs(seed) % hues.count]
-        // Vivid and bright; younger players get an extra saturation boost.
-        return Color(hue: h, saturation: 0.62 + 0.15 * cartoon, brightness: 0.92)
-    }
+    /// The shared house palette (red-led, high contrast).
+    private var plate: Color { Brand.houseColor(abs(seed), cartoon: cartoon) }
 
     var body: some View {
         // Rounder corners, bigger emoji, thicker outline and softer shadow the
