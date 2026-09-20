@@ -12,6 +12,7 @@ import SwiftUI
 struct LociMissionView: View {
     @Environment(GameStore.self) private var store
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.goToStart) private var goToStart
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var session: LociSession
@@ -51,6 +52,21 @@ struct LociMissionView: View {
         .animation(reduceMotion ? nil : .easeInOut, value: session.phase)
         .navigationBarBackButtonHidden(session.phase != .intro)
         .toolbar {
+            // Straight back to the worlds from anywhere in the mission.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { goToStart() } label: {
+                    // A plain nav-bar glyph was too faint to notice, so it
+                    // sits on a solid capsule.
+                    Image(systemName: "house.fill")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 11).padding(.vertical, 7)
+                        .background(Brand.accent, in: Capsule())
+                        .shadow(color: Brand.accent.opacity(0.45), radius: 4, y: 2)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Back to home"))
+            }
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
@@ -89,35 +105,39 @@ struct LociMissionView: View {
             ProgressView(value: session.placeProgress).tint(Brand.accent)
 
             if let p = session.currentPlacement {
-                Text("Drag the \(p.item.word.localizedContent) onto the \(p.stop.name.localizedContent) — really see them together.")
-                    .font(.subheadline).foregroundStyle(Brand.text.opacity(0.8))
-                    .multilineTextAlignment(.center)
+                Spacer(minLength: 0)
 
-                // The stage: the location up top (with a target ring), and the
-                // item waiting in a dock below — drag it up onto the location.
+                // Stage: the place as a big, glossy animated 3D tile up top (with
+                // a target ring), and the item waiting in a dock below — drag it
+                // up onto the place. Symbols are large; the visuals do the talking.
                 ZStack {
-                    // Target ring at the location.
                     Circle()
                         .strokeBorder(isItemOnSpot ? Brand.accent : Brand.text.opacity(0.18),
                                       style: StrokeStyle(lineWidth: 2, dash: [7]))
-                        .frame(width: 150, height: 150)
+                        .frame(width: 176, height: 176)
                         .offset(LociMissionView.locationOffset)
 
-                    VStack(spacing: 6) {
-                        Text(p.stop.icon).font(.system(size: 104))
+                    // The stop, as an animated 3D character tile.
+                    VStack(spacing: 8) {
+                        Symbol3DTile(symbol: p.stop.icon, tint: session.level.tileBase, size: 150)
                         Text(p.stop.name.localizedContent)
-                            .font(.headline).foregroundStyle(Brand.text.opacity(0.85))
+                            .font(.subheadline.weight(.semibold))
+                            .padding(.horizontal, 12).padding(.vertical, 5)
+                            .background(.ultraThinMaterial, in: Capsule())
+                            .foregroundStyle(Brand.text)
                     }
                     .offset(LociMissionView.locationOffset)
+                    .allowsHitTesting(false)
 
                     // The dock the item starts in.
                     Circle()
                         .fill(Brand.text.opacity(0.05))
-                        .frame(width: 88, height: 88)
+                        .frame(width: 116, height: 116)
                         .offset(LociMissionView.itemStart)
 
-                    SymbolBadge(symbol: p.item.symbol, seed: p.item.id.hashValue, size: 78)
-                        .scaleEffect(isItemOnSpot ? 1.12 : 1)
+                    // The big draggable item.
+                    SymbolBadge(symbol: p.item.symbol, seed: p.item.id.hashValue, size: 108)
+                        .scaleEffect(isItemOnSpot ? 1.14 : 1)
                         .offset(itemOffset)
                         .gesture(
                             DragGesture()
@@ -137,7 +157,9 @@ struct LociMissionView: View {
                                    value: itemOffset)
                         .accessibilityLabel(Text(p.item.word.localizedContent))
                 }
-                .frame(maxWidth: .infinity, minHeight: 340)
+                .frame(maxWidth: .infinity, minHeight: 400)
+
+                Spacer(minLength: 0)
             }
 
             PrimaryButton(title: "Leave it & walk on", systemImage: "arrow.right") {
@@ -153,7 +175,7 @@ struct LociMissionView: View {
     private var isItemOnSpot: Bool {
         let dx = itemOffset.width - LociMissionView.locationOffset.width
         let dy = itemOffset.height - LociMissionView.locationOffset.height
-        return dx * dx + dy * dy < 75 * 75
+        return dx * dx + dy * dy < 85 * 85
     }
 
     private func resetItem() {
@@ -171,10 +193,14 @@ struct LociMissionView: View {
                 .font(.title3.weight(.semibold)).foregroundStyle(Brand.text)
 
             if let stop = session.currentStop {
-                VStack(spacing: 6) {
-                    Text(stop.icon).font(.system(size: 64))
+                // The stop shown as the same big animated 3D tile as when placing.
+                VStack(spacing: 8) {
+                    Symbol3DTile(symbol: stop.icon, tint: session.level.tileBase, size: 150)
                     Text(stop.name.localizedContent)
-                        .font(.headline).foregroundStyle(Brand.text.opacity(0.9))
+                        .font(.subheadline.weight(.semibold))
+                        .padding(.horizontal, 12).padding(.vertical, 5)
+                        .background(.ultraThinMaterial, in: Capsule())
+                        .foregroundStyle(Brand.text)
                 }
 
                 itemTray

@@ -176,7 +176,9 @@ struct Symbol3DTile: View {
     /// Renders an emoji/symbol string to a transparent image for texturing.
     private static func symbolImage(_ symbol: String) -> Any? {
         #if canImport(UIKit)
-        let side: CGFloat = 256
+        // Big enough that the emoji stays sharp when the tile fills the frame
+        // on a 3x screen (a 150pt tile is 450px, so 256 was visibly soft).
+        let side: CGFloat = 512
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: side, height: side))
         return renderer.image { _ in
             let paragraph = NSMutableParagraphStyle()
@@ -229,7 +231,9 @@ struct Symbol3DTile: View {
 
 /// A SceneKit view with a transparent background, so 3D content floats directly
 /// on the app's backdrop (SwiftUI's `SceneView` is always opaque).
-private struct TransparentSceneView {
+/// Shared by the 3D tiles and the level-cleared trophy so neither sits on an
+/// opaque plate.
+struct TransparentSceneView {
     let scene: SCNScene
 }
 

@@ -14,9 +14,9 @@ struct HomeView: View {
     @State private var activeLevel: GameLevel?
     @State private var showReview = false
     @State private var showNight = false
-    @State private var showV2 = false
-    @State private var expandedChapters: Set<Int> = []
+    @State private var activeWorld: LadderWorld?
     @State private var showAudience = false
+    @Environment(\.goToStart) private var goToStart
 
     private func bandLabel(_ band: GameStore.AgeBand) -> LocalizedStringKey {
         switch band {
@@ -30,17 +30,16 @@ struct HomeView: View {
         NavigationStack {
             ZStack {
                 BrandBackground()
+                // The entry is the worlds, nothing else: the age band is chosen
+                // before this screen, so each world explains itself for that
+                // audience. Stats and the resume card live in the profile.
                 ScrollView {
                     VStack(spacing: 20) {
                         header.dealIn(0)
                         statsRow.dealIn(1)
-                        dailyMissionCard.dealIn(2)
-                        reviewCard.dealIn(3)
-                        continueCard.dealIn(4)
-                        v2Card.dealIn(5)
-                        levelLadder.dealIn(5)
-                        nightCard.dealIn(6)
-                        disclaimer.dealIn(7)
+                        reviewBanner.dealIn(2)
+                        levelLadder.dealIn(3)
+                        nightCard.dealIn(4)
                     }
                     .padding()
                 }
@@ -74,8 +73,11 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showNight) {
                 NightDopingView()
             }
-            .navigationDestination(isPresented: $showV2) {
-                V2WorldsView()
+            .navigationDestination(item: $activeWorld) { world in
+                WorldLevelsView(world: world) { level in
+                    activeWorld = nil
+                    activeLevel = level
+                }
             }
         }
     }
@@ -104,6 +106,14 @@ struct HomeView: View {
                         .foregroundStyle(Brand.text.opacity(0.7))
                 }
                 Spacer()
+                // Same corner as everywhere else: back to the opening screen.
+                Button { goToStart() } label: {
+                    Image(systemName: "house.fill")
+                        .font(.title3)
+                        .foregroundStyle(Brand.text)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Back to home"))
                 NavigationLink { ProfileView() } label: {
                     Image(systemName: "person.crop.circle")
                         .font(.title)
@@ -129,226 +139,138 @@ struct HomeView: View {
         }
     }
 
-    // MARK: Daily mission
+    // MARK: Spaced review
 
-    private var dailyMissionCard: some View {
-        Button {
-            if store.dueReviewCount > 0 { showReview = true }
-            else { activeLevel = store.currentLevel }
-        } label: {
-            Card {
-                HStack(spacing: 14) {
-                    Image(systemName: store.isDailyMissionDone ? "checkmark.seal.fill" : "sun.max.fill")
-                        .font(.title)
-                        .foregroundStyle(store.isDailyMissionDone ? Brand.successText : Brand.accent)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Daily mission")
-                            .font(.headline).foregroundStyle(Brand.text)
-                        dailySubtitle
-                            .font(.subheadline)
-                            .foregroundStyle(Brand.text.opacity(0.75))
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
-                }
-            }
-        }
-        .buttonStyle(.plain)
-    }
-
+    /// Only appears when something is actually due, so the entry stays clean —
+    /// but the spaced-repetition loop keeps a way in. Stats moved to the
+    /// profile, which already shows all of them.
     @ViewBuilder
-    private var dailySubtitle: some View {
-        if store.isDailyMissionDone {
-            Text("Done for today — one more if you like.")
-        } else if store.dueReviewCount > 0 {
-            Text("Today: refresh \(store.dueReviewCount) due items")
-        } else {
-            Text("Today: Level \(store.currentLevel.index) · \(store.currentLevel.title.localizedContent)")
-        }
-    }
-
-    // MARK: Spaced review (T05 — quiet, opt-in, no streak pressure)
-
-    @ViewBuilder
-    private var reviewCard: some View {
-        if store.dueReviewCount > 0 {
-            Button {
-                showReview = true
-            } label: {
-                Card {
-                    HStack(spacing: 14) {
-                        Image(systemName: "clock.arrow.circlepath")
-                            .font(.title)
-                            .foregroundStyle(Brand.accentText)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("\(store.dueReviewCount) items due for review")
-                                .font(.headline).foregroundStyle(Brand.text)
-                            Text("You learned these earlier — let's see if they stuck.")
-                                .font(.subheadline)
-                                .foregroundStyle(Brand.text.opacity(0.75))
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
-                    }
-                }
-            }
-            .buttonStyle(.plain)
-        } else if let next = store.nextReviewDate {
-            Card {
-                HStack(spacing: 14) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title)
-                        .foregroundStyle(Brand.successText)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("All caught up on reviews")
-                            .font(.headline).foregroundStyle(Brand.text)
-                        Text("Next review \(next.formatted(.relative(presentation: .named))).")
-                            .font(.subheadline)
-                            .foregroundStyle(Brand.text.opacity(0.75))
-                    }
-                    Spacer()
-                }
-            }
-        }
-    }
-
-    private var difficultyLabel: LocalizedStringKey {
-        switch store.difficultyState {
-        case .eased:    "Eased to your pace"
-        case .standard: "Adapts to you"
-        case .ramped:   "Ramped up"
-        }
-    }
-
-    // MARK: Continue (core loop entry)
-
-    private var continueCard: some View {
-        Card {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack {
-                    ProgressRing(progress: store.ringProgress)
-                        .frame(width: 54, height: 54)
-                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.7), value: store.ringProgress)
-                        .overlay(
-                            Text("\(store.ringLevel)")
-                                .font(.headline).foregroundStyle(Brand.text)
-                        )
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Continue your training")
-                            .font(.headline).foregroundStyle(Brand.text)
-                        Text("Level \(store.currentLevel.index): \(store.currentLevel.title.localizedContent)")
-                            .font(.subheadline)
-                            .foregroundStyle(Brand.text.opacity(0.75))
-                        Label(difficultyLabel, systemImage: "slider.horizontal.3")
-                            .font(.caption2)
-                            .foregroundStyle(Brand.accentText)
-                    }
-                    Spacer()
-                }
-                PrimaryButton(title: "Play", systemImage: "play.fill") {
-                    activeLevel = store.currentLevel
-                }
-            }
-        }
-    }
-
-    // MARK: Level ladder
-
-    /// Ten themed chapters of ten levels each, so the ladder reads as chapters
-    /// with headings + emoji instead of one long list.
-    private struct Chapter {
-        let title: LocalizedStringKey
-        let emoji: String
-        let range: ClosedRange<Int>
-    }
-
-    private let chapters: [Chapter] = [
-        .init(title: "Warm-up",      emoji: "🌱", range: 1...10),
-        .init(title: "Explorer",     emoji: "🧭", range: 11...20),
-        .init(title: "Focus",        emoji: "🎯", range: 21...30),
-        .init(title: "Momentum",     emoji: "🚀", range: 31...40),
-        .init(title: "Sharp",        emoji: "⚡️", range: 41...50),
-        .init(title: "Deep Dive",    emoji: "🌊", range: 51...60),
-        .init(title: "Master Steps", emoji: "🧠", range: 61...70),
-        .init(title: "Challenge",    emoji: "🔥", range: 71...80),
-        .init(title: "Expert",       emoji: "💎", range: 81...90),
-        .init(title: "Legend",       emoji: "👑", range: 91...100)
-    ]
-
-    private var levelLadder: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Levels")
-                .font(.title3.bold())
-                .foregroundStyle(Brand.text)
-            ForEach(Array(chapters.enumerated()), id: \.offset) { i, chapter in
-                chapterSection(i, chapter)
-            }
-        }
-        .onAppear {
-            // Open the chapter that holds the current level by default.
-            if expandedChapters.isEmpty,
-               let i = chapters.firstIndex(where: { $0.range.contains(store.currentLevel.index) }) {
-                expandedChapters.insert(i)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func chapterSection(_ index: Int, _ chapter: Chapter) -> some View {
-        let levels = SampleLevels.all.filter { chapter.range.contains($0.index) }
-        let unlocked = levels.filter { $0.index <= store.highestUnlockedLevel }.count
-        let chapterLocked = chapter.range.lowerBound > store.highestUnlockedLevel
-        let isOpen = expandedChapters.contains(index)
-
-        VStack(spacing: 8) {
-            Button {
-                if store.hapticsEnabled { HapticsPlayer.shared.tap() }
-                withAnimation(.easeInOut(duration: 0.22)) {
-                    if isOpen { expandedChapters.remove(index) } else { expandedChapters.insert(index) }
-                }
-            } label: {
+    private var reviewBanner: some View {
+        let due = store.dueReviewCount
+        if due > 0 {
+            Button { showReview = true } label: {
                 HStack(spacing: 12) {
-                    Text(chapter.emoji).font(.title)
-                        .opacity(chapterLocked ? 0.5 : 1)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(chapter.title)
-                            .font(.headline)
-                            .foregroundStyle(chapterLocked ? Brand.text.opacity(0.5) : Brand.text)
-                        Text(verbatim: "\(chapter.range.lowerBound)–\(chapter.range.upperBound)")
-                            .font(.caption.monospacedDigit())
-                            .foregroundStyle(Brand.text.opacity(0.55))
+                    Image(systemName: "clock.arrow.circlepath")
+                        .font(.title3)
+                        .foregroundStyle(Brand.accentText)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Ready to recall")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Brand.text)
+                        Text("\(due) things you learned are waiting.")
+                            .font(.caption)
+                            .foregroundStyle(Brand.text.opacity(0.75))
                     }
                     Spacer()
-                    if chapterLocked {
-                        Image(systemName: "lock.fill").foregroundStyle(Brand.text.opacity(0.4))
-                    } else {
-                        Text("\(unlocked)/\(levels.count)")
-                            .font(.subheadline.monospacedDigit().weight(.semibold))
-                            .foregroundStyle(unlocked == levels.count ? Brand.successText : Brand.accentText)
-                    }
-                    Image(systemName: "chevron.down")
-                        .font(.footnote.weight(.bold))
-                        .foregroundStyle(Brand.text.opacity(0.5))
-                        .rotationEffect(.degrees(isOpen ? 0 : -90))
+                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.45))
                 }
-                .padding(14)
-                .background(Color.white.opacity(0.55),
+                .padding(12)
+                .background(Color.white.opacity(0.6),
                             in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
             }
             .buttonStyle(.plain)
+        }
+    }
 
-            if isOpen {
-                ForEach(levels) { level in
-                    levelRow(level)
-                }
-                .padding(.leading, 6)
+    // MARK: Level ladder
+
+    /// Five story worlds over the 100-level ladder. Opening the app shows these
+    /// five, not a wall of a hundred levels — you pick a world and its twenty
+    /// levels live inside it. Everyone can play all of them; the age band still
+    /// only shifts tone and difficulty.
+    private var levelLadder: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Worlds")
+                .font(.title3.bold())
+                .foregroundStyle(Brand.text)
+
+            ForEach(LadderWorld.all) { world in
+                worldRow(world)
+                    .id("\(world.id)-\(store.ageBand?.rawValue ?? "none")")
             }
         }
     }
 
-    private func levelRow(_ level: GameLevel) -> some View {
+    private func worldRow(_ world: LadderWorld) -> some View {
+        let levels = SampleLevels.all.filter { world.range.contains($0.index) }
+        let unlocked = levels.filter { $0.index <= store.highestUnlockedLevel }.count
+        let locked = world.range.lowerBound > store.highestUnlockedLevel
+
+        let progress = levels.isEmpty ? 0 : Double(unlocked) / Double(levels.count)
+
+        return Button {
+            if !locked { activeWorld = world }
+        } label: {
+            HStack(spacing: 14) {
+                // The world's emblem on its own colour — a place, not a row.
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Brand.gloss(locked ? Brand.text.opacity(0.10) : world.tint))
+                        .frame(width: 58, height: 58)
+                        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
+                        .shadow(color: locked ? .clear : world.tint.opacity(0.45), radius: 6, y: 3)
+                    Text(world.emoji).font(.system(size: 30))
+                        .opacity(locked ? 0.45 : 1)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) {
+                        Text(world.title)
+                            .font(.headline)
+                            .foregroundStyle(locked ? Brand.text.opacity(0.5) : Brand.text)
+                        Spacer(minLength: 0)
+                        if locked {
+                            Image(systemName: "lock.fill")
+                                .font(.footnote)
+                                .foregroundStyle(Brand.text.opacity(0.4))
+                        } else {
+                            Text("\(unlocked)/\(levels.count)")
+                                .font(.caption.monospacedDigit().weight(.bold))
+                                .foregroundStyle(unlocked == levels.count ? Brand.successText : Brand.accentText)
+                        }
+                    }
+                    // What this world trains, in the chosen audience's terms —
+                    // shown for locked worlds too, so you can see what you're
+                    // working towards, not just that it's shut.
+                    Text(world.blurb(for: store.ageBand))
+                        .font(.caption)
+                        .foregroundStyle(Brand.text.opacity(locked ? 0.55 : 0.75))
+                        .fixedSize(horizontal: false, vertical: true)
+                    if locked {
+                        Text("Opens at level \(world.range.lowerBound)")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Brand.text.opacity(0.5))
+                    }
+
+                    // How far through this world you are.
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(Brand.text.opacity(0.10))
+                            Capsule().fill(world.tint)
+                                .frame(width: max(0, geo.size.width * progress))
+                        }
+                    }
+                    .frame(height: 5)
+                    .opacity(locked ? 0.35 : 1)
+                    .padding(.top, 2)
+                }
+            }
+            .padding(14)
+            .background(Color.white.opacity(0.62),
+                        in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
+            .shadow(color: .black.opacity(locked ? 0 : 0.06), radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+        .disabled(locked)
+        .accessibilityElement(children: .combine)
+    }
+
+    func levelRow(_ level: GameLevel) -> some View {
         let unlocked = level.index <= store.highestUnlockedLevel
         let best = store.bestAccuracy[level.index]
 
@@ -391,28 +313,12 @@ struct HomeView: View {
 
     // MARK: Night Doping (§4 — optional calm mode)
 
-    private var v2Card: some View {
-        Button { showV2 = true } label: {
-            Card {
-                HStack(spacing: 14) {
-                    Text("🧭").font(.title)
-                    VStack(alignment: .leading, spacing: 2) {
-                        HStack(spacing: 6) {
-                            Text("V2 Worlds").font(.headline).foregroundStyle(Brand.text)
-                            Text("BETA").font(.caption2.weight(.bold))
-                                .padding(.horizontal, 6).padding(.vertical, 2)
-                                .background(Brand.accent.opacity(0.3), in: Capsule())
-                                .foregroundStyle(Brand.accentText)
-                        }
-                        Text("Three worlds · nine scenes · story-led")
-                            .font(.subheadline).foregroundStyle(Brand.text.opacity(0.75))
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))
-                }
-            }
+    private var nightBlurb: LocalizedStringKey {
+        switch store.ageBand {
+        case .child:      "A sleepy round before bed — soft, slow, no score."
+        case .adult:      "Wind down after the day: quiet recall, no timer, no score."
+        case .teen, .none: "A calm, untimed wind-down — no score, no rush."
         }
-        .buttonStyle(.plain)
     }
 
     private var nightCard: some View {
@@ -423,9 +329,11 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Night Doping")
                             .font(.headline).foregroundStyle(Brand.text)
-                        Text("A calm, untimed wind-down — no score, no rush.")
+                        // Worded for whoever is playing, like the worlds above.
+                        Text(nightBlurb)
                             .font(.subheadline)
                             .foregroundStyle(Brand.text.opacity(0.75))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(Brand.text.opacity(0.5))

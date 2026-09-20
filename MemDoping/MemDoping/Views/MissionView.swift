@@ -11,6 +11,7 @@ import SwiftUI
 struct MissionView: View {
     @Environment(GameStore.self) private var store
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.goToStart) private var goToStart
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var session: MissionSession
@@ -41,6 +42,21 @@ struct MissionView: View {
         .animation(reduceMotion ? nil : .easeInOut, value: session.phase)
         .navigationBarBackButtonHidden(session.phase != .intro)
         .toolbar {
+            // Straight back to the worlds from anywhere in the mission.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { goToStart() } label: {
+                    // A plain nav-bar glyph was too faint to notice, so it
+                    // sits on a solid capsule.
+                    Image(systemName: "house.fill")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 11).padding(.vertical, 7)
+                        .background(Brand.accent, in: Capsule())
+                        .shadow(color: Brand.accent.opacity(0.45), radius: 4, y: 2)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Back to home"))
+            }
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }

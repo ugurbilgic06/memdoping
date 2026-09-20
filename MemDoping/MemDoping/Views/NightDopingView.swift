@@ -65,7 +65,7 @@ struct NightDopingView: View {
             if store.musicEnabled { MusicPlayer.shared.startNight() }   // sleepier loop
         }
         .onDisappear {
-            if store.musicEnabled { MusicPlayer.shared.start() }        // back to day loop
+            if store.musicEnabled { MusicPlayer.shared.start(for: store.ageBand) }  // back to day loop
         }
         // This screen is intentionally dark; keep the app's forced light scheme
         // from turning nav/system elements dark-on-dark here.

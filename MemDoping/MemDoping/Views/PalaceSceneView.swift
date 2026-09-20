@@ -72,15 +72,19 @@ private enum Palace {
             center = src.convertPosition(local, to: nil)
             span = max(bmax.x - bmin.x, max(bmax.y - bmin.y, bmax.z - bmin.z)) * Float(max(src.scale.x, 0.001))
         }
+        // The exported palace is Z-up (floor on XY, height on Z), so we frame with
+        // Z as the world up vector — otherwise the room comes out rolled.
+        let up = SCNVector3(0, 0, 1)
         if let n = focus, let st = stationNode(n, in: scene.rootNode) {
             let t = st.worldPosition
-            let d = span * 0.35
-            cam.position = SCNVector3(t.x + d, t.y + d * 0.7, t.z + d)
-            cam.look(at: t)
+            let d = span * 0.30
+            // Stand in front of the stop (−y) and a little above it (+z).
+            cam.position = SCNVector3(t.x + d * 0.5, t.y - d, t.z + d * 0.6)
+            cam.look(at: t, up: up, localFront: SCNNode.localFront)
         } else {
-            let d = span * 0.95
-            cam.position = SCNVector3(center.x + d, center.y + d * 0.8, center.z + d)
-            cam.look(at: center)
+            let d = span * 0.75
+            cam.position = SCNVector3(center.x, center.y - d, center.z + d * 0.7)
+            cam.look(at: center, up: up, localFront: SCNNode.localFront)
         }
         scene.rootNode.addChildNode(cam)
         return scene
@@ -97,14 +101,17 @@ private enum Palace {
     }
 
     private static func placeEmoji(_ emoji: String?, atStation n: Int?, in root: SCNNode) {
-        guard let emoji, let n, let marker = markerNode(n, in: root) ?? stationNode(n, in: root),
+        // Anchor on the station itself (the stop the camera focuses on) so the
+        // dropped item is always in view; raise it on Z (the model's up axis).
+        guard let emoji, let n, let anchor = stationNode(n, in: root) ?? markerNode(n, in: root),
               let image = emojiImage(emoji) else { return }
-        let plane = SCNPlane(width: 0.6, height: 0.6)
+        let plane = SCNPlane(width: 1.4, height: 1.4)
         let m = SCNMaterial(); m.diffuse.contents = image; m.isDoubleSided = true; m.lightingModel = .constant
         plane.materials = [m]
         let node = SCNNode(geometry: plane)
         node.constraints = [SCNBillboardConstraint()]   // always face camera
-        node.position = SCNVector3(marker.worldPosition.x, marker.worldPosition.y + 0.5, marker.worldPosition.z)
+        let p = anchor.worldPosition
+        node.position = SCNVector3(p.x, p.y, p.z + 0.9)
         root.addChildNode(node)
     }
 
@@ -130,6 +137,15 @@ private enum Palace {
 #if canImport(UIKit)
 private struct PalaceContainer: UIViewRepresentable {
     let focus: Int?; let emoji: String?; let interactive: Bool
+
+    /// Caches the last-built scene inputs so we only rebuild the SceneKit scene
+    /// when focus/emoji actually change — not on every SwiftUI update (e.g. the
+    /// per-frame drag in the place phase).
+    final class Coordinator { var signature = "" }
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    private var signature: String { "\(focus ?? -1)|\(emoji ?? "")" }
+
     func makeUIView(context: Context) -> SCNView {
         let v = SCNView()
         v.backgroundColor = .clear
@@ -137,11 +153,15 @@ private struct PalaceContainer: UIViewRepresentable {
         v.antialiasingMode = .multisampling4X
         v.allowsCameraControl = interactive
         v.scene = Palace.makeScene(focus: focus, emoji: emoji)
+        context.coordinator.signature = signature
         return v
     }
     func updateUIView(_ v: SCNView, context: Context) {
         v.allowsCameraControl = interactive
-        v.scene = Palace.makeScene(focus: focus, emoji: emoji)
+        if context.coordinator.signature != signature {
+            context.coordinator.signature = signature
+            v.scene = Palace.makeScene(focus: focus, emoji: emoji)
+        }
     }
 }
 #else

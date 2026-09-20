@@ -225,6 +225,80 @@ struct GameLevel: Identifiable, Hashable {
         return key.localizedContent
     }
 
+    /// What this technique actually buys you: the ability it trains and where
+    /// it pays off. Written per audience — a child has no IBAN to remember, so
+    /// the examples change with the band while the trained ability doesn't.
+    /// Deliberately concrete (real situations, no "boosts your IQ" claims).
+    func techniqueBenefit(for band: GameStore.AgeBand?) -> String {
+        let key: String
+        switch (mechanic, band ?? .teen) {
+
+        case (.pairRecall, .child):
+            key = "Grows your attention: your friends' names, where you put your things, what the teacher just said."
+        case (.pairRecall, .teen):
+            key = "Grows attention and encoding: names and faces, new words, the bit of the lesson you always miss."
+        case (.pairRecall, .adult):
+            key = "Grows attention and encoding: names at a meeting, where the keys went, what was just said."
+
+        case (.scene, .child):
+            key = "Teaches you to turn words into funny pictures — new words and pairs stay put."
+        case (.scene, .teen):
+            key = "Turns dry material into an image you can find again: vocabulary, terms, definitions."
+        case (.scene, .adult):
+            key = "Turns information into an image you can find again: terms, names, the points of a talk."
+
+        case (.chunking, .child):
+            key = "Teaches you to cut long numbers into small groups — a phone number, a birthday."
+        case (.chunking, .teen):
+            key = "Uses your working memory well: passwords, formulas, verification codes."
+        case (.chunking, .adult):
+            key = "Uses your working memory well: phone numbers, IBANs, verification and door codes."
+
+        case (.retrieval, .child):
+            key = "Teaches you to remember without looking — it helps with homework and in class."
+        case (.retrieval, .teen):
+            key = "Teaches you to test yourself — far stronger than reading it again."
+        case (.retrieval, .adult):
+            key = "Producing instead of recognising: a name, a figure, the next point in your talk."
+
+        case (.interleaving, .child):
+            key = "Teaches you to tell mixed-up things apart."
+        case (.interleaving, .teen):
+            key = "Stops you confusing look-alike topics — decisive when you revise several at once."
+        case (.interleaving, .adult):
+            key = "Teaches you to pick the right method among similar ones, under pressure."
+
+        case (.elaboration, .child):
+            key = "Teaches you to ask 'why?' — so it's understanding, not parroting."
+        case (.elaboration, .teen):
+            key = "Links new material to what you already know: understanding beats memorising."
+        case (.elaboration, .adult):
+            key = "Links new information to what you know: deeper understanding, and it lasts longer."
+
+        case (.story, .child):
+            key = "Teaches you to turn an order into a story — like a fairy tale, you won't lose it."
+        case (.story, .teen):
+            key = "Teaches you to hold things in order: steps, dates, processes."
+        case (.story, .adult):
+            key = "Teaches you to hold order: the steps of a process, a speech outline, a sequence of events."
+
+        case (.loci, .child):
+            key = "Teaches you to make your room a memory map — you'll recall lists in order."
+        case (.loci, .teen):
+            key = "Uses your spatial memory: exam points come back in the right order."
+        case (.loci, .adult):
+            key = "Uses your spatial memory: a talk without notes, errands kept in order."
+
+        case (.numberShape, .child):
+            key = "Teaches you to turn digits into shapes — numbers become toys."
+        case (.numberShape, .teen):
+            key = "Makes numbers concrete: dates, formulas, short codes."
+        case (.numberShape, .adult):
+            key = "Makes numbers concrete: dates, prices, short numbers — a handy aid, not a cure-all."
+        }
+        return key.localizedContent
+    }
+
     /// The plain-language scientific reason the technique works. Honest about
     /// strength (§9) — shown to teens/adults, hidden for the child band.
     var techniqueScience: String {

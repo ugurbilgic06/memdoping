@@ -27,6 +27,7 @@ struct MissionStat: Identifiable {
 /// Mission briefing: what this level teaches, and one rule to hold on to.
 struct MissionIntro: View {
     @Environment(GameStore.self) private var store
+    @State private var showsHowItWorks = true
     let level: GameLevel
     let stats: [MissionStat]
     let onStart: () -> Void
@@ -51,10 +52,69 @@ struct MissionIntro: View {
                 .font(.largeTitle.bold())
                 .foregroundStyle(Brand.text)
 
+            // The hook: one punchy line that opens the mission (V2 phase 1).
+            Label {
+                Text(MissionHook.line(for: level.mechanic))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Brand.text)
+            } icon: {
+                Image(systemName: "bolt.fill").foregroundStyle(Brand.accentText)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+
+            // What it gives you comes before the animation: pushed below the
+            // 230pt demo it fell off the first screen and nobody found it.
+            // The home screen gives a one-line summary of a world; this is
+            // where the technique itself is explained in full — what it trains,
+            // where it pays off, and the evidence.
+            VStack(alignment: .leading, spacing: 10) {
+                Label {
+                    Text(level.techniqueBenefit(for: store.ageBand))
+                        .font(.subheadline)
+                        .foregroundStyle(Brand.text.opacity(0.9))
+                } icon: {
+                    Image(systemName: "target").foregroundStyle(Brand.accentText)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+
+                // Open by default: collapsed, nobody found the explanation.
+                DisclosureGroup(isExpanded: $showsHowItWorks) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(level.techniqueExplanation)
+                            .font(.subheadline)
+                            .foregroundStyle(Brand.text.opacity(0.85))
+                            .fixedSize(horizontal: false, vertical: true)
+                        if store.ageBand != .child {
+                            Label {
+                                Text(level.techniqueScience)
+                                    .font(.caption)
+                                    .foregroundStyle(Brand.text.opacity(0.7))
+                            } icon: {
+                                Image(systemName: "flask.fill").foregroundStyle(Brand.primary)
+                            }
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .padding(.top, 6)
+                } label: {
+                    Label("How it works", systemImage: "brain.head.profile")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Brand.text)
+                }
+                .tint(Brand.accentText)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.white.opacity(0.55),
+                        in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(Brand.edgeHighlight, lineWidth: 1))
+
             // Show, don't tell: a short animated micro-tutorial instead of a
             // wall of text (V2 §1.3). The technique name is its caption.
             MechanicDemo(mechanic: level.mechanic, tint: level.tileBase,
-                         caption: level.technique)
+                         caption: level.technique, voice: store.soundEnabled,
+                         narration: NarratorVoice.example(for: level.mechanic))
 
             // The single takeaway sentence.
             Label {
@@ -66,31 +126,8 @@ struct MissionIntro: View {
             }
             .fixedSize(horizontal: false, vertical: true)
 
-            // The long explanation is opt-in, collapsed by default.
-            DisclosureGroup {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(level.techniqueExplanation)
-                        .font(.subheadline)
-                        .foregroundStyle(Brand.text.opacity(0.85))
-                        .fixedSize(horizontal: false, vertical: true)
-                    if store.ageBand != .child {
-                        Label {
-                            Text(level.techniqueScience)
-                                .font(.caption)
-                                .foregroundStyle(Brand.text.opacity(0.7))
-                        } icon: {
-                            Image(systemName: "flask.fill").foregroundStyle(Brand.primary)
-                        }
-                        .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .padding(.top, 6)
-            } label: {
-                Label("How it works", systemImage: "brain.head.profile")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Brand.text)
-            }
-            .tint(Brand.accentText)
+            // The six-phase flow, so the shape of the mission is visible.
+            MissionPhaseBar()
 
             HStack(spacing: 12) {
                 ForEach(stats) { stat in

@@ -13,6 +13,7 @@ import SwiftUI
 struct SceneMissionView: View {
     @Environment(GameStore.self) private var store
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.goToStart) private var goToStart
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var session: SceneSession
@@ -48,6 +49,21 @@ struct SceneMissionView: View {
         .animation(reduceMotion ? nil : .easeInOut, value: session.phase)
         .navigationBarBackButtonHidden(session.phase != .intro)
         .toolbar {
+            // Straight back to the worlds from anywhere in the mission.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { goToStart() } label: {
+                    // A plain nav-bar glyph was too faint to notice, so it
+                    // sits on a solid capsule.
+                    Image(systemName: "house.fill")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 11).padding(.vertical, 7)
+                        .background(Brand.accent, in: Capsule())
+                        .shadow(color: Brand.accent.opacity(0.45), radius: 4, y: 2)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Back to home"))
+            }
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase != .intro && session.phase != .summary {
                     Button("Quit") { dismiss() }
@@ -88,12 +104,13 @@ struct SceneMissionView: View {
             if let card = session.currentCard {
                 Spacer()
 
-                // The item — the drop target. The chosen twist lands on it.
+                // The item — the drop target, as a big animated 3D tile. The
+                // chosen twist lands on it.
                 ZStack(alignment: .topTrailing) {
-                    SymbolBadge(symbol: card.pair.symbol, seed: card.pair.id.hashValue, size: 124)
+                    Symbol3DTile(symbol: card.pair.symbol, tint: session.level.tileBase, size: 156)
                     if let chosen = card.chosen {
-                        Text(chosen.emoji).font(.system(size: 46))
-                            .offset(x: 16, y: -8)
+                        Text(chosen.emoji).font(.system(size: 58))
+                            .offset(x: 10, y: 2)
                             .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
                     }
                 }
@@ -119,9 +136,6 @@ struct SceneMissionView: View {
                         session.advanceAfterChoice()
                     }
                 } else {
-                    Text("Drag a twist up onto the \(card.pair.word.localizedContent):")
-                        .font(.subheadline).foregroundStyle(Brand.text.opacity(0.75))
-                        .multilineTextAlignment(.center)
                     VStack(spacing: 10) {
                         ForEach(Array(card.options.enumerated()), id: \.element.id) { i, modifier in
                             modifierChip(card: card, modifier: modifier, index: i)
@@ -137,8 +151,8 @@ struct SceneMissionView: View {
     /// A draggable twist chip — drag it up onto the item to build the scene.
     private func modifierChip(card: SceneSession.SceneCard, modifier: SceneModifier, index: Int) -> some View {
         GameTile(base: session.level.tileBase, cornerRadius: 14) {
-            HStack(spacing: 12) {
-                Text(modifier.emoji).font(.title2)
+            HStack(spacing: 14) {
+                Text(modifier.emoji).font(.system(size: 40))
                 Text("\(card.pair.word.localizedContent) \(modifier.text.localizedContent)")
                     .foregroundStyle(Brand.text).fontWeight(.medium)
                 Spacer()

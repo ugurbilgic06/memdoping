@@ -12,6 +12,7 @@ import SwiftUI
 struct ReviewMissionView: View {
     @Environment(GameStore.self) private var store
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.goToStart) private var goToStart
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var session: ReviewSession
@@ -40,6 +41,19 @@ struct ReviewMissionView: View {
         .animation(reduceMotion ? nil : .easeInOut, value: session.phase)
         .navigationBarBackButtonHidden(session.phase == .recall)
         .toolbar {
+            // Same home button as the missions, so "home" means one place.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { goToStart() } label: {
+                    Image(systemName: "house.fill")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 11).padding(.vertical, 7)
+                        .background(Brand.accent, in: Capsule())
+                        .shadow(color: Brand.accent.opacity(0.45), radius: 4, y: 2)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Back to home"))
+            }
             ToolbarItem(placement: .cancellationAction) {
                 if session.phase == .recall {
                     Button("Quit") { dismiss() }
